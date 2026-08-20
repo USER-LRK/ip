@@ -184,13 +184,82 @@ Hello! I'm kaykay.
 What can I do for you?
 ____________________________________________________________
 ____________________________________________________________
-OOPS! A todo needs a description.
+OOPS! A todo needs a description. Try: todo <description>.
 ____________________________________________________________
 ____________________________________________________________
 OOPS! I don't recognise that command. Try todo, deadline, event, list, mark, unmark, or bye.
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## Case 5: Reject invalid commands without changing task state
+
+**Aim:** Verify that invalid commands between valid commands do not add tasks and provide specific correction guidance.
+
+Commands / console input:
+
+```
+todo keep this
+blah
+deadline finish report /by Friday
+deadline missing
+event meeting /from 10am /to 11am
+event missing /from 10am
+mark 99
+list
+bye
+```
+
+Expected output:
+
+```
+____________________________________________________________
+#   #   ###   #   #  #   #   ###   #   #
+#  #   #   #   # #   #  #   #   #   # #
+###    #####    #    ###    #####    #
+#  #   #   #    #    #  #   #   #    #
+#   #  #   #    #    #   #  #   #    #
+____________________________________________________________
+Hello! I'm kaykay.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+[T][ ] keep this
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+OOPS! I don't recognise that command. Try todo, deadline, event, list, mark, unmark, or bye.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+[D][ ] finish report (by: Friday)
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+OOPS! A deadline needs a description and a date. Try: deadline <description> /by <date>.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+[E][ ] meeting (from: 10am to: 11am)
+Now you have 3 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+OOPS! An event needs a description, start, and end. Try: event <description> /from <start> /to <end>.
+____________________________________________________________
+____________________________________________________________
+OOPS! Please provide an existing task number to mark or unmark.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1. [T][ ] keep this
+2. [D][ ] finish report (by: Friday)
+3. [E][ ] meeting (from: 10am to: 11am)
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!
