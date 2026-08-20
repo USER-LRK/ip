@@ -37,6 +37,18 @@ public class Kaykay {
                         System.out.printf("%d. %s\n", i + 1, tasks[i]);
                     }
                     System.out.println(SEPARATOR);
+                } else if (input.startsWith("delete")) {
+                    String[] pieces = input.split(" ");
+                    if (pieces.length != 2 || !isValidTaskNumber(pieces[1], taskCount)) {
+                        throw new KaykayException("Please provide an existing task number to delete.");
+                    }
+                    int index = Integer.parseInt(pieces[1]) - 1;
+                    Task deletedTask = tasks[index];
+                    for (int i = index; i < taskCount - 1; i += 1) {
+                        tasks[i] = tasks[i + 1];
+                    }
+                    tasks[--taskCount] = null;
+                    printDeletedTask(deletedTask, taskCount);
                 } else if (input.startsWith("mark") || input.startsWith("unmark")) {
                     String[] pieces = input.split(" ");
                     if (pieces.length != 2 || !isValidTaskNumber(pieces[1], taskCount)) {
@@ -93,7 +105,7 @@ public class Kaykay {
                     }
                 } else {
                     throw new KaykayException("I don't recognise that command. Try todo, deadline, event, "
-                            + "list, mark, unmark, or bye.");
+                            + "list, delete, mark, unmark, or bye.");
                 }
             } catch (KaykayException exception) {
                 printError(exception.getMessage());
@@ -109,6 +121,15 @@ public class Kaykay {
         System.out.println(SEPARATOR);
         System.out.println("Got it. I've added this task:");
         System.out.println(task);
+        System.out.printf("Now you have %d tasks in the list.\n", taskCount);
+        System.out.println(SEPARATOR);
+    }
+
+    /** Prints the standard confirmation after deleting a task. */
+    private static void printDeletedTask(Task task, int taskCount) {
+        System.out.println(SEPARATOR);
+        System.out.println("Noted. I've removed this task:");
+        System.out.println("  " + task);
         System.out.printf("Now you have %d tasks in the list.\n", taskCount);
         System.out.println(SEPARATOR);
     }

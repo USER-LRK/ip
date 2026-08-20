@@ -187,7 +187,7 @@ ____________________________________________________________
 OOPS! A todo needs a description. Try: todo <description>.
 ____________________________________________________________
 ____________________________________________________________
-OOPS! I don't recognise that command. Try todo, deadline, event, list, mark, unmark, or bye.
+OOPS! I don't recognise that command. Try todo, deadline, event, list, delete, mark, unmark, or bye.
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
@@ -234,7 +234,7 @@ Got it. I've added this task:
 Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
-OOPS! I don't recognise that command. Try todo, deadline, event, list, mark, unmark, or bye.
+OOPS! I don't recognise that command. Try todo, deadline, event, list, delete, mark, unmark, or bye.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
@@ -260,6 +260,72 @@ Here are the tasks in your list:
 1. [T][ ] keep this
 2. [D][ ] finish report (by: Friday)
 3. [E][ ] meeting (from: 10am to: 11am)
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## Case 6: Delete tasks and reject invalid task numbers
+
+**Aim:** Verify that deleting a task removes it, renumbers the remaining tasks, and rejects missing or non-existent task numbers.
+
+Commands / console input:
+
+```
+todo first task
+deadline second task /by Friday
+event third task /from 10am /to 11am
+delete 2
+delete 9
+delete nope
+list
+bye
+```
+
+Expected output:
+
+```
+____________________________________________________________
+#   #   ###   #   #  #   #   ###   #   #
+#  #   #   #   # #   #  #   #   #   # #
+###    #####    #    ###    #####    #
+#  #   #   #    #    #  #   #   #    #
+#   #  #   #    #    #   #  #   #    #
+____________________________________________________________
+Hello! I'm kaykay.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+[T][ ] first task
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+[D][ ] second task (by: Friday)
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+[E][ ] third task (from: 10am to: 11am)
+Now you have 3 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Noted. I've removed this task:
+  [D][ ] second task (by: Friday)
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+OOPS! Please provide an existing task number to delete.
+____________________________________________________________
+____________________________________________________________
+OOPS! Please provide an existing task number to delete.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1. [T][ ] first task
+2. [E][ ] third task (from: 10am to: 11am)
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!
