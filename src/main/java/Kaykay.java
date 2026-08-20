@@ -16,7 +16,7 @@ public class Kaykay {
      * @param args command-line arguments, which are not used
      */
     public static void main(String[] args) {
-        String[] tasks = new String[100];
+        Task[] tasks = new Task[100];
         int taskCount = 0;
         System.out.println(SEPARATOR);
         System.out.println(BANNER);
@@ -30,15 +30,30 @@ public class Kaykay {
             if (input.equals("bye")) {
                 break;
             } else if (input.equals("list")) {
+                System.out.println(SEPARATOR);
+                System.out.println("Here are the tasks in your list:");
                 for (int i = 0; i < taskCount; i += 1) {
                     System.out.printf("%d. %s\n", i + 1, tasks[i]);
                 }
                 System.out.println(SEPARATOR);
-            } else {
+            } else if (input.contains("mark")) {
+                System.out.println(SEPARATOR);
+                String[] pieces = input.split(" ");
+                int index = Integer.parseInt(pieces[1]) - 1;
+                if (pieces[0].equals("mark")) {
+                    System.out.println("Nice! I've marked this task as done:");
+                    tasks[index].mark();
+                } else {
+                    System.out.println("OK, I've marked this task as not done yet:");
+                    tasks[index].unmark();
+                }
+                System.out.println(tasks[index]);
+                System.out.println(SEPARATOR);
+            }  else {
                 System.out.println(SEPARATOR);
                 System.out.printf("added: %s\n", input);
                 System.out.println(SEPARATOR);
-                tasks[taskCount++] = input;
+                tasks[taskCount++] = new Task(input);
             }
         }
         System.out.println(SEPARATOR);
