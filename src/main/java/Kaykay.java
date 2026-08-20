@@ -16,6 +16,8 @@ public class Kaykay {
      * @param args command-line arguments, which are not used
      */
     public static void main(String[] args) {
+        String[] tasks = new String[100];
+        int taskCount = 0;
         System.out.println(SEPARATOR);
         System.out.println(BANNER);
         System.out.println(SEPARATOR);
@@ -27,10 +29,16 @@ public class Kaykay {
             String input = scanner.nextLine();
             if (input.equals("bye")) {
                 break;
+            } else if (input.equals("list")) {
+                for (int i = 0; i < taskCount; i += 1) {
+                    System.out.printf("%d. %s\n", i + 1, tasks[i]);
+                }
+                System.out.println(SEPARATOR);
             } else {
                 System.out.println(SEPARATOR);
-                System.out.println(input);
+                System.out.printf("added: %s\n", input);
                 System.out.println(SEPARATOR);
+                tasks[taskCount++] = input;
             }
         }
         System.out.println(SEPARATOR);
