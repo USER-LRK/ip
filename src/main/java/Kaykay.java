@@ -36,7 +36,7 @@ public class Kaykay {
                     System.out.printf("%d. %s\n", i + 1, tasks[i]);
                 }
                 System.out.println(SEPARATOR);
-            } else if (input.contains("mark")) {
+            } else if (input.startsWith("mark ") || input.startsWith("unmark ")) {
                 System.out.println(SEPARATOR);
                 String[] pieces = input.split(" ");
                 int index = Integer.parseInt(pieces[1]) - 1;
@@ -49,15 +49,60 @@ public class Kaykay {
                 }
                 System.out.println(tasks[index]);
                 System.out.println(SEPARATOR);
-            }  else {
+            // AI-GENERATED: Level 4 command parsing and polymorphic task creation.
+            } else if (input.startsWith("todo ")) {
+                String description = input.substring("todo ".length());
+                tasks[taskCount++] = new Todo(description);
+                printAddedTask(tasks[taskCount - 1], taskCount);
+            } else if (input.startsWith("deadline ")) {
+                String[] deadlineParts = input.substring("deadline ".length()).split(" /by ", 2);
+                if (deadlineParts.length == 2) {
+                    tasks[taskCount++] = new Deadline(deadlineParts[0], deadlineParts[1]);
+                    printAddedTask(tasks[taskCount - 1], taskCount);
+                } else {
+                    printInvalidCommand();
+                }
+            } else if (input.startsWith("event ")) {
+                String eventInput = input.substring("event ".length());
+                String[] fromParts = eventInput.split(" /from ", 2);
+                if (fromParts.length == 2) {
+                    String[] toParts = fromParts[1].split(" /to ", 2);
+                    if (toParts.length == 2) {
+                        tasks[taskCount++] = new Event(fromParts[0], toParts[0], toParts[1]);
+                        printAddedTask(tasks[taskCount - 1], taskCount);
+                    } else {
+                        printInvalidCommand();
+                    }
+                } else {
+                    printInvalidCommand();
+                }
+            } else {
                 System.out.println(SEPARATOR);
-                System.out.printf("added: %s\n", input);
+                System.out.println("Got it. I've added this task:");
+                tasks[taskCount++] = new Todo(input);
+                System.out.println(tasks[taskCount - 1]);
+                System.out.printf("Now you have %d tasks in the list.\n", taskCount);
                 System.out.println(SEPARATOR);
-                tasks[taskCount++] = new Task(input);
             }
         }
         System.out.println(SEPARATOR);
         System.out.println("Bye. Hope to see you again soon!");
+        System.out.println(SEPARATOR);
+    }
+
+    // AI-GENERATED: Shared output helper for newly supported task commands.
+    private static void printAddedTask(Task task, int taskCount) {
+        System.out.println(SEPARATOR);
+        System.out.println("Got it. I've added this task:");
+        System.out.println(task);
+        System.out.printf("Now you have %d tasks in the list.\n", taskCount);
+        System.out.println(SEPARATOR);
+    }
+
+    // AI-GENERATED: Keeps malformed Level 4 commands from terminating the chatbot.
+    private static void printInvalidCommand() {
+        System.out.println(SEPARATOR);
+        System.out.println("Please use: deadline <description> /by <date/time> or event <description> /from <start> /to <end>.");
         System.out.println(SEPARATOR);
     }
 }

@@ -1,3 +1,8 @@
+/**
+ * Represents a task that can be marked as done or not done.
+ *
+ * // AI-GENERATED: This class documentation was added as part of the Level 4 implementation.
+ */
 public class Task {
     protected String description;
     protected boolean isDone;
