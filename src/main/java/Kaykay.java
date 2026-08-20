@@ -36,10 +36,14 @@ public class Kaykay {
                     System.out.printf("%d. %s\n", i + 1, tasks[i]);
                 }
                 System.out.println(SEPARATOR);
-            } else if (input.startsWith("mark ") || input.startsWith("unmark ")) {
-                System.out.println(SEPARATOR);
+            } else if (input.startsWith("mark") || input.startsWith("unmark")) {
                 String[] pieces = input.split(" ");
+                if (pieces.length != 2 || !isValidTaskNumber(pieces[1], taskCount)) {
+                    printError("Please provide a valid task number to mark or unmark.");
+                    continue;
+                }
                 int index = Integer.parseInt(pieces[1]) - 1;
+                System.out.println(SEPARATOR);
                 if (pieces[0].equals("mark")) {
                     System.out.println("Nice! I've marked this task as done:");
                     tasks[index].mark();
@@ -49,40 +53,44 @@ public class Kaykay {
                 }
                 System.out.println(tasks[index]);
                 System.out.println(SEPARATOR);
-            // AI-GENERATED: Level 4 command parsing and polymorphic task creation.
-            } else if (input.startsWith("todo ")) {
-                String description = input.substring("todo ".length());
+            } else if (input.equals("todo") || input.startsWith("todo ")) {
+                String description = input.length() == "todo".length()
+                        ? "" : input.substring("todo ".length());
+                if (description.trim().isEmpty()) {
+                    printError("A todo needs a description.");
+                    continue;
+                }
                 tasks[taskCount++] = new Todo(description);
                 printAddedTask(tasks[taskCount - 1], taskCount);
-            } else if (input.startsWith("deadline ")) {
-                String[] deadlineParts = input.substring("deadline ".length()).split(" /by ", 2);
-                if (deadlineParts.length == 2) {
+            } else if (input.equals("deadline") || input.startsWith("deadline ")) {
+                String deadlineInput = input.length() == "deadline".length()
+                        ? "" : input.substring("deadline ".length());
+                String[] deadlineParts = deadlineInput.split(" /by ", 2);
+                if (deadlineParts.length == 2 && !deadlineParts[0].trim().isEmpty()
+                        && !deadlineParts[1].trim().isEmpty()) {
                     tasks[taskCount++] = new Deadline(deadlineParts[0], deadlineParts[1]);
                     printAddedTask(tasks[taskCount - 1], taskCount);
                 } else {
-                    printInvalidCommand();
+                    printError("That command is incomplete. Check the required description and timing details.");
                 }
-            } else if (input.startsWith("event ")) {
-                String eventInput = input.substring("event ".length());
+            } else if (input.equals("event") || input.startsWith("event ")) {
+                String eventInput = input.length() == "event".length()
+                        ? "" : input.substring("event ".length());
                 String[] fromParts = eventInput.split(" /from ", 2);
-                if (fromParts.length == 2) {
+                if (fromParts.length == 2 && !fromParts[0].trim().isEmpty()) {
                     String[] toParts = fromParts[1].split(" /to ", 2);
-                    if (toParts.length == 2) {
+                    if (toParts.length == 2 && !toParts[0].trim().isEmpty()
+                            && !toParts[1].trim().isEmpty()) {
                         tasks[taskCount++] = new Event(fromParts[0], toParts[0], toParts[1]);
                         printAddedTask(tasks[taskCount - 1], taskCount);
                     } else {
-                        printInvalidCommand();
+                        printError("That command is incomplete. Check the required description and timing details.");
                     }
                 } else {
-                    printInvalidCommand();
+                    printError("That command is incomplete. Check the required description and timing details.");
                 }
             } else {
-                System.out.println(SEPARATOR);
-                System.out.println("Got it. I've added this task:");
-                tasks[taskCount++] = new Todo(input);
-                System.out.println(tasks[taskCount - 1]);
-                System.out.printf("Now you have %d tasks in the list.\n", taskCount);
-                System.out.println(SEPARATOR);
+                printError("I don't recognise that command. Try todo, deadline, event, list, mark, unmark, or bye.");
             }
         }
         System.out.println(SEPARATOR);
@@ -90,7 +98,7 @@ public class Kaykay {
         System.out.println(SEPARATOR);
     }
 
-    // AI-GENERATED: Shared output helper for newly supported task commands.
+    /** Prints the standard confirmation after adding a task. */
     private static void printAddedTask(Task task, int taskCount) {
         System.out.println(SEPARATOR);
         System.out.println("Got it. I've added this task:");
@@ -99,10 +107,20 @@ public class Kaykay {
         System.out.println(SEPARATOR);
     }
 
-    // AI-GENERATED: Keeps malformed Level 4 commands from terminating the chatbot.
-    private static void printInvalidCommand() {
+    /** Prints an error surrounded by the chatbot's standard separator. */
+    private static void printError(String message) {
         System.out.println(SEPARATOR);
-        System.out.println("Please use: deadline <description> /by <date/time> or event <description> /from <start> /to <end>.");
+        System.out.println("OOPS! " + message);
         System.out.println(SEPARATOR);
+    }
+
+    /** Checks that a mark/unmark argument is an existing positive task number. */
+    private static boolean isValidTaskNumber(String value, int taskCount) {
+        try {
+            int taskNumber = Integer.parseInt(value);
+            return taskNumber >= 1 && taskNumber <= taskCount;
+        } catch (NumberFormatException exception) {
+            return false;
+        }
     }
 }
