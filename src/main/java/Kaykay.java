@@ -18,7 +18,12 @@ public class Kaykay {
      * @param args command-line arguments, which are not used
      */
     public static void main(String[] args) {
-        ArrayList<Task> tasks = new ArrayList<>();
+        ArrayList<Task> tasks;
+        try {
+            tasks = Storage.loadTasks();
+        } catch (IOException exception) {
+            tasks = new ArrayList<>();
+        }
         System.out.println(SEPARATOR);
         System.out.println(BANNER);
         System.out.println(SEPARATOR);
