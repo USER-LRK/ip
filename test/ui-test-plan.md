@@ -150,10 +150,10 @@ Got it. I've added this task:
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
-OOPS! A deadline date/time must use the format dd MM yyyy HH:mm.
+OOPS! The deadline date/time 'Friday' is invalid. Please use dd MM yyyy HH:mm, for example 01 01 2026 18:30.
 ____________________________________________________________
 ____________________________________________________________
-OOPS! An event date/time must use the format dd MM yyyy HH:mm.
+OOPS! The event start date/time 'no idea' is invalid. Please use dd MM yyyy HH:mm, for example 01 01 2026 18:30.
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:

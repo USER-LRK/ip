@@ -8,6 +8,12 @@ import java.util.Locale;
  * Parses and formats task date/time values using Kaykay's standard format.
  */
 public final class DateTimeParser {
+    /** The date/time format accepted from users and written to task output. */
+    public static final String INPUT_FORMAT = "dd MM yyyy HH:mm";
+
+    /** An example date/time shown in input guidance. */
+    public static final String EXAMPLE = "01 01 2026 18:30";
+
     /**
      * The format shown to users: day, month, year, 24-hour time.
      *
