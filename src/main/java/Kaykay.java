@@ -3,23 +3,45 @@ import java.io.IOException;
  * Entry point for the Kaykay chatbot.
  */
 public class Kaykay {
+    /** Provides console input and output. */
+    private final Ui ui;
+
+    /** Loads and saves the chatbot's tasks. */
+    private final Storage storage;
+
+    /** Holds the tasks managed during this run. */
+    private final TaskList tasks;
+
+    /** Interprets each line of user input. */
+    private final Parser parser;
+
+    /** Whether loading the initial task data failed. */
+    private final boolean loadFailed;
+
     /**
-     * Greets the user, repeats user input, and exits when user types bye
+     * Creates a Kaykay chatbot using the given task data file.
      *
-    * @param args command-line arguments, which are not used
-    */
-    public static void main(String[] args) {
-        Ui ui = new Ui();
-        Storage storage = new Storage("data/kaykay.txt");
-        Parser parser = new Parser();
-        TaskList tasks;
-        boolean loadFailed = false;
+     * @param filePath path of the task data file
+     */
+    public Kaykay(String filePath) {
+        ui = new Ui();
+        storage = new Storage(filePath);
+        parser = new Parser();
+        TaskList loadedTasks;
+        boolean failedToLoad;
         try {
-            tasks = new TaskList(storage.loadTasks());
+            loadedTasks = new TaskList(storage.loadTasks());
+            failedToLoad = false;
         } catch (IOException exception) {
-            tasks = new TaskList();
-            loadFailed = true;
+            loadedTasks = new TaskList();
+            failedToLoad = true;
         }
+        tasks = loadedTasks;
+        loadFailed = failedToLoad;
+    }
+
+    /** Runs the chatbot until the user says bye or input ends. */
+    public void run() {
         ui.showWelcome();
         if (loadFailed) {
             ui.showLoadingError();
@@ -110,4 +132,8 @@ public class Kaykay {
         ui.showFarewell();
     }
 
+    /** Starts Kaykay with its default task data file. */
+    public static void main(String[] args) {
+        new Kaykay("data/kaykay.txt").run();
+    }
 }
