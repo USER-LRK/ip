@@ -122,6 +122,8 @@ deadline do homework /by 28 12 2026 23:45
 event orientation week /from 29 12 2026 08:00 /to 29 12 2026 10:30
 deadline reject random /by Friday
 event reject random /from no idea /to no idea
+deadline reject invalid date /by 31 02 2026 10:00
+event reject invalid time /from 30 12 2026 10:00 /to 30 12 2026 25:00
 list
 bye
 ```
@@ -154,6 +156,12 @@ OOPS! The deadline date/time 'Friday' is invalid. Please use dd MM yyyy HH:mm, f
 ____________________________________________________________
 ____________________________________________________________
 OOPS! The event start date/time 'no idea' is invalid. Please use dd MM yyyy HH:mm, for example 01 01 2026 18:30.
+____________________________________________________________
+____________________________________________________________
+OOPS! The deadline date/time '31 02 2026 10:00' is invalid. Please use dd MM yyyy HH:mm, for example 01 01 2026 18:30.
+____________________________________________________________
+____________________________________________________________
+OOPS! The event end date/time '30 12 2026 25:00' is invalid. Please use dd MM yyyy HH:mm, for example 01 01 2026 18:30.
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
@@ -581,6 +589,89 @@ What can I do for you?
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## Case 11: Save and reload typed deadline and event date/times
+
+**Aim:** Verify that deadline and event `LocalDateTime` values survive saving and restarting.
+
+Commands / console input:
+
+```
+deadline persist deadline /by 25 12 2026 18:30
+event persist event /from 26 12 2026 09:00 /to 26 12 2026 10:00
+list
+bye
+```
+
+Expected output:
+
+```
+____________________________________________________________
+#   #   ###   #   #  #   #   ###   #   #
+#  #   #   #   # #   #  #   #   #   # #
+###    #####    #    ###    #####    #
+#  #   #   #    #    #  #   #   #    #
+#   #  #   #    #    #   #  #   #    #
+____________________________________________________________
+Hello! I'm kaykay.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+[D][ ] persist deadline (by: 25 12 2026 18:30)
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+[E][ ] persist event (from: 26 12 2026 09:00 to: 26 12 2026 10:00)
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1. [D][ ] persist deadline (by: 25 12 2026 18:30)
+2. [E][ ] persist event (from: 26 12 2026 09:00 to: 26 12 2026 10:00)
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+Expected file contents:
+
+```
+D | 0 | persist deadline | 25 12 2026 18:30
+E | 0 | persist event | 26 12 2026 09:00 | 26 12 2026 10:00
+```
+
+Restart console input:
+
+```
+list
+bye
+```
+
+Expected restart output:
+
+```
+____________________________________________________________
+#   #   ###   #   #  #   #   ###   #   #
+#  #   #   #   # #   #  #   #   #   # #
+###    #####    #    ###    #####    #
+#  #   #   #    #    #  #   #   #    #
+#   #  #   #    #    #   #  #   #    #
+____________________________________________________________
+Hello! I'm kaykay.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1. [D][ ] persist deadline (by: 25 12 2026 18:30)
+2. [E][ ] persist event (from: 26 12 2026 09:00 to: 26 12 2026 10:00)
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!
