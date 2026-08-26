@@ -28,4 +28,13 @@ public class Task {
     public String toString() {
         return String.format("[%s] %s", this.getStatusIcon(), this.description);
     }
+
+    /**
+     * Returns the task in the format used by the task storage file.
+     *
+     * @return the serialised task
+     */
+    public String toFileFormat() {
+        return String.format("T | %d | %s", isDone ? 1 : 0, description);
+    }
 }

@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 /**
@@ -44,6 +45,7 @@ public class Kaykay {
                     }
                     int index = Integer.parseInt(pieces[1]) - 1;
                     Task deletedTask = tasks.remove(index);
+                    Storage.saveTasks(tasks);
                     printDeletedTask(deletedTask, tasks.size());
                 } else if (input.startsWith("mark") || input.startsWith("unmark")) {
                     String[] pieces = input.split(" ");
@@ -59,6 +61,7 @@ public class Kaykay {
                         System.out.println("OK, I've marked this task as not done yet:");
                         tasks.get(index).unmark();
                     }
+                    Storage.saveTasks(tasks);
                     System.out.println(tasks.get(index));
                     System.out.println(SEPARATOR);
                 } else if (input.equals("todo") || input.startsWith("todo ")) {
@@ -68,6 +71,7 @@ public class Kaykay {
                         throw new KaykayException("A todo needs a description. Try: todo <description>.");
                     }
                     tasks.add(new Todo(description));
+                    Storage.saveTasks(tasks);
                     printAddedTask(tasks.get(tasks.size() - 1), tasks.size());
                 } else if (input.equals("deadline") || input.startsWith("deadline ")) {
                     String deadlineInput = input.length() == "deadline".length()
@@ -76,6 +80,7 @@ public class Kaykay {
                     if (deadlineParts.length == 2 && !deadlineParts[0].trim().isEmpty()
                             && !deadlineParts[1].trim().isEmpty()) {
                         tasks.add(new Deadline(deadlineParts[0], deadlineParts[1]));
+                        Storage.saveTasks(tasks);
                         printAddedTask(tasks.get(tasks.size() - 1), tasks.size());
                     } else {
                         throw new KaykayException("A deadline needs a description and a date. "
@@ -90,6 +95,7 @@ public class Kaykay {
                         if (toParts.length == 2 && !toParts[0].trim().isEmpty()
                                 && !toParts[1].trim().isEmpty()) {
                             tasks.add(new Event(fromParts[0], toParts[0], toParts[1]));
+                            Storage.saveTasks(tasks);
                             printAddedTask(tasks.get(tasks.size() - 1), tasks.size());
                         } else {
                             throw new KaykayException("An event needs a description, start, and end. "
@@ -105,6 +111,8 @@ public class Kaykay {
                 }
             } catch (KaykayException exception) {
                 printError(exception.getMessage());
+            } catch (IOException exception) {
+                printError("I couldn't save your tasks. Please check the data folder.");
             }
         }
         System.out.println(SEPARATOR);
