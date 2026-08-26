@@ -1,20 +1,22 @@
+import java.time.LocalDateTime;
+
 /**
  * A task with a starting date/time and an ending date/time.
  *
  * // AI-GENERATED: This class was added as part of the Level 4 implementation.
  */
 public class Event extends Task {
-    protected String from;
-    protected String to;
+    protected LocalDateTime from;
+    protected LocalDateTime to;
 
     /**
-     * Creates an event without interpreting either date/time string.
+     * Creates an event with typed starting and ending date/time values.
      *
      * @param description what the event is about
-     * @param from when the event starts, kept as entered by the user
-     * @param to when the event ends, kept as entered by the user
+     * @param from when the event starts
+     * @param to when the event ends
      */
-    public Event(String description, String from, String to) {
+    public Event(String description, LocalDateTime from, LocalDateTime to) {
         super(description);
         this.from = from;
         this.to = to;
@@ -22,12 +24,14 @@ public class Event extends Task {
 
     @Override
     public String toString() {
-        return "[E]" + super.toString() + " (from: " + from + " to: " + to + ")";
+        return "[E]" + super.toString() + " (from: " + DateTimeParser.format(from)
+                + " to: " + DateTimeParser.format(to) + ")";
     }
 
     @Override
     public String toFileFormat() {
         return String.format("E | %d | %s | %s | %s", isDone ? 1 : 0,
-                Storage.escape(description), Storage.escape(from), Storage.escape(to));
+                Storage.escape(description), Storage.escape(DateTimeParser.format(from)),
+                Storage.escape(DateTimeParser.format(to)));
     }
 }

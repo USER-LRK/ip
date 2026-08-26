@@ -5,6 +5,7 @@ import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -115,27 +116,32 @@ public final class Storage {
         }
 
         Task task;
-        switch (parts[0]) {
-            case "T":
-                if (parts.length != 3) {
-                    throw new IOException("Invalid todo data: " + line);
-                }
-                task = new Todo(parts[2]);
-                break;
-            case "D":
-                if (parts.length != 4) {
-                    throw new IOException("Invalid deadline data: " + line);
-                }
-                task = new Deadline(parts[2], parts[3]);
-                break;
-            case "E":
-                if (parts.length != 5) {
-                    throw new IOException("Invalid event data: " + line);
-                }
-                task = new Event(parts[2], parts[3], parts[4]);
-                break;
-            default:
-                throw new IOException("Unknown task type: " + line);
+        try {
+            switch (parts[0]) {
+                case "T":
+                    if (parts.length != 3) {
+                        throw new IOException("Invalid todo data: " + line);
+                    }
+                    task = new Todo(parts[2]);
+                    break;
+                case "D":
+                    if (parts.length != 4) {
+                        throw new IOException("Invalid deadline data: " + line);
+                    }
+                    task = new Deadline(parts[2], DateTimeParser.parse(parts[3]));
+                    break;
+                case "E":
+                    if (parts.length != 5) {
+                        throw new IOException("Invalid event data: " + line);
+                    }
+                    task = new Event(parts[2], DateTimeParser.parse(parts[3]),
+                            DateTimeParser.parse(parts[4]));
+                    break;
+                default:
+                    throw new IOException("Unknown task type: " + line);
+            }
+        } catch (DateTimeParseException exception) {
+            throw new IOException("Invalid date/time data: " + line, exception);
         }
 
         if (status == 1) {

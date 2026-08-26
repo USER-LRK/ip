@@ -1,3 +1,5 @@
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -114,15 +116,21 @@ public class Kaykay {
                     String[] deadlineParts = deadlineInput.split(" /by ", 2);
                     if (deadlineParts.length == 2 && !deadlineParts[0].trim().isEmpty()
                             && !deadlineParts[1].trim().isEmpty()) {
-                        Task addedTask = new Deadline(deadlineParts[0], deadlineParts[1]);
-                        tasks.add(addedTask);
                         try {
-                            Storage.saveTasks(tasks);
-                        } catch (IOException exception) {
-                            tasks.remove(addedTask);
-                            throw exception;
+                            LocalDateTime by = DateTimeParser.parse(deadlineParts[1].trim());
+                            Task addedTask = new Deadline(deadlineParts[0], by);
+                            tasks.add(addedTask);
+                            try {
+                                Storage.saveTasks(tasks);
+                            } catch (IOException exception) {
+                                tasks.remove(addedTask);
+                                throw exception;
+                            }
+                            printAddedTask(addedTask, tasks.size());
+                        } catch (DateTimeParseException exception) {
+                            throw new KaykayException("A deadline date/time must use the format "
+                                    + "dd MM yyyy HH:mm.");
                         }
-                        printAddedTask(addedTask, tasks.size());
                     } else {
                         throw new KaykayException("A deadline needs a description and a date. "
                                 + "Try: deadline <description> /by <date>.");
@@ -135,15 +143,22 @@ public class Kaykay {
                         String[] toParts = fromParts[1].split(" /to ", 2);
                         if (toParts.length == 2 && !toParts[0].trim().isEmpty()
                                 && !toParts[1].trim().isEmpty()) {
-                            Task addedTask = new Event(fromParts[0], toParts[0], toParts[1]);
-                            tasks.add(addedTask);
                             try {
-                                Storage.saveTasks(tasks);
-                            } catch (IOException exception) {
-                                tasks.remove(addedTask);
-                                throw exception;
+                                LocalDateTime from = DateTimeParser.parse(toParts[0].trim());
+                                LocalDateTime to = DateTimeParser.parse(toParts[1].trim());
+                                Task addedTask = new Event(fromParts[0], from, to);
+                                tasks.add(addedTask);
+                                try {
+                                    Storage.saveTasks(tasks);
+                                } catch (IOException exception) {
+                                    tasks.remove(addedTask);
+                                    throw exception;
+                                }
+                                printAddedTask(addedTask, tasks.size());
+                            } catch (DateTimeParseException exception) {
+                                throw new KaykayException("An event date/time must use the format "
+                                        + "dd MM yyyy HH:mm.");
                             }
-                            printAddedTask(addedTask, tasks.size());
                         } else {
                             throw new KaykayException("An event needs a description, start, and end. "
                                     + "Try: event <description> /from <start> /to <end>.");
