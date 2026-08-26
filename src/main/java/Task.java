@@ -35,6 +35,6 @@ public class Task {
      * @return the serialised task
      */
     public String toFileFormat() {
-        return String.format("T | %d | %s", isDone ? 1 : 0, description);
+        return String.format("T | %d | %s", isDone ? 1 : 0, Storage.escape(description));
     }
 }

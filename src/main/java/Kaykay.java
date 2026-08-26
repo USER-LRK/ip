@@ -15,14 +15,16 @@ public class Kaykay {
     /**
      * Greets the user, repeats user input, and exits when user types bye
      *
-     * @param args command-line arguments, which are not used
+    * @param args command-line arguments, which are not used
      */
     public static void main(String[] args) {
         ArrayList<Task> tasks;
+        boolean loadFailed = false;
         try {
             tasks = Storage.loadTasks();
         } catch (IOException exception) {
             tasks = new ArrayList<>();
+            loadFailed = true;
         }
         System.out.println(SEPARATOR);
         System.out.println(BANNER);
@@ -30,9 +32,12 @@ public class Kaykay {
         System.out.println("Hello! I'm kaykay.");
         System.out.println("What can I do for you?");
         System.out.println(SEPARATOR);
+        if (loadFailed) {
+            printError("I couldn't load your tasks. Please check the data file.");
+        }
         Scanner scanner = new Scanner(System.in);
-        while (true) {
-            String input = scanner.nextLine();
+        while (scanner.hasNextLine()) {
+            String input = scanner.nextLine().trim();
             try {
                 if (input.equals("bye")) {
                     break;
@@ -43,55 +48,86 @@ public class Kaykay {
                         System.out.printf("%d. %s\n", i + 1, tasks.get(i));
                     }
                     System.out.println(SEPARATOR);
-                } else if (input.startsWith("delete")) {
-                    String[] pieces = input.split(" ");
+                } else if (isCommand(input, "delete")) {
+                    String[] pieces = input.split("\\s+");
                     if (pieces.length != 2 || !isValidTaskNumber(pieces[1], tasks.size())) {
                         throw new KaykayException("Please provide an existing task number to delete.");
                     }
                     int index = Integer.parseInt(pieces[1]) - 1;
                     Task deletedTask = tasks.remove(index);
-                    Storage.saveTasks(tasks);
+                    try {
+                        Storage.saveTasks(tasks);
+                    } catch (IOException exception) {
+                        tasks.add(index, deletedTask);
+                        throw exception;
+                    }
                     printDeletedTask(deletedTask, tasks.size());
-                } else if (input.startsWith("mark") || input.startsWith("unmark")) {
-                    String[] pieces = input.split(" ");
+                } else if (isCommand(input, "mark") || isCommand(input, "unmark")) {
+                    String[] pieces = input.split("\\s+");
                     if (pieces.length != 2 || !isValidTaskNumber(pieces[1], tasks.size())) {
                         throw new KaykayException("Please provide an existing task number to mark or unmark.");
                     }
                     int index = Integer.parseInt(pieces[1]) - 1;
+                    Task changedTask = tasks.get(index);
+                    boolean wasDone = changedTask.getStatusIcon().equals("X");
+                    if (pieces[0].equals("mark")) {
+                        changedTask.mark();
+                    } else {
+                        changedTask.unmark();
+                    }
+                    try {
+                        Storage.saveTasks(tasks);
+                    } catch (IOException exception) {
+                        if (wasDone) {
+                            changedTask.mark();
+                        } else {
+                            changedTask.unmark();
+                        }
+                        throw exception;
+                    }
                     System.out.println(SEPARATOR);
                     if (pieces[0].equals("mark")) {
                         System.out.println("Nice! I've marked this task as done:");
-                        tasks.get(index).mark();
                     } else {
                         System.out.println("OK, I've marked this task as not done yet:");
-                        tasks.get(index).unmark();
                     }
-                    Storage.saveTasks(tasks);
-                    System.out.println(tasks.get(index));
+                    System.out.println(changedTask);
                     System.out.println(SEPARATOR);
-                } else if (input.equals("todo") || input.startsWith("todo ")) {
+                } else if (isCommand(input, "todo")) {
                     String description = input.length() == "todo".length()
                             ? "" : input.substring("todo ".length());
                     if (description.trim().isEmpty()) {
                         throw new KaykayException("A todo needs a description. Try: todo <description>.");
                     }
-                    tasks.add(new Todo(description));
-                    Storage.saveTasks(tasks);
-                    printAddedTask(tasks.get(tasks.size() - 1), tasks.size());
-                } else if (input.equals("deadline") || input.startsWith("deadline ")) {
+                    Task addedTask = new Todo(description);
+                    tasks.add(addedTask);
+                    try {
+                        Storage.saveTasks(tasks);
+                    } catch (IOException exception) {
+                        tasks.remove(addedTask);
+                        throw exception;
+                    }
+                    printAddedTask(addedTask, tasks.size());
+                } else if (isCommand(input, "deadline")) {
                     String deadlineInput = input.length() == "deadline".length()
                             ? "" : input.substring("deadline ".length());
                     String[] deadlineParts = deadlineInput.split(" /by ", 2);
                     if (deadlineParts.length == 2 && !deadlineParts[0].trim().isEmpty()
                             && !deadlineParts[1].trim().isEmpty()) {
-                        tasks.add(new Deadline(deadlineParts[0], deadlineParts[1]));
-                        Storage.saveTasks(tasks);
-                        printAddedTask(tasks.get(tasks.size() - 1), tasks.size());
+                        Task addedTask = new Deadline(deadlineParts[0], deadlineParts[1]);
+                        tasks.add(addedTask);
+                        try {
+                            Storage.saveTasks(tasks);
+                        } catch (IOException exception) {
+                            tasks.remove(addedTask);
+                            throw exception;
+                        }
+                        printAddedTask(addedTask, tasks.size());
                     } else {
                         throw new KaykayException("A deadline needs a description and a date. "
                                 + "Try: deadline <description> /by <date>.");
                     }
-                } else if (input.equals("event") || input.startsWith("event ")) {
+                } else if (isCommand(input, "event")) {
                     String eventInput = input.length() == "event".length()
                             ? "" : input.substring("event ".length());
                     String[] fromParts = eventInput.split(" /from ", 2);
@@ -99,9 +135,15 @@ public class Kaykay {
                         String[] toParts = fromParts[1].split(" /to ", 2);
                         if (toParts.length == 2 && !toParts[0].trim().isEmpty()
                                 && !toParts[1].trim().isEmpty()) {
-                            tasks.add(new Event(fromParts[0], toParts[0], toParts[1]));
-                            Storage.saveTasks(tasks);
-                            printAddedTask(tasks.get(tasks.size() - 1), tasks.size());
+                            Task addedTask = new Event(fromParts[0], toParts[0], toParts[1]);
+                            tasks.add(addedTask);
+                            try {
+                                Storage.saveTasks(tasks);
+                            } catch (IOException exception) {
+                                tasks.remove(addedTask);
+                                throw exception;
+                            }
+                            printAddedTask(addedTask, tasks.size());
                         } else {
                             throw new KaykayException("An event needs a description, start, and end. "
                                     + "Try: event <description> /from <start> /to <end>.");
@@ -158,5 +200,10 @@ public class Kaykay {
         } catch (NumberFormatException exception) {
             return false;
         }
+    }
+
+    /** Checks whether an input is a command or starts with that command and an argument. */
+    private static boolean isCommand(String input, String command) {
+        return input.equals(command) || input.startsWith(command + " ");
     }
 }
