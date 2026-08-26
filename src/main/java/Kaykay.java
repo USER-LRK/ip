@@ -1,5 +1,3 @@
-import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
 import java.io.IOException;
 /**
  * Entry point for the Kaykay chatbot.
@@ -13,6 +11,7 @@ public class Kaykay {
     public static void main(String[] args) {
         Ui ui = new Ui();
         Storage storage = new Storage("data/kaykay.txt");
+        Parser parser = new Parser();
         TaskList tasks;
         boolean loadFailed = false;
         try {
@@ -28,16 +27,16 @@ public class Kaykay {
         while (ui.hasNextLine()) {
             String input = ui.readCommand();
             try {
-                if (input.equals("bye")) {
+                Parser.Command command = parser.parse(input);
+                if (command.getType() == Parser.CommandType.BYE) {
                     break;
-                } else if (input.equals("list")) {
+                } else if (command.getType() == Parser.CommandType.LIST) {
                     ui.showTaskList(tasks);
-                } else if (isCommand(input, "delete")) {
-                    String[] pieces = input.split("\\s+");
-                    if (pieces.length != 2 || !tasks.isValidTaskNumber(pieces[1])) {
+                } else if (command.getType() == Parser.CommandType.DELETE) {
+                    if (!tasks.isValidTaskNumber(command.getValue())) {
                         throw new KaykayException("Please provide an existing task number to delete.");
                     }
-                    int index = Integer.parseInt(pieces[1]) - 1;
+                    int index = Integer.parseInt(command.getValue()) - 1;
                     Task deletedTask = tasks.remove(index);
                     try {
                         storage.saveTasks(tasks);
@@ -46,15 +45,16 @@ public class Kaykay {
                         throw exception;
                     }
                     ui.showDeletedTask(deletedTask, tasks.size());
-                } else if (isCommand(input, "mark") || isCommand(input, "unmark")) {
-                    String[] pieces = input.split("\\s+");
-                    if (pieces.length != 2 || !tasks.isValidTaskNumber(pieces[1])) {
+                } else if (command.getType() == Parser.CommandType.MARK
+                        || command.getType() == Parser.CommandType.UNMARK) {
+                    if (!tasks.isValidTaskNumber(command.getValue())) {
                         throw new KaykayException("Please provide an existing task number to mark or unmark.");
                     }
-                    int index = Integer.parseInt(pieces[1]) - 1;
+                    int index = Integer.parseInt(command.getValue()) - 1;
                     Task changedTask = tasks.getTask(index);
                     boolean wasDone = changedTask.getStatusIcon().equals("X");
-                    if (pieces[0].equals("mark")) {
+                    boolean marked = command.getType() == Parser.CommandType.MARK;
+                    if (marked) {
                         changedTask.mark();
                     } else {
                         changedTask.unmark();
@@ -69,14 +69,9 @@ public class Kaykay {
                         }
                         throw exception;
                     }
-                    ui.showMarkedTask(changedTask, pieces[0].equals("mark"));
-                } else if (isCommand(input, "todo")) {
-                    String description = input.length() == "todo".length()
-                            ? "" : input.substring("todo ".length());
-                    if (description.trim().isEmpty()) {
-                        throw new KaykayException("A todo needs a description. Try: todo <description>.");
-                    }
-                    Task addedTask = new Todo(description);
+                    ui.showMarkedTask(changedTask, marked);
+                } else if (command.getType() == Parser.CommandType.TODO) {
+                    Task addedTask = new Todo(command.getValue());
                     tasks.add(addedTask);
                     try {
                         storage.saveTasks(tasks);
@@ -85,73 +80,26 @@ public class Kaykay {
                         throw exception;
                     }
                     ui.showAddedTask(addedTask, tasks.size());
-                } else if (isCommand(input, "deadline")) {
-                    String deadlineInput = input.length() == "deadline".length()
-                            ? "" : input.substring("deadline ".length());
-                    String[] deadlineParts = deadlineInput.split(" /by ", 2);
-                    if (deadlineParts.length == 2 && !deadlineParts[0].trim().isEmpty()
-                            && !deadlineParts[1].trim().isEmpty()) {
-                        String byText = deadlineParts[1].trim();
-                        try {
-                            LocalDateTime by = DateTimeParser.parse(byText);
-                            Task addedTask = new Deadline(deadlineParts[0], by);
-                            tasks.add(addedTask);
-                            try {
-                                storage.saveTasks(tasks);
-                            } catch (IOException exception) {
-                                tasks.remove(addedTask);
-                                throw exception;
-                            }
-                            ui.showAddedTask(addedTask, tasks.size());
-                        } catch (DateTimeParseException exception) {
-                            throw invalidDateTime("deadline", byText);
-                        }
-                    } else {
-                        throw new KaykayException("A deadline needs a description and a date. "
-                                + "Try: deadline <description> /by <date>.");
+                } else if (command.getType() == Parser.CommandType.DEADLINE) {
+                    Task addedTask = new Deadline(command.getValue(), command.getStart());
+                    tasks.add(addedTask);
+                    try {
+                        storage.saveTasks(tasks);
+                    } catch (IOException exception) {
+                        tasks.remove(addedTask);
+                        throw exception;
                     }
-                } else if (isCommand(input, "event")) {
-                    String eventInput = input.length() == "event".length()
-                            ? "" : input.substring("event ".length());
-                    String[] fromParts = eventInput.split(" /from ", 2);
-                    if (fromParts.length == 2 && !fromParts[0].trim().isEmpty()) {
-                        String[] toParts = fromParts[1].split(" /to ", 2);
-                        if (toParts.length == 2 && !toParts[0].trim().isEmpty()
-                                && !toParts[1].trim().isEmpty()) {
-                            String fromText = toParts[0].trim();
-                            String toText = toParts[1].trim();
-                            LocalDateTime from;
-                            LocalDateTime to;
-                            try {
-                                from = DateTimeParser.parse(fromText);
-                            } catch (DateTimeParseException exception) {
-                                throw invalidDateTime("event start", fromText);
-                            }
-                            try {
-                                to = DateTimeParser.parse(toText);
-                            } catch (DateTimeParseException exception) {
-                                throw invalidDateTime("event end", toText);
-                            }
-                            Task addedTask = new Event(fromParts[0], from, to);
-                            tasks.add(addedTask);
-                            try {
-                                storage.saveTasks(tasks);
-                            } catch (IOException exception) {
-                                tasks.remove(addedTask);
-                                throw exception;
-                            }
-                            ui.showAddedTask(addedTask, tasks.size());
-                        } else {
-                            throw new KaykayException("An event needs a description, start, and end. "
-                                    + "Try: event <description> /from <start> /to <end>.");
-                        }
-                    } else {
-                        throw new KaykayException("An event needs a description, start, and end. "
-                                + "Try: event <description> /from <start> /to <end>.");
+                    ui.showAddedTask(addedTask, tasks.size());
+                } else if (command.getType() == Parser.CommandType.EVENT) {
+                    Task addedTask = new Event(command.getValue(), command.getStart(), command.getEnd());
+                    tasks.add(addedTask);
+                    try {
+                        storage.saveTasks(tasks);
+                    } catch (IOException exception) {
+                        tasks.remove(addedTask);
+                        throw exception;
                     }
-                } else {
-                    throw new KaykayException("I don't recognise that command. Try todo, deadline, event, "
-                            + "list, delete, mark, unmark, or bye.");
+                    ui.showAddedTask(addedTask, tasks.size());
                 }
             } catch (KaykayException exception) {
                 ui.showError(exception.getMessage());
@@ -162,15 +110,4 @@ public class Kaykay {
         ui.showFarewell();
     }
 
-    /** Builds a date/time error that identifies the invalid input and its expected format. */
-    private static KaykayException invalidDateTime(String field, String value) {
-        return new KaykayException(String.format(
-                "The %s date/time '%s' is invalid. Please use %s, for example %s.",
-                field, value, DateTimeParser.INPUT_FORMAT, DateTimeParser.EXAMPLE));
-    }
-
-    /** Checks whether an input is a command or starts with that command and an argument. */
-    private static boolean isCommand(String input, String command) {
-        return input.equals(command) || input.startsWith(command + " ");
-    }
 }
