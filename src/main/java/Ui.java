@@ -1,4 +1,3 @@
-import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -54,11 +53,11 @@ public class Ui {
     }
 
     /** Shows all tasks with their one-based positions. */
-    public void showTaskList(List<Task> tasks) {
+    public void showTaskList(TaskList tasks) {
         System.out.println(SEPARATOR);
         System.out.println("Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i += 1) {
-            System.out.printf("%d. %s\n", i + 1, tasks.get(i));
+            System.out.printf("%d. %s\n", i + 1, tasks.getTask(i));
         }
         System.out.println(SEPARATOR);
     }

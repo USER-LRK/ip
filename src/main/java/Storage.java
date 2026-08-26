@@ -7,7 +7,6 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -23,10 +22,10 @@ public final class Storage {
     /**
      * Replaces the data file with the current contents of the task list.
      *
-     * @param tasks tasks to save
+     * @param tasks task list to save
      * @throws IOException if the data directory or file cannot be written
      */
-    public static void saveTasks(List<Task> tasks) throws IOException {
+    public static void saveTasks(TaskList tasks) throws IOException {
         File dataFile = new File(DATA_FILE_PATH);
         File dataDirectory = dataFile.getParentFile();
         if (!dataDirectory.exists() && !dataDirectory.mkdirs()) {
@@ -36,7 +35,8 @@ public final class Storage {
         File temporaryFile = new File(DATA_FILE_PATH + ".tmp");
         try {
             try (FileWriter writer = new FileWriter(temporaryFile)) {
-                for (Task task : tasks) {
+                for (int i = 0; i < tasks.size(); i += 1) {
+                    Task task = tasks.getTask(i);
                     writer.write(task.toFileFormat());
                     writer.write(System.lineSeparator());
                 }

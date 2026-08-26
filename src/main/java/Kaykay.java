@@ -1,7 +1,6 @@
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.io.IOException;
-import java.util.ArrayList;
 /**
  * Entry point for the Kaykay chatbot.
  */
@@ -13,12 +12,12 @@ public class Kaykay {
     */
     public static void main(String[] args) {
         Ui ui = new Ui();
-        ArrayList<Task> tasks;
+        TaskList tasks;
         boolean loadFailed = false;
         try {
-            tasks = Storage.loadTasks();
+            tasks = new TaskList(Storage.loadTasks());
         } catch (IOException exception) {
-            tasks = new ArrayList<>();
+            tasks = new TaskList();
             loadFailed = true;
         }
         ui.showWelcome();
@@ -34,7 +33,7 @@ public class Kaykay {
                     ui.showTaskList(tasks);
                 } else if (isCommand(input, "delete")) {
                     String[] pieces = input.split("\\s+");
-                    if (pieces.length != 2 || !isValidTaskNumber(pieces[1], tasks.size())) {
+                    if (pieces.length != 2 || !tasks.isValidTaskNumber(pieces[1])) {
                         throw new KaykayException("Please provide an existing task number to delete.");
                     }
                     int index = Integer.parseInt(pieces[1]) - 1;
@@ -48,11 +47,11 @@ public class Kaykay {
                     ui.showDeletedTask(deletedTask, tasks.size());
                 } else if (isCommand(input, "mark") || isCommand(input, "unmark")) {
                     String[] pieces = input.split("\\s+");
-                    if (pieces.length != 2 || !isValidTaskNumber(pieces[1], tasks.size())) {
+                    if (pieces.length != 2 || !tasks.isValidTaskNumber(pieces[1])) {
                         throw new KaykayException("Please provide an existing task number to mark or unmark.");
                     }
                     int index = Integer.parseInt(pieces[1]) - 1;
-                    Task changedTask = tasks.get(index);
+                    Task changedTask = tasks.getTask(index);
                     boolean wasDone = changedTask.getStatusIcon().equals("X");
                     if (pieces[0].equals("mark")) {
                         changedTask.mark();
@@ -167,16 +166,6 @@ public class Kaykay {
         return new KaykayException(String.format(
                 "The %s date/time '%s' is invalid. Please use %s, for example %s.",
                 field, value, DateTimeParser.INPUT_FORMAT, DateTimeParser.EXAMPLE));
-    }
-
-    /** Checks that a mark/unmark argument is an existing positive task number. */
-    private static boolean isValidTaskNumber(String value, int taskCount) {
-        try {
-            int taskNumber = Integer.parseInt(value);
-            return taskNumber >= 1 && taskNumber <= taskCount;
-        } catch (NumberFormatException exception) {
-            return false;
-        }
     }
 
     /** Checks whether an input is a command or starts with that command and an argument. */
