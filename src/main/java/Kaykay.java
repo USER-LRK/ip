@@ -2,24 +2,17 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
 /**
  * Entry point for the Kaykay chatbot.
  */
 public class Kaykay {
-    private static final String SEPARATOR = "____________________________________________________________";
-    private static final String BANNER = "#   #   ###   #   #  #   #   ###   #   #\n"
-            + "#  #   #   #   # #   #  #   #   #   # #\n"
-            + "###    #####    #    ###    #####    #\n"
-            + "#  #   #   #    #    #  #   #   #    #\n"
-            + "#   #  #   #    #    #   #  #   #    #";
-
     /**
      * Greets the user, repeats user input, and exits when user types bye
      *
     * @param args command-line arguments, which are not used
-     */
+    */
     public static void main(String[] args) {
+        Ui ui = new Ui();
         ArrayList<Task> tasks;
         boolean loadFailed = false;
         try {
@@ -28,28 +21,17 @@ public class Kaykay {
             tasks = new ArrayList<>();
             loadFailed = true;
         }
-        System.out.println(SEPARATOR);
-        System.out.println(BANNER);
-        System.out.println(SEPARATOR);
-        System.out.println("Hello! I'm kaykay.");
-        System.out.println("What can I do for you?");
-        System.out.println(SEPARATOR);
+        ui.showWelcome();
         if (loadFailed) {
-            printError("I couldn't load your tasks. Please check the data file.");
+            ui.showLoadingError();
         }
-        Scanner scanner = new Scanner(System.in);
-        while (scanner.hasNextLine()) {
-            String input = scanner.nextLine().trim();
+        while (ui.hasNextLine()) {
+            String input = ui.readCommand();
             try {
                 if (input.equals("bye")) {
                     break;
                 } else if (input.equals("list")) {
-                    System.out.println(SEPARATOR);
-                    System.out.println("Here are the tasks in your list:");
-                    for (int i = 0; i < tasks.size(); i += 1) {
-                        System.out.printf("%d. %s\n", i + 1, tasks.get(i));
-                    }
-                    System.out.println(SEPARATOR);
+                    ui.showTaskList(tasks);
                 } else if (isCommand(input, "delete")) {
                     String[] pieces = input.split("\\s+");
                     if (pieces.length != 2 || !isValidTaskNumber(pieces[1], tasks.size())) {
@@ -63,7 +45,7 @@ public class Kaykay {
                         tasks.add(index, deletedTask);
                         throw exception;
                     }
-                    printDeletedTask(deletedTask, tasks.size());
+                    ui.showDeletedTask(deletedTask, tasks.size());
                 } else if (isCommand(input, "mark") || isCommand(input, "unmark")) {
                     String[] pieces = input.split("\\s+");
                     if (pieces.length != 2 || !isValidTaskNumber(pieces[1], tasks.size())) {
@@ -87,14 +69,7 @@ public class Kaykay {
                         }
                         throw exception;
                     }
-                    System.out.println(SEPARATOR);
-                    if (pieces[0].equals("mark")) {
-                        System.out.println("Nice! I've marked this task as done:");
-                    } else {
-                        System.out.println("OK, I've marked this task as not done yet:");
-                    }
-                    System.out.println(changedTask);
-                    System.out.println(SEPARATOR);
+                    ui.showMarkedTask(changedTask, pieces[0].equals("mark"));
                 } else if (isCommand(input, "todo")) {
                     String description = input.length() == "todo".length()
                             ? "" : input.substring("todo ".length());
@@ -109,7 +84,7 @@ public class Kaykay {
                         tasks.remove(addedTask);
                         throw exception;
                     }
-                    printAddedTask(addedTask, tasks.size());
+                    ui.showAddedTask(addedTask, tasks.size());
                 } else if (isCommand(input, "deadline")) {
                     String deadlineInput = input.length() == "deadline".length()
                             ? "" : input.substring("deadline ".length());
@@ -127,7 +102,7 @@ public class Kaykay {
                                 tasks.remove(addedTask);
                                 throw exception;
                             }
-                            printAddedTask(addedTask, tasks.size());
+                            ui.showAddedTask(addedTask, tasks.size());
                         } catch (DateTimeParseException exception) {
                             throw invalidDateTime("deadline", byText);
                         }
@@ -165,7 +140,7 @@ public class Kaykay {
                                 tasks.remove(addedTask);
                                 throw exception;
                             }
-                            printAddedTask(addedTask, tasks.size());
+                            ui.showAddedTask(addedTask, tasks.size());
                         } else {
                             throw new KaykayException("An event needs a description, start, and end. "
                                     + "Try: event <description> /from <start> /to <end>.");
@@ -179,14 +154,12 @@ public class Kaykay {
                             + "list, delete, mark, unmark, or bye.");
                 }
             } catch (KaykayException exception) {
-                printError(exception.getMessage());
+                ui.showError(exception.getMessage());
             } catch (IOException exception) {
-                printError("I couldn't save your tasks. Please check the data folder.");
+                ui.showError("I couldn't save your tasks. Please check the data folder.");
             }
         }
-        System.out.println(SEPARATOR);
-        System.out.println("Bye. Hope to see you again soon!");
-        System.out.println(SEPARATOR);
+        ui.showFarewell();
     }
 
     /** Builds a date/time error that identifies the invalid input and its expected format. */
@@ -194,31 +167,6 @@ public class Kaykay {
         return new KaykayException(String.format(
                 "The %s date/time '%s' is invalid. Please use %s, for example %s.",
                 field, value, DateTimeParser.INPUT_FORMAT, DateTimeParser.EXAMPLE));
-    }
-
-    /** Prints the standard confirmation after adding a task. */
-    private static void printAddedTask(Task task, int taskCount) {
-        System.out.println(SEPARATOR);
-        System.out.println("Got it. I've added this task:");
-        System.out.println(task);
-        System.out.printf("Now you have %d tasks in the list.\n", taskCount);
-        System.out.println(SEPARATOR);
-    }
-
-    /** Prints the standard confirmation after deleting a task. */
-    private static void printDeletedTask(Task task, int taskCount) {
-        System.out.println(SEPARATOR);
-        System.out.println("Noted. I've removed this task:");
-        System.out.println("  " + task);
-        System.out.printf("Now you have %d tasks in the list.\n", taskCount);
-        System.out.println(SEPARATOR);
-    }
-
-    /** Prints an error surrounded by the chatbot's standard separator. */
-    private static void printError(String message) {
-        System.out.println(SEPARATOR);
-        System.out.println("OOPS! " + message);
-        System.out.println(SEPARATOR);
     }
 
     /** Checks that a mark/unmark argument is an existing positive task number. */
