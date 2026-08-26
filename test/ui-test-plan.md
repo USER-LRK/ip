@@ -10,8 +10,8 @@ Commands / console input:
 
 ```
 todo borrow book
-deadline return book /by Sunday
-event project meeting /from Mon 2pm /to 4pm
+deadline return book /by 25 12 2026 18:30
+event project meeting /from 26 12 2026 14:00 /to 26 12 2026 16:00
 list
 bye
 ```
@@ -36,19 +36,19 @@ Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-[D][ ] return book (by: Sunday)
+[D][ ] return book (by: 25 12 2026 18:30)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-[E][ ] project meeting (from: Mon 2pm to: 4pm)
+[E][ ] project meeting (from: 26 12 2026 14:00 to: 26 12 2026 16:00)
 Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
 1. [T][ ] borrow book
-2. [D][ ] return book (by: Sunday)
-3. [E][ ] project meeting (from: Mon 2pm to: 4pm)
+2. [D][ ] return book (by: 25 12 2026 18:30)
+3. [E][ ] project meeting (from: 26 12 2026 14:00 to: 26 12 2026 16:00)
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!
@@ -63,7 +63,7 @@ Commands / console input:
 
 ```
 todo revise notes
-deadline submit report /by Friday
+deadline submit report /by 27 12 2026 09:00
 mark 1
 unmark 2
 list
@@ -90,7 +90,7 @@ Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-[D][ ] submit report (by: Friday)
+[D][ ] submit report (by: 27 12 2026 09:00)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
@@ -99,27 +99,31 @@ Nice! I've marked this task as done:
 ____________________________________________________________
 ____________________________________________________________
 OK, I've marked this task as not done yet:
-[D][ ] submit report (by: Friday)
+[D][ ] submit report (by: 27 12 2026 09:00)
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
 1. [T][X] revise notes
-2. [D][ ] submit report (by: Friday)
+2. [D][ ] submit report (by: 27 12 2026 09:00)
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
 
-## Case 3: Preserve date/time strings exactly
+## Case 3: Parse and display standard date/time values
 
-**Aim:** Verify dates and times are stored and displayed as user-provided strings without date conversion.
+**Aim:** Verify dates and times are accepted and displayed in the standard format.
 
 Commands / console input:
 
 ```
-deadline do homework /by no idea :-p
-event orientation week /from 4/10/2019 /to 11/10/2019
+deadline do homework /by 28 12 2026 23:45
+event orientation week /from 29 12 2026 08:00 /to 29 12 2026 10:30
+deadline reject random /by Friday
+event reject random /from no idea /to no idea
+deadline reject invalid date /by 31 02 2026 10:00
+event reject invalid time /from 30 12 2026 10:00 /to 30 12 2026 25:00
 list
 bye
 ```
@@ -139,18 +143,30 @@ What can I do for you?
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-[D][ ] do homework (by: no idea :-p)
+[D][ ] do homework (by: 28 12 2026 23:45)
 Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-[E][ ] orientation week (from: 4/10/2019 to: 11/10/2019)
+[E][ ] orientation week (from: 29 12 2026 08:00 to: 29 12 2026 10:30)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
+OOPS! The deadline date/time 'Friday' is invalid. Please use dd MM yyyy HH:mm, for example 01 01 2026 18:30.
+____________________________________________________________
+____________________________________________________________
+OOPS! The event start date/time 'no idea' is invalid. Please use dd MM yyyy HH:mm, for example 01 01 2026 18:30.
+____________________________________________________________
+____________________________________________________________
+OOPS! The deadline date/time '31 02 2026 10:00' is invalid. Please use dd MM yyyy HH:mm, for example 01 01 2026 18:30.
+____________________________________________________________
+____________________________________________________________
+OOPS! The event end date/time '30 12 2026 25:00' is invalid. Please use dd MM yyyy HH:mm, for example 01 01 2026 18:30.
+____________________________________________________________
+____________________________________________________________
 Here are the tasks in your list:
-1. [D][ ] do homework (by: no idea :-p)
-2. [E][ ] orientation week (from: 4/10/2019 to: 11/10/2019)
+1. [D][ ] do homework (by: 28 12 2026 23:45)
+2. [E][ ] orientation week (from: 29 12 2026 08:00 to: 29 12 2026 10:30)
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!
@@ -206,10 +222,10 @@ Commands / console input:
 ```
 todo keep this
 blah
-deadline finish report /by Friday
+deadline finish report /by 30 12 2026 17:00
 deadline missing
-event meeting /from 10am /to 11am
-event missing /from 10am
+event meeting /from 31 12 2026 10:00 /to 31 12 2026 11:00
+event missing /from 31 12 2026 10:00
 mark 99
 list
 bye
@@ -238,7 +254,7 @@ OOPS! I don't recognise that command. Try todo, deadline, event, list, delete, m
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-[D][ ] finish report (by: Friday)
+[D][ ] finish report (by: 30 12 2026 17:00)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
@@ -246,7 +262,7 @@ OOPS! A deadline needs a description and a date. Try: deadline <description> /by
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-[E][ ] meeting (from: 10am to: 11am)
+[E][ ] meeting (from: 31 12 2026 10:00 to: 31 12 2026 11:00)
 Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
@@ -258,8 +274,8 @@ ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
 1. [T][ ] keep this
-2. [D][ ] finish report (by: Friday)
-3. [E][ ] meeting (from: 10am to: 11am)
+2. [D][ ] finish report (by: 30 12 2026 17:00)
+3. [E][ ] meeting (from: 31 12 2026 10:00 to: 31 12 2026 11:00)
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!
@@ -274,8 +290,8 @@ Commands / console input:
 
 ```
 todo first task
-deadline second task /by Friday
-event third task /from 10am /to 11am
+deadline second task /by 01 01 2027 12:00
+event third task /from 02 01 2027 10:00 /to 02 01 2027 11:00
 delete 2
 delete 9
 delete nope
@@ -303,17 +319,17 @@ Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-[D][ ] second task (by: Friday)
+[D][ ] second task (by: 01 01 2027 12:00)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-[E][ ] third task (from: 10am to: 11am)
+[E][ ] third task (from: 02 01 2027 10:00 to: 02 01 2027 11:00)
 Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Noted. I've removed this task:
-  [D][ ] second task (by: Friday)
+  [D][ ] second task (by: 01 01 2027 12:00)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
@@ -325,7 +341,7 @@ ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
 1. [T][ ] first task
-2. [E][ ] third task (from: 10am to: 11am)
+2. [E][ ] third task (from: 02 01 2027 10:00 to: 02 01 2027 11:00)
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!
@@ -573,6 +589,89 @@ What can I do for you?
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## Case 11: Save and reload typed deadline and event date/times
+
+**Aim:** Verify that deadline and event `LocalDateTime` values survive saving and restarting.
+
+Commands / console input:
+
+```
+deadline persist deadline /by 25 12 2026 18:30
+event persist event /from 26 12 2026 09:00 /to 26 12 2026 10:00
+list
+bye
+```
+
+Expected output:
+
+```
+____________________________________________________________
+#   #   ###   #   #  #   #   ###   #   #
+#  #   #   #   # #   #  #   #   #   # #
+###    #####    #    ###    #####    #
+#  #   #   #    #    #  #   #   #    #
+#   #  #   #    #    #   #  #   #    #
+____________________________________________________________
+Hello! I'm kaykay.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+[D][ ] persist deadline (by: 25 12 2026 18:30)
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+[E][ ] persist event (from: 26 12 2026 09:00 to: 26 12 2026 10:00)
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1. [D][ ] persist deadline (by: 25 12 2026 18:30)
+2. [E][ ] persist event (from: 26 12 2026 09:00 to: 26 12 2026 10:00)
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+Expected file contents:
+
+```
+D | 0 | persist deadline | 25 12 2026 18:30
+E | 0 | persist event | 26 12 2026 09:00 | 26 12 2026 10:00
+```
+
+Restart console input:
+
+```
+list
+bye
+```
+
+Expected restart output:
+
+```
+____________________________________________________________
+#   #   ###   #   #  #   #   ###   #   #
+#  #   #   #   # #   #  #   #   #   # #
+###    #####    #    ###    #####    #
+#  #   #   #    #    #  #   #   #    #
+#   #  #   #    #    #   #  #   #    #
+____________________________________________________________
+Hello! I'm kaykay.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1. [D][ ] persist deadline (by: 25 12 2026 18:30)
+2. [E][ ] persist event (from: 26 12 2026 09:00 to: 26 12 2026 10:00)
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!

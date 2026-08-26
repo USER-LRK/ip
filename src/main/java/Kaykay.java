@@ -1,3 +1,5 @@
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -114,15 +116,21 @@ public class Kaykay {
                     String[] deadlineParts = deadlineInput.split(" /by ", 2);
                     if (deadlineParts.length == 2 && !deadlineParts[0].trim().isEmpty()
                             && !deadlineParts[1].trim().isEmpty()) {
-                        Task addedTask = new Deadline(deadlineParts[0], deadlineParts[1]);
-                        tasks.add(addedTask);
+                        String byText = deadlineParts[1].trim();
                         try {
-                            Storage.saveTasks(tasks);
-                        } catch (IOException exception) {
-                            tasks.remove(addedTask);
-                            throw exception;
+                            LocalDateTime by = DateTimeParser.parse(byText);
+                            Task addedTask = new Deadline(deadlineParts[0], by);
+                            tasks.add(addedTask);
+                            try {
+                                Storage.saveTasks(tasks);
+                            } catch (IOException exception) {
+                                tasks.remove(addedTask);
+                                throw exception;
+                            }
+                            printAddedTask(addedTask, tasks.size());
+                        } catch (DateTimeParseException exception) {
+                            throw invalidDateTime("deadline", byText);
                         }
-                        printAddedTask(addedTask, tasks.size());
                     } else {
                         throw new KaykayException("A deadline needs a description and a date. "
                                 + "Try: deadline <description> /by <date>.");
@@ -135,7 +143,21 @@ public class Kaykay {
                         String[] toParts = fromParts[1].split(" /to ", 2);
                         if (toParts.length == 2 && !toParts[0].trim().isEmpty()
                                 && !toParts[1].trim().isEmpty()) {
-                            Task addedTask = new Event(fromParts[0], toParts[0], toParts[1]);
+                            String fromText = toParts[0].trim();
+                            String toText = toParts[1].trim();
+                            LocalDateTime from;
+                            LocalDateTime to;
+                            try {
+                                from = DateTimeParser.parse(fromText);
+                            } catch (DateTimeParseException exception) {
+                                throw invalidDateTime("event start", fromText);
+                            }
+                            try {
+                                to = DateTimeParser.parse(toText);
+                            } catch (DateTimeParseException exception) {
+                                throw invalidDateTime("event end", toText);
+                            }
+                            Task addedTask = new Event(fromParts[0], from, to);
                             tasks.add(addedTask);
                             try {
                                 Storage.saveTasks(tasks);
@@ -165,6 +187,13 @@ public class Kaykay {
         System.out.println(SEPARATOR);
         System.out.println("Bye. Hope to see you again soon!");
         System.out.println(SEPARATOR);
+    }
+
+    /** Builds a date/time error that identifies the invalid input and its expected format. */
+    private static KaykayException invalidDateTime(String field, String value) {
+        return new KaykayException(String.format(
+                "The %s date/time '%s' is invalid. Please use %s, for example %s.",
+                field, value, DateTimeParser.INPUT_FORMAT, DateTimeParser.EXAMPLE));
     }
 
     /** Prints the standard confirmation after adding a task. */
