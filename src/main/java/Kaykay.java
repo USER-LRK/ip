@@ -12,10 +12,11 @@ public class Kaykay {
     */
     public static void main(String[] args) {
         Ui ui = new Ui();
+        Storage storage = new Storage("data/kaykay.txt");
         TaskList tasks;
         boolean loadFailed = false;
         try {
-            tasks = new TaskList(Storage.loadTasks());
+            tasks = new TaskList(storage.loadTasks());
         } catch (IOException exception) {
             tasks = new TaskList();
             loadFailed = true;
@@ -39,7 +40,7 @@ public class Kaykay {
                     int index = Integer.parseInt(pieces[1]) - 1;
                     Task deletedTask = tasks.remove(index);
                     try {
-                        Storage.saveTasks(tasks);
+                        storage.saveTasks(tasks);
                     } catch (IOException exception) {
                         tasks.add(index, deletedTask);
                         throw exception;
@@ -59,7 +60,7 @@ public class Kaykay {
                         changedTask.unmark();
                     }
                     try {
-                        Storage.saveTasks(tasks);
+                        storage.saveTasks(tasks);
                     } catch (IOException exception) {
                         if (wasDone) {
                             changedTask.mark();
@@ -78,7 +79,7 @@ public class Kaykay {
                     Task addedTask = new Todo(description);
                     tasks.add(addedTask);
                     try {
-                        Storage.saveTasks(tasks);
+                        storage.saveTasks(tasks);
                     } catch (IOException exception) {
                         tasks.remove(addedTask);
                         throw exception;
@@ -96,7 +97,7 @@ public class Kaykay {
                             Task addedTask = new Deadline(deadlineParts[0], by);
                             tasks.add(addedTask);
                             try {
-                                Storage.saveTasks(tasks);
+                                storage.saveTasks(tasks);
                             } catch (IOException exception) {
                                 tasks.remove(addedTask);
                                 throw exception;
@@ -134,7 +135,7 @@ public class Kaykay {
                             Task addedTask = new Event(fromParts[0], from, to);
                             tasks.add(addedTask);
                             try {
-                                Storage.saveTasks(tasks);
+                                storage.saveTasks(tasks);
                             } catch (IOException exception) {
                                 tasks.remove(addedTask);
                                 throw exception;

@@ -13,10 +13,16 @@ import java.util.Scanner;
  * Saves and loads the current task list from the chatbot's data file.
  */
 public final class Storage {
-    private static final String DATA_FILE_PATH = "data/kaykay.txt";
+    /** The file used to persist tasks for this storage instance. */
+    private final File dataFile;
 
-    private Storage() {
-        // Prevent instantiation of this utility class.
+    /**
+     * Creates a storage component for a specific data file.
+     *
+     * @param filePath path of the file used to load and save tasks
+     */
+    public Storage(String filePath) {
+        dataFile = new File(filePath);
     }
 
     /**
@@ -25,14 +31,13 @@ public final class Storage {
      * @param tasks task list to save
      * @throws IOException if the data directory or file cannot be written
      */
-    public static void saveTasks(TaskList tasks) throws IOException {
-        File dataFile = new File(DATA_FILE_PATH);
+    public void saveTasks(TaskList tasks) throws IOException {
         File dataDirectory = dataFile.getParentFile();
-        if (!dataDirectory.exists() && !dataDirectory.mkdirs()) {
+        if (dataDirectory != null && !dataDirectory.exists() && !dataDirectory.mkdirs()) {
             throw new IOException("Could not create the data directory.");
         }
 
-        File temporaryFile = new File(DATA_FILE_PATH + ".tmp");
+        File temporaryFile = new File(dataFile.getPath() + ".tmp");
         try {
             try (FileWriter writer = new FileWriter(temporaryFile)) {
                 for (int i = 0; i < tasks.size(); i += 1) {
@@ -58,8 +63,7 @@ public final class Storage {
      * @return tasks stored in the data file
      * @throws IOException if the data file contains an invalid task or cannot be read
      */
-    public static ArrayList<Task> loadTasks() throws IOException {
-        File dataFile = new File(DATA_FILE_PATH);
+    public ArrayList<Task> loadTasks() throws IOException {
         ArrayList<Task> tasks = new ArrayList<>();
         if (!dataFile.exists()) {
             return tasks;
