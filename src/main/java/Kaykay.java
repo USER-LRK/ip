@@ -1,6 +1,7 @@
 import java.io.IOException;
+
 /**
- * Entry point for the Kaykay chatbot.
+ * Entry point and coordinator for the Kaykay chatbot.
  */
 public class Kaykay {
     /** Provides console input and output. */
@@ -49,79 +50,10 @@ public class Kaykay {
         while (ui.hasNextLine()) {
             String input = ui.readCommand();
             try {
-                Parser.Command command = parser.parse(input);
-                if (command.getType() == Parser.CommandType.BYE) {
+                Command command = parser.parse(input);
+                command.execute(tasks, ui, storage);
+                if (command.isExit()) {
                     break;
-                } else if (command.getType() == Parser.CommandType.LIST) {
-                    ui.showTaskList(tasks);
-                } else if (command.getType() == Parser.CommandType.DELETE) {
-                    if (!tasks.isValidTaskNumber(command.getValue())) {
-                        throw new KaykayException("Please provide an existing task number to delete.");
-                    }
-                    int index = Integer.parseInt(command.getValue()) - 1;
-                    Task deletedTask = tasks.remove(index);
-                    try {
-                        storage.saveTasks(tasks);
-                    } catch (IOException exception) {
-                        tasks.add(index, deletedTask);
-                        throw exception;
-                    }
-                    ui.showDeletedTask(deletedTask, tasks.size());
-                } else if (command.getType() == Parser.CommandType.MARK
-                        || command.getType() == Parser.CommandType.UNMARK) {
-                    if (!tasks.isValidTaskNumber(command.getValue())) {
-                        throw new KaykayException("Please provide an existing task number to mark or unmark.");
-                    }
-                    int index = Integer.parseInt(command.getValue()) - 1;
-                    Task changedTask = tasks.getTask(index);
-                    boolean wasDone = changedTask.getStatusIcon().equals("X");
-                    boolean marked = command.getType() == Parser.CommandType.MARK;
-                    if (marked) {
-                        changedTask.mark();
-                    } else {
-                        changedTask.unmark();
-                    }
-                    try {
-                        storage.saveTasks(tasks);
-                    } catch (IOException exception) {
-                        if (wasDone) {
-                            changedTask.mark();
-                        } else {
-                            changedTask.unmark();
-                        }
-                        throw exception;
-                    }
-                    ui.showMarkedTask(changedTask, marked);
-                } else if (command.getType() == Parser.CommandType.TODO) {
-                    Task addedTask = new Todo(command.getValue());
-                    tasks.add(addedTask);
-                    try {
-                        storage.saveTasks(tasks);
-                    } catch (IOException exception) {
-                        tasks.remove(addedTask);
-                        throw exception;
-                    }
-                    ui.showAddedTask(addedTask, tasks.size());
-                } else if (command.getType() == Parser.CommandType.DEADLINE) {
-                    Task addedTask = new Deadline(command.getValue(), command.getStart());
-                    tasks.add(addedTask);
-                    try {
-                        storage.saveTasks(tasks);
-                    } catch (IOException exception) {
-                        tasks.remove(addedTask);
-                        throw exception;
-                    }
-                    ui.showAddedTask(addedTask, tasks.size());
-                } else if (command.getType() == Parser.CommandType.EVENT) {
-                    Task addedTask = new Event(command.getValue(), command.getStart(), command.getEnd());
-                    tasks.add(addedTask);
-                    try {
-                        storage.saveTasks(tasks);
-                    } catch (IOException exception) {
-                        tasks.remove(addedTask);
-                        throw exception;
-                    }
-                    ui.showAddedTask(addedTask, tasks.size());
                 }
             } catch (KaykayException exception) {
                 ui.showError(exception.getMessage());

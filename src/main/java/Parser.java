@@ -2,86 +2,30 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 
 /**
- * Interprets user input as validated Kaykay commands.
+ * Interprets user input as executable Kaykay commands.
  */
 public final class Parser {
-    /** The command kinds understood by Kaykay. */
-    public enum CommandType {
-        BYE,
-        LIST,
-        DELETE,
-        MARK,
-        UNMARK,
-        TODO,
-        DEADLINE,
-        EVENT
-    }
-
-    /**
-     * Immutable result of parsing one user command.
-     */
-    public static final class Command {
-        /** The kind of command that was parsed. */
-        private final CommandType type;
-
-        /** Text associated with the command, such as a description or task number. */
-        private final String value;
-
-        /** First date/time associated with the command, if any. */
-        private final LocalDateTime start;
-
-        /** Second date/time associated with the command, if any. */
-        private final LocalDateTime end;
-
-        private Command(CommandType type, String value, LocalDateTime start, LocalDateTime end) {
-            this.type = type;
-            this.value = value;
-            this.start = start;
-            this.end = end;
-        }
-
-        /** @return the parsed command kind */
-        public CommandType getType() {
-            return type;
-        }
-
-        /** @return the command's text value, if one was supplied */
-        public String getValue() {
-            return value;
-        }
-
-        /** @return the command's first date/time, if one was supplied */
-        public LocalDateTime getStart() {
-            return start;
-        }
-
-        /** @return the command's second date/time, if one was supplied */
-        public LocalDateTime getEnd() {
-            return end;
-        }
-    }
-
     /**
      * Parses a complete user input line.
      *
      * @param input user input to interpret
-     * @return the parsed command
+     * @return an executable command
      * @throws KaykayException if the input is not a valid Kaykay command
      */
     public Command parse(String input) throws KaykayException {
         if (input.equals("bye")) {
-            return new Command(CommandType.BYE, null, null, null);
+            return new ExitCommand();
         } else if (input.equals("list")) {
-            return new Command(CommandType.LIST, null, null, null);
+            return new ListCommand();
         } else if (isCommand(input, "delete")) {
-            return parseTaskNumber(input, CommandType.DELETE,
-                    "Please provide an existing task number to delete.");
+            return new DeleteCommand(parseTaskNumber(input,
+                    "Please provide an existing task number to delete."));
         } else if (isCommand(input, "mark")) {
-            return parseTaskNumber(input, CommandType.MARK,
-                    "Please provide an existing task number to mark or unmark.");
+            return new MarkCommand(parseTaskNumber(input,
+                    "Please provide an existing task number to mark or unmark."));
         } else if (isCommand(input, "unmark")) {
-            return parseTaskNumber(input, CommandType.UNMARK,
-                    "Please provide an existing task number to mark or unmark.");
+            return new UnmarkCommand(parseTaskNumber(input,
+                    "Please provide an existing task number to mark or unmark."));
         } else if (isCommand(input, "todo")) {
             return parseTodo(input);
         } else if (isCommand(input, "deadline")) {
@@ -99,10 +43,10 @@ public final class Parser {
         if (description.trim().isEmpty()) {
             throw new KaykayException("A todo needs a description. Try: todo <description>.");
         }
-        return new Command(CommandType.TODO, description, null, null);
+        return new TodoCommand(description);
     }
 
-    /** Parses a deadline command and converts its date/time text. */
+    /** Parses a deadline command and converts its date/time. */
     private Command parseDeadline(String input) throws KaykayException {
         String deadlineInput = argumentAfter(input, "deadline");
         String[] deadlineParts = deadlineInput.split(" /by ", 2);
@@ -114,14 +58,14 @@ public final class Parser {
 
         String byText = deadlineParts[1].trim();
         try {
-            return new Command(CommandType.DEADLINE, deadlineParts[0],
-                    DateTimeParser.parse(byText), null);
+            LocalDateTime by = DateTimeParser.parse(byText);
+            return new DeadlineCommand(deadlineParts[0], by);
         } catch (DateTimeParseException exception) {
             throw invalidDateTime("deadline", byText);
         }
     }
 
-    /** Parses an event command and converts its start and end date/time text. */
+    /** Parses an event command and converts its start and end date/times. */
     private Command parseEvent(String input) throws KaykayException {
         String eventInput = argumentAfter(input, "event");
         String[] fromParts = eventInput.split(" /from ", 2);
@@ -148,20 +92,19 @@ public final class Parser {
         } catch (DateTimeParseException exception) {
             throw invalidDateTime("event end", toText);
         }
-        return new Command(CommandType.EVENT, fromParts[0], from, to);
+        return new EventCommand(fromParts[0], from, to);
     }
 
     /** Parses the numeric argument shared by delete, mark, and unmark. */
-    private Command parseTaskNumber(String input, CommandType type, String errorMessage)
-            throws KaykayException {
+    private String parseTaskNumber(String input, String errorMessage) throws KaykayException {
         String[] pieces = input.split("\\s+");
         if (pieces.length != 2 || !isInteger(pieces[1])) {
             throw new KaykayException(errorMessage);
         }
-        return new Command(type, pieces[1], null, null);
+        return pieces[1];
     }
 
-    /** Returns the text after a command name while preserving the existing spacing behavior. */
+    /** Returns the text after a command name while preserving existing spacing behavior. */
     private static String argumentAfter(String input, String command) {
         return input.length() == command.length() ? "" : input.substring(command.length() + 1);
     }
