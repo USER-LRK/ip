@@ -20,3 +20,7 @@ _temp/
 text-ui-test/EXPECTED-UNIX.TXT
 
 .codex/
+
+# Kaykay task data created at runtime
+/data/kaykay.txt
+/data/kaykay.txt.tmp
