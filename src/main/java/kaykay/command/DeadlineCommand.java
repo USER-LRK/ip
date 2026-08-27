@@ -1,4 +1,9 @@
+package kaykay.command;
+
 import java.time.LocalDateTime;
+
+import kaykay.model.Deadline;
+import kaykay.model.Task;
 
 /**
  * Adds a deadline task.

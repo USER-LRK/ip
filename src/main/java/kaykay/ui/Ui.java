@@ -1,4 +1,9 @@
+package kaykay.ui;
+
 import java.util.Scanner;
+
+import kaykay.model.Task;
+import kaykay.model.TaskList;
 
 /**
  * Handles all console input and output for the Kaykay chatbot.

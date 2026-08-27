@@ -1,4 +1,13 @@
+package kaykay;
+
 import java.io.IOException;
+
+import kaykay.command.Command;
+import kaykay.exception.KaykayException;
+import kaykay.model.TaskList;
+import kaykay.parser.Parser;
+import kaykay.storage.Storage;
+import kaykay.ui.Ui;
 
 /**
  * Entry point and coordinator for the Kaykay chatbot.

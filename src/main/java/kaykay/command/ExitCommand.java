@@ -1,4 +1,10 @@
+package kaykay.command;
+
 import java.io.IOException;
+
+import kaykay.model.TaskList;
+import kaykay.storage.Storage;
+import kaykay.ui.Ui;
 
 /**
  * Ends the current Kaykay session.

@@ -1,3 +1,5 @@
+package kaykay.storage;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -6,6 +8,13 @@ import java.nio.file.StandardCopyOption;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import kaykay.model.Deadline;
+import kaykay.model.Event;
+import kaykay.model.Task;
+import kaykay.model.TaskList;
+import kaykay.model.Todo;
+import kaykay.parser.DateTimeParser;
 
 /**
  * Saves and loads the current task list from the chatbot's data file.
@@ -82,7 +91,7 @@ public final class Storage {
      * @param value text to escape
      * @return escaped text
      */
-    static String escape(String value) {
+    public static String escape(String value) {
         return value.replace("\\", "\\\\")
                 .replace("|", "\\|")
                 .replace("\r", "\\r")

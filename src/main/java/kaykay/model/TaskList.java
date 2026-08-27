@@ -1,3 +1,5 @@
+package kaykay.model;
+
 import java.util.ArrayList;
 import java.util.List;
 
