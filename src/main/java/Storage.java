@@ -1,52 +1,50 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.AtomicMoveNotSupportedException;
-import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 /**
  * Saves and loads the current task list from the chatbot's data file.
  */
 public final class Storage {
-    private static final String DATA_FILE_PATH = "data/kaykay.txt";
+    /** The file used to persist tasks for this storage instance. */
+    private final File dataFile;
 
-    private Storage() {
-        // Prevent instantiation of this utility class.
+    /**
+     * Creates a storage component for a specific data file.
+     *
+     * @param filePath path of the file used to load and save tasks
+     */
+    public Storage(String filePath) {
+        dataFile = new File(filePath);
     }
 
     /**
      * Replaces the data file with the current contents of the task list.
      *
-     * @param tasks tasks to save
+     * @param tasks task list to save
      * @throws IOException if the data directory or file cannot be written
      */
-    public static void saveTasks(List<Task> tasks) throws IOException {
-        File dataFile = new File(DATA_FILE_PATH);
+    public void saveTasks(TaskList tasks) throws IOException {
         File dataDirectory = dataFile.getParentFile();
-        if (!dataDirectory.exists() && !dataDirectory.mkdirs()) {
+        if (dataDirectory != null && !dataDirectory.exists() && !dataDirectory.mkdirs()) {
             throw new IOException("Could not create the data directory.");
         }
 
-        File temporaryFile = new File(DATA_FILE_PATH + ".tmp");
+        File temporaryFile = new File(dataFile.getPath() + ".tmp");
         try {
             try (FileWriter writer = new FileWriter(temporaryFile)) {
-                for (Task task : tasks) {
+                for (int i = 0; i < tasks.size(); i += 1) {
+                    Task task = tasks.getTask(i);
                     writer.write(task.toFileFormat());
                     writer.write(System.lineSeparator());
                 }
             }
-            try {
-                Files.move(temporaryFile.toPath(), dataFile.toPath(),
-                        StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
-            } catch (AtomicMoveNotSupportedException | FileAlreadyExistsException exception) {
-                Files.move(temporaryFile.toPath(), dataFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            }
+            Files.move(temporaryFile.toPath(), dataFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } finally {
             Files.deleteIfExists(temporaryFile.toPath());
         }
@@ -58,8 +56,7 @@ public final class Storage {
      * @return tasks stored in the data file
      * @throws IOException if the data file contains an invalid task or cannot be read
      */
-    public static ArrayList<Task> loadTasks() throws IOException {
-        File dataFile = new File(DATA_FILE_PATH);
+    public ArrayList<Task> loadTasks() throws IOException {
         ArrayList<Task> tasks = new ArrayList<>();
         if (!dataFile.exists()) {
             return tasks;
