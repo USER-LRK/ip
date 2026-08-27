@@ -1,8 +1,6 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.AtomicMoveNotSupportedException;
-import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.time.format.DateTimeParseException;
@@ -46,12 +44,7 @@ public final class Storage {
                     writer.write(System.lineSeparator());
                 }
             }
-            try {
-                Files.move(temporaryFile.toPath(), dataFile.toPath(),
-                        StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
-            } catch (AtomicMoveNotSupportedException | FileAlreadyExistsException exception) {
-                Files.move(temporaryFile.toPath(), dataFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            }
+            Files.move(temporaryFile.toPath(), dataFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } finally {
             Files.deleteIfExists(temporaryFile.toPath());
         }
