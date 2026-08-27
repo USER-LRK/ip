@@ -1,3 +1,7 @@
+package kaykay.model;
+
+import kaykay.storage.Storage;
+
 /**
  * Represents a task that can be marked as done or not done.
  *

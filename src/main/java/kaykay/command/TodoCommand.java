@@ -1,3 +1,8 @@
+package kaykay.command;
+
+import kaykay.model.Task;
+import kaykay.model.Todo;
+
 /**
  * Adds a todo task.
  */

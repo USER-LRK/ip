@@ -1,3 +1,5 @@
+package kaykay.exception;
+
 /**
  * Represents an expected input error reported by the Kaykay chatbot.
  */

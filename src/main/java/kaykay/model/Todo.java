@@ -1,3 +1,7 @@
+package kaykay.model;
+
+import kaykay.storage.Storage;
+
 /**
  * A task without an associated date or time.
  *
