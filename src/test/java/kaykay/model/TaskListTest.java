@@ -47,4 +47,18 @@ class TaskListTest {
         assertFalse(tasks.isValidTaskNumber("one"));
         assertFalse(tasks.isValidTaskNumber(null));
     }
+
+    /** Checks case-insensitive keyword matching and preservation of task order. */
+    @Test
+    void findTasks_keyword_returnsMatchingTasksInOrder() {
+        Task first = new Todo("Read the BOOK");
+        Task second = new Todo("buy milk");
+        Task third = new Todo("return book");
+        TaskList tasks = new TaskList(List.of(first, second, third));
+
+        List<Task> matchingTasks = tasks.findTasks("book");
+
+        assertEquals(List.of(first, third), matchingTasks);
+        assertEquals(List.of(), tasks.findTasks("missing"));
+    }
 }

@@ -53,10 +53,19 @@ accepted. Kaykay will identify the invalid input and show the required format.
 
 ## Managing tasks
 
+To find tasks whose descriptions contain a keyword, use `find`:
+
+```text
+find book
+```
+
+Searches ignore letter case and display matching tasks in their original order.
+
 Use the following commands:
 
 ```text
 list       Show all tasks
+find book  Show tasks whose descriptions contain "book"
 mark 1     Mark task 1 as done
 unmark 1   Mark task 1 as not done
 delete 1   Delete task 1

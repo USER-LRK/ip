@@ -32,6 +32,15 @@ public class Task {
         return (isDone ? "X" : " ");
     }
 
+    /**
+     * Returns the text used when searching for this task.
+     *
+     * @return the task description.
+     */
+    public String getDescription() {
+        return description;
+    }
+
     /** Marks this task as completed. */
     public void mark() {
         this.isDone = true;

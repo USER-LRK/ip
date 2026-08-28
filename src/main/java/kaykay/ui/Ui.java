@@ -1,5 +1,6 @@
 package kaykay.ui;
 
+import java.util.List;
 import java.util.Scanner;
 
 import kaykay.model.Task;
@@ -67,6 +68,20 @@ public class Ui {
         System.out.println("Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i += 1) {
             System.out.printf("%d. %s\n", i + 1, tasks.getTask(i));
+        }
+        System.out.println(SEPARATOR);
+    }
+
+    /**
+     * Shows matching tasks with positions relative to the search results.
+     *
+     * @param matchingTasks tasks that matched the user's search keyword.
+     */
+    public void showMatchingTasks(List<Task> matchingTasks) {
+        System.out.println(SEPARATOR);
+        System.out.println("Here are the matching tasks in your list:");
+        for (int i = 0; i < matchingTasks.size(); i += 1) {
+            System.out.printf("%d. %s\n", i + 1, matchingTasks.get(i));
         }
         System.out.println(SEPARATOR);
     }

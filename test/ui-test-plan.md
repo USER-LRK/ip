@@ -203,7 +203,7 @@ ____________________________________________________________
 OOPS! A todo needs a description. Try: todo <description>.
 ____________________________________________________________
 ____________________________________________________________
-OOPS! I don't recognise that command. Try todo, deadline, event, list, delete, mark, unmark, or bye.
+OOPS! I don't recognise that command. Try todo, deadline, event, list, find, delete, mark, unmark, or bye.
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
@@ -250,7 +250,7 @@ Got it. I've added this task:
 Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
-OOPS! I don't recognise that command. Try todo, deadline, event, list, delete, mark, unmark, or bye.
+OOPS! I don't recognise that command. Try todo, deadline, event, list, find, delete, mark, unmark, or bye.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
@@ -672,6 +672,66 @@ ____________________________________________________________
 Here are the tasks in your list:
 1. [D][ ] persist deadline (by: 25 12 2026 18:30)
 2. [E][ ] persist event (from: 26 12 2026 09:00 to: 26 12 2026 10:00)
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## Case 12: Find tasks by description keyword
+
+**Aim:** Verify that find displays matching tasks in their original order, ignores letter case, and handles no matches or a missing keyword.
+
+Commands / console input:
+
+```
+todo read book
+deadline return book /by 06 06 2027 18:30
+todo buy milk
+find BOOK
+find missing
+find
+bye
+```
+
+Expected output:
+
+```
+____________________________________________________________
+#   #   ###   #   #  #   #   ###   #   #
+#  #   #   #   # #   #  #   #   #   # #
+###    #####    #    ###    #####    #
+#  #   #   #    #    #  #   #   #    #
+#   #  #   #    #    #   #  #   #    #
+____________________________________________________________
+Hello! I'm kaykay.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+[T][ ] read book
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+[D][ ] return book (by: 06 06 2027 18:30)
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+[T][ ] buy milk
+Now you have 3 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Here are the matching tasks in your list:
+1. [T][ ] read book
+2. [D][ ] return book (by: 06 06 2027 18:30)
+____________________________________________________________
+____________________________________________________________
+Here are the matching tasks in your list:
+____________________________________________________________
+____________________________________________________________
+OOPS! A find command needs a keyword. Try: find <keyword>.
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!
