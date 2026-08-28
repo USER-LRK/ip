@@ -28,6 +28,10 @@ Unless the user says otherwise, assume that you are assisting a student working 
 
 After every code update, review and update `test/ui-test-plan.md` when the console behavior or test coverage changes, then invoke the project-specific `test-ui` skill. The skill must run all listed cases in order, show each console input/output transcript, and stop immediately on the first failure.
 
+### JUnit testing
+
+Keep JUnit tests under `src/test/java` and target approximately the top 50% of test-worthy methods, prioritizing core business logic, validation, state changes, persistence, and other behavior with meaningful branches or user impact. After each code change, review and update the relevant JUnit tests so that they continue to cover this target.
+
 ## Java version:
 
 Ensure that Java 25 is used when running the application or build tasks. On macOS, use `sdk use java 25.0.3.fx-zulu` to switch to Java 25 if needed.
