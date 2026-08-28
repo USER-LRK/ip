@@ -52,16 +52,19 @@ class CommandTest {
 
     /** Suppresses UI output while allowing commands to execute in isolation. */
     private static final class RecordingUi extends Ui {
+        /** Does nothing because these tests verify command state changes directly. */
         @Override
         public void showAddedTask(Task task, int taskCount) {
             // Intentionally empty: command tests assert state, not console formatting.
         }
 
+        /** Does nothing because these tests verify command state changes directly. */
         @Override
         public void showDeletedTask(Task task, int taskCount) {
             // Intentionally empty: command tests assert state, not console formatting.
         }
 
+        /** Does nothing because these tests verify command state changes directly. */
         @Override
         public void showMarkedTask(Task task, boolean marked) {
             // Intentionally empty: command tests assert state, not console formatting.

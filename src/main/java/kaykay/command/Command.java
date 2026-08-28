@@ -11,6 +11,10 @@ import kaykay.ui.Ui;
  * Represents a parsed command that can be executed by Kaykay.
  */
 public abstract class Command {
+    /** Creates a command. */
+    public Command() {
+    }
+
     /**
      * Executes this command using the supplied application components.
      *

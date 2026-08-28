@@ -57,7 +57,11 @@ public class Ui {
         showError("I couldn't load your tasks. Please check the data file.");
     }
 
-    /** Shows all tasks with their one-based positions. */
+    /**
+     * Shows all tasks with their one-based positions.
+     *
+     * @param tasks tasks to display
+     */
     public void showTaskList(TaskList tasks) {
         System.out.println(SEPARATOR);
         System.out.println("Here are the tasks in your list:");
@@ -67,7 +71,12 @@ public class Ui {
         System.out.println(SEPARATOR);
     }
 
-    /** Shows the standard confirmation after adding a task. */
+    /**
+     * Shows the standard confirmation after adding a task.
+     *
+     * @param task task that was added
+     * @param taskCount number of tasks after the addition
+     */
     public void showAddedTask(Task task, int taskCount) {
         System.out.println(SEPARATOR);
         System.out.println("Got it. I've added this task:");
@@ -76,7 +85,12 @@ public class Ui {
         System.out.println(SEPARATOR);
     }
 
-    /** Shows the standard confirmation after deleting a task. */
+    /**
+     * Shows the standard confirmation after deleting a task.
+     *
+     * @param task task that was deleted
+     * @param taskCount number of tasks after the deletion
+     */
     public void showDeletedTask(Task task, int taskCount) {
         System.out.println(SEPARATOR);
         System.out.println("Noted. I've removed this task:");
@@ -85,7 +99,12 @@ public class Ui {
         System.out.println(SEPARATOR);
     }
 
-    /** Shows the standard confirmation after marking or unmarking a task. */
+    /**
+     * Shows the standard confirmation after marking or unmarking a task.
+     *
+     * @param task task whose status changed
+     * @param marked whether the task was marked as done
+     */
     public void showMarkedTask(Task task, boolean marked) {
         System.out.println(SEPARATOR);
         if (marked) {
@@ -97,7 +116,11 @@ public class Ui {
         System.out.println(SEPARATOR);
     }
 
-    /** Shows an error surrounded by the chatbot's standard separator. */
+    /**
+     * Shows an error surrounded by the chatbot's standard separator.
+     *
+     * @param message error message to display
+     */
     public void showError(String message) {
         System.out.println(SEPARATOR);
         System.out.println("OOPS! " + message);

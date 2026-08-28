@@ -18,6 +18,10 @@ import kaykay.exception.KaykayException;
  * Interprets user input as executable Kaykay commands.
  */
 public final class Parser {
+    /** Creates a parser for Kaykay commands. */
+    public Parser() {
+    }
+
     /**
      * Parses a complete user input line.
      *

@@ -11,7 +11,10 @@ import kaykay.storage.Storage;
  * // AI-GENERATED: This class was added as part of the Level 4 implementation.
  */
 public class Event extends Task {
+    /** The date and time when this event starts. */
     protected LocalDateTime from;
+
+    /** The date and time when this event ends. */
     protected LocalDateTime to;
 
     /**
@@ -27,12 +30,22 @@ public class Event extends Task {
         this.to = to;
     }
 
+    /**
+     * Returns the event's user-facing display text with its date/time range.
+     *
+     * @return the formatted event text
+     */
     @Override
     public String toString() {
         return "[E]" + super.toString() + " (from: " + DateTimeParser.format(from)
                 + " to: " + DateTimeParser.format(to) + ")";
     }
 
+    /**
+     * Returns the event in the format used by the task storage file.
+     *
+     * @return the serialised event
+     */
     @Override
     public String toFileFormat() {
         return String.format("E | %d | %s | %s | %s", isDone ? 1 : 0,
