@@ -10,6 +10,18 @@ import kaykay.ui.Ui;
  * Displays all tasks in their current order.
  */
 public final class ListCommand extends Command {
+    /** Creates a list command. */
+    public ListCommand() {
+    }
+
+    /**
+     * Displays the tasks in their current order.
+     *
+     * @param tasks task list to display
+     * @param ui UI used to display the tasks
+     * @param storage unused storage component supplied by the command interface
+     * @throws IOException declared by the command interface; not thrown by listing
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws IOException {
         ui.showTaskList(tasks);

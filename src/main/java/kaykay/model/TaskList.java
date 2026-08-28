@@ -43,7 +43,11 @@ public class TaskList {
         return tasks.get(index);
     }
 
-    /** Adds a task to the end of the list. */
+    /**
+     * Adds a task to the end of the list.
+     *
+     * @param task task to add
+     */
     public void add(Task task) {
         tasks.add(task);
     }
@@ -68,7 +72,11 @@ public class TaskList {
         return tasks.remove(index);
     }
 
-    /** Removes the specified task from the list. */
+    /**
+     * Removes the specified task from the list.
+     *
+     * @param task task to remove
+     */
     public void remove(Task task) {
         tasks.remove(task);
     }

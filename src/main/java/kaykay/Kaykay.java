@@ -73,7 +73,11 @@ public class Kaykay {
         ui.showFarewell();
     }
 
-    /** Starts Kaykay with its default task data file. */
+    /**
+     * Starts Kaykay with its default task data file.
+     *
+     * @param args command-line arguments, which are not used
+     */
     public static void main(String[] args) {
         new Kaykay("data/kaykay.txt").run();
     }
