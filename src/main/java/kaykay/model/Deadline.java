@@ -8,7 +8,6 @@ import kaykay.storage.Storage;
 /**
  * A task that must be completed by a specified date or time.
  *
- * // AI-GENERATED: This class was added as part of the Level 4 implementation.
  */
 public class Deadline extends Task {
     /** The date and time by which this task should be completed. */
@@ -17,8 +16,8 @@ public class Deadline extends Task {
     /**
      * Creates a deadline with a typed date/time value.
      *
-     * @param description what needs to be done
-     * @param by the deadline date and time
+     * @param description what needs to be done.
+     * @param by the deadline date and time.
      */
     public Deadline(String description, LocalDateTime by) {
         super(description);
@@ -28,7 +27,7 @@ public class Deadline extends Task {
     /**
      * Returns the deadline's user-facing display text with its due date/time.
      *
-     * @return the formatted deadline text
+     * @return the formatted deadline text.
      */
     @Override
     public String toString() {
@@ -38,7 +37,7 @@ public class Deadline extends Task {
     /**
      * Returns the deadline in the format used by the task storage file.
      *
-     * @return the serialised deadline
+     * @return the serialized deadline.
      */
     @Override
     public String toFileFormat() {

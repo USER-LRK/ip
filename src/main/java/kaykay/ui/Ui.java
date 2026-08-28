@@ -27,7 +27,7 @@ public class Ui {
     /**
      * Checks whether another input line is available.
      *
-     * @return true if the user or input stream has another line
+     * @return true if the user or input stream has another line.
      */
     public boolean hasNextLine() {
         return scanner.hasNextLine();
@@ -36,7 +36,7 @@ public class Ui {
     /**
      * Reads and trims one command from standard input.
      *
-     * @return the next command without leading or trailing whitespace
+     * @return the next command without leading or trailing whitespace.
      */
     public String readCommand() {
         return scanner.nextLine().trim();
@@ -60,7 +60,7 @@ public class Ui {
     /**
      * Shows all tasks with their one-based positions.
      *
-     * @param tasks tasks to display
+     * @param tasks tasks to display.
      */
     public void showTaskList(TaskList tasks) {
         System.out.println(SEPARATOR);
@@ -74,8 +74,8 @@ public class Ui {
     /**
      * Shows the standard confirmation after adding a task.
      *
-     * @param task task that was added
-     * @param taskCount number of tasks after the addition
+     * @param task task that was added.
+     * @param taskCount number of tasks after the addition.
      */
     public void showAddedTask(Task task, int taskCount) {
         System.out.println(SEPARATOR);
@@ -88,8 +88,8 @@ public class Ui {
     /**
      * Shows the standard confirmation after deleting a task.
      *
-     * @param task task that was deleted
-     * @param taskCount number of tasks after the deletion
+     * @param task task that was deleted.
+     * @param taskCount number of tasks after the deletion.
      */
     public void showDeletedTask(Task task, int taskCount) {
         System.out.println(SEPARATOR);
@@ -102,8 +102,8 @@ public class Ui {
     /**
      * Shows the standard confirmation after marking or unmarking a task.
      *
-     * @param task task whose status changed
-     * @param marked whether the task was marked as done
+     * @param task task whose status changed.
+     * @param marked whether the task was marked as done.
      */
     public void showMarkedTask(Task task, boolean marked) {
         System.out.println(SEPARATOR);
@@ -119,7 +119,7 @@ public class Ui {
     /**
      * Shows an error surrounded by the chatbot's standard separator.
      *
-     * @param message error message to display
+     * @param message error message to display.
      */
     public void showError(String message) {
         System.out.println(SEPARATOR);

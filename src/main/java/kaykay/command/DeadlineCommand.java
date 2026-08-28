@@ -15,8 +15,8 @@ public final class DeadlineCommand extends AddCommand {
     /**
      * Creates a deadline command with its description and due date/time.
      *
-     * @param description description of the deadline task
-     * @param by date and time by which the task should be completed
+     * @param description description of the deadline task.
+     * @param by date and time by which the task should be completed.
      */
     public DeadlineCommand(String description, LocalDateTime by) {
         super(description);
@@ -26,7 +26,7 @@ public final class DeadlineCommand extends AddCommand {
     /**
      * Creates the deadline represented by this command.
      *
-     * @return a deadline with the command's description and due date/time
+     * @return a deadline with the command's description and due date/time.
      */
     @Override
     protected Task createTask() {

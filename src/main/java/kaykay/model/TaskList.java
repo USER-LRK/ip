@@ -18,7 +18,7 @@ public class TaskList {
     /**
      * Creates a task list containing a copy of the supplied tasks.
      *
-     * @param tasks tasks loaded from storage
+     * @param tasks tasks loaded from storage.
      */
     public TaskList(List<Task> tasks) {
         this.tasks = new ArrayList<>(tasks);
@@ -27,7 +27,7 @@ public class TaskList {
     /**
      * Returns the number of tasks currently stored.
      *
-     * @return task count
+     * @return task count.
      */
     public int size() {
         return tasks.size();
@@ -36,8 +36,8 @@ public class TaskList {
     /**
      * Returns the task at a zero-based index.
      *
-     * @param index zero-based task index
-     * @return the task at the index
+     * @param index zero-based task index.
+     * @return the task at the index.
      */
     public Task getTask(int index) {
         return tasks.get(index);
@@ -46,7 +46,7 @@ public class TaskList {
     /**
      * Adds a task to the end of the list.
      *
-     * @param task task to add
+     * @param task task to add.
      */
     public void add(Task task) {
         tasks.add(task);
@@ -55,8 +55,8 @@ public class TaskList {
     /**
      * Adds a task at a specific zero-based index.
      *
-     * @param index zero-based insertion index
-     * @param task task to add
+     * @param index zero-based insertion index.
+     * @param task task to add.
      */
     public void add(int index, Task task) {
         tasks.add(index, task);
@@ -65,8 +65,8 @@ public class TaskList {
     /**
      * Removes and returns the task at a specific zero-based index.
      *
-     * @param index zero-based task index
-     * @return the removed task
+     * @param index zero-based task index.
+     * @return the removed task.
      */
     public Task remove(int index) {
         return tasks.remove(index);
@@ -75,7 +75,7 @@ public class TaskList {
     /**
      * Removes the specified task from the list.
      *
-     * @param task task to remove
+     * @param task task to remove.
      */
     public void remove(Task task) {
         tasks.remove(task);
@@ -84,8 +84,8 @@ public class TaskList {
     /**
      * Checks whether a value identifies an existing one-based task number.
      *
-     * @param value task number entered by the user
-     * @return true if the value identifies a task in this list
+     * @param value task number entered by the user.
+     * @return true if the value identifies a task in this list.
      */
     public boolean isValidTaskNumber(String value) {
         try {

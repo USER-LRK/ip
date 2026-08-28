@@ -21,8 +21,8 @@ public abstract class ChangeStatusCommand extends Command {
     /**
      * Creates a status-change command.
      *
-     * @param taskNumber one-based number of the task to change
-     * @param marked whether the task should be marked as done
+     * @param taskNumber one-based number of the task to change.
+     * @param marked whether the task should be marked as done.
      */
     protected ChangeStatusCommand(String taskNumber, boolean marked) {
         this.taskNumber = taskNumber;
@@ -33,11 +33,11 @@ public abstract class ChangeStatusCommand extends Command {
      * Changes the selected task's completion status, saves the result, and confirms it.
      * The previous status is restored if saving fails.
      *
-     * @param tasks task list containing the task to change
-     * @param ui UI used to show the confirmation
-     * @param storage storage used to persist the updated task list
-     * @throws KaykayException if the task number is invalid
-     * @throws IOException if the updated task list cannot be saved
+     * @param tasks task list containing the task to change.
+     * @param ui UI used to show the confirmation.
+     * @param storage storage used to persist the updated task list.
+     * @throws KaykayException if the task number is invalid.
+     * @throws IOException if the updated task list cannot be saved.
      */
     @Override
     public final void execute(TaskList tasks, Ui ui, Storage storage)

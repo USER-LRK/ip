@@ -17,7 +17,7 @@ public abstract class AddCommand extends Command {
     /**
      * Creates an add command for a task description.
      *
-     * @param description description of the task to create
+     * @param description description of the task to create.
      */
     protected AddCommand(String description) {
         this.description = description;
@@ -26,14 +26,14 @@ public abstract class AddCommand extends Command {
     /**
      * Creates the concrete task represented by this command.
      *
-     * @return the task represented by this command
+     * @return the task represented by this command.
      */
     protected abstract Task createTask();
 
     /**
      * Returns the description supplied to this command.
      *
-     * @return the task description
+     * @return the task description.
      */
     protected String getDescription() {
         return description;
@@ -43,10 +43,10 @@ public abstract class AddCommand extends Command {
      * Creates, adds, saves, and confirms the task represented by this command.
      * The task is removed again if saving fails.
      *
-     * @param tasks task list to modify
-     * @param ui UI used to show the confirmation
-     * @param storage storage used to persist the updated task list
-     * @throws IOException if the updated task list cannot be saved
+     * @param tasks task list to modify.
+     * @param ui UI used to show the confirmation.
+     * @param storage storage used to persist the updated task list.
+     * @throws IOException if the updated task list cannot be saved.
      */
     @Override
     public final void execute(TaskList tasks, Ui ui, Storage storage) throws IOException {

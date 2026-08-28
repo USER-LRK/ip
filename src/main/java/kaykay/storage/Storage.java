@@ -26,7 +26,7 @@ public final class Storage {
     /**
      * Creates a storage component for a specific data file.
      *
-     * @param filePath path of the file used to load and save tasks
+     * @param filePath path of the file used to load and save tasks.
      */
     public Storage(String filePath) {
         dataFile = new File(filePath);
@@ -35,8 +35,8 @@ public final class Storage {
     /**
      * Replaces the data file with the current contents of the task list.
      *
-     * @param tasks task list to save
-     * @throws IOException if the data directory or file cannot be written
+     * @param tasks task list to save.
+     * @throws IOException if the data directory or file cannot be written.
      */
     public void saveTasks(TaskList tasks) throws IOException {
         File dataDirectory = dataFile.getParentFile();
@@ -62,8 +62,8 @@ public final class Storage {
     /**
      * Loads tasks from the data file, or returns an empty list if the file does not exist.
      *
-     * @return tasks stored in the data file
-     * @throws IOException if the data file contains an invalid task or cannot be read
+     * @return tasks stored in the data file.
+     * @throws IOException if the data file contains an invalid task or cannot be read.
      */
     public ArrayList<Task> loadTasks() throws IOException {
         ArrayList<Task> tasks = new ArrayList<>();
@@ -88,8 +88,8 @@ public final class Storage {
     /**
      * Escapes characters that have a special meaning in the storage format.
      *
-     * @param value text to escape
-     * @return escaped text
+     * @param value text to escape.
+     * @return escaped text.
      */
     public static String escape(String value) {
         return value.replace("\\", "\\\\")
@@ -101,9 +101,9 @@ public final class Storage {
     /**
      * Creates a task from one line in the data file.
      *
-     * @param line serialized task data
-     * @return the reconstructed task
-     * @throws IOException if the line does not follow the storage format
+     * @param line serialized task data.
+     * @return the reconstructed task.
+     * @throws IOException if the line does not follow the storage format.
      */
     private static Task parseTask(String line) throws IOException {
         String[] parts = splitFields(line);
@@ -159,9 +159,9 @@ public final class Storage {
     /**
      * Splits one storage line at unescaped field separators.
      *
-     * @param line serialized task data
-     * @return decoded fields from the line
-     * @throws IOException if the line ends with an incomplete escape sequence
+     * @param line serialized task data.
+     * @return decoded fields from the line.
+     * @throws IOException if the line ends with an incomplete escape sequence.
      */
     private static String[] splitFields(String line) throws IOException {
         ArrayList<String> fields = new ArrayList<>();
@@ -218,21 +218,21 @@ public final class Storage {
             }
             char escapedCharacter = value.charAt(i + 1);
             switch (escapedCharacter) {
-            case 'n':
-                result.append('\n');
-                break;
-            case 'r':
-                result.append('\r');
-                break;
-            case '|':
-                result.append('|');
-                break;
-            case '\\':
-                result.append('\\');
-                break;
-            default:
-                result.append('\\').append(escapedCharacter);
-                break;
+                case 'n':
+                    result.append('\n');
+                    break;
+                case 'r':
+                    result.append('\r');
+                    break;
+                case '|':
+                    result.append('|');
+                    break;
+                case '\\':
+                    result.append('\\');
+                    break;
+                default:
+                    result.append('\\').append(escapedCharacter);
+                    break;
             }
             i += 1;
         }

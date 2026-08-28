@@ -10,7 +10,7 @@ public final class TodoCommand extends AddCommand {
     /**
      * Creates a todo command with its description.
      *
-     * @param description description of the todo task
+     * @param description description of the todo task.
      */
     public TodoCommand(String description) {
         super(description);
@@ -19,7 +19,7 @@ public final class TodoCommand extends AddCommand {
     /**
      * Creates the todo represented by this command.
      *
-     * @return a todo with the command's description
+     * @return a todo with the command's description.
      */
     @Override
     protected Task createTask() {

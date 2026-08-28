@@ -17,10 +17,10 @@ public final class ExitCommand extends Command {
     /**
      * Performs no task action because the caller checks {@link #isExit()} after execution.
      *
-     * @param tasks task list managed by the chatbot
-     * @param ui UI managed by the chatbot
-     * @param storage storage managed by the chatbot
-     * @throws IOException declared by the command interface; not thrown by exiting
+     * @param tasks task list managed by the chatbot.
+     * @param ui UI managed by the chatbot.
+     * @param storage storage managed by the chatbot.
+     * @throws IOException declared by the command interface; not thrown by exiting.
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws IOException {
@@ -30,7 +30,7 @@ public final class ExitCommand extends Command {
     /**
      * Indicates that this command ends the chatbot session.
      *
-     * @return always {@code true}
+     * @return always {@code true}.
      */
     @Override
     public boolean isExit() {
