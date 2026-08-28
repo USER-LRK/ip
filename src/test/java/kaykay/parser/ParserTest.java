@@ -12,6 +12,7 @@ import kaykay.command.DeadlineCommand;
 import kaykay.command.DeleteCommand;
 import kaykay.command.EventCommand;
 import kaykay.command.ExitCommand;
+import kaykay.command.FindCommand;
 import kaykay.command.ListCommand;
 import kaykay.command.MarkCommand;
 import kaykay.command.TodoCommand;
@@ -34,6 +35,7 @@ class ParserTest {
         assertInstanceOf(MarkCommand.class, parser.parse("mark 1"));
         assertInstanceOf(UnmarkCommand.class, parser.parse("unmark 1"));
         assertInstanceOf(ListCommand.class, parser.parse("list"));
+        assertInstanceOf(FindCommand.class, parser.parse("find notes"));
         assertInstanceOf(ExitCommand.class, parser.parse("bye"));
         assertTrue(parser.parse("bye").isExit());
         assertFalse(parser.parse("list").isExit());
@@ -43,6 +45,7 @@ class ParserTest {
     @Test
     void parse_invalidCommands_throwsKaykayExceptionWithGuidance() {
         assertParseError("todo", "A todo needs a description. Try: todo <description>.");
+        assertParseError("find", "A find command needs a keyword. Try: find <keyword>.");
         assertParseError("deadline missing",
                 "A deadline needs a description and a date. Try: deadline <description> /by <date>.");
         assertParseError("event meeting /from 31 12 2026 10:00",
@@ -52,7 +55,7 @@ class ParserTest {
                 "The deadline date/time '31 02 2026 10:00' is invalid. Please use dd MM yyyy HH:mm, "
                         + "for example 01 01 2026 18:30.");
         assertParseError("blah",
-                "I don't recognise that command. Try todo, deadline, event, list, delete, mark, "
+                "I don't recognise that command. Try todo, deadline, event, list, find, delete, mark, "
                         + "unmark, or bye.");
     }
 

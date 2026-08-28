@@ -8,6 +8,7 @@ import kaykay.command.DeadlineCommand;
 import kaykay.command.DeleteCommand;
 import kaykay.command.EventCommand;
 import kaykay.command.ExitCommand;
+import kaykay.command.FindCommand;
 import kaykay.command.ListCommand;
 import kaykay.command.MarkCommand;
 import kaykay.command.TodoCommand;
@@ -34,6 +35,8 @@ public final class Parser {
             return new ExitCommand();
         } else if (input.equals("list")) {
             return new ListCommand();
+        } else if (isCommand(input, "find")) {
+            return parseFind(input);
         } else if (isCommand(input, "delete")) {
             return new DeleteCommand(parseTaskNumber(input,
                     "Please provide an existing task number to delete."));
@@ -51,7 +54,16 @@ public final class Parser {
             return parseEvent(input);
         }
         throw new KaykayException("I don't recognise that command. Try todo, deadline, event, "
-                + "list, delete, mark, unmark, or bye.");
+                + "list, find, delete, mark, unmark, or bye.");
+    }
+
+    /** Parses a find command and extracts its search keyword. */
+    private Command parseFind(String input) throws KaykayException {
+        String keyword = argumentAfter(input, "find").trim();
+        if (keyword.isEmpty()) {
+            throw new KaykayException("A find command needs a keyword. Try: find <keyword>.");
+        }
+        return new FindCommand(keyword);
     }
 
     /** Parses a todo command and extracts its description. */
