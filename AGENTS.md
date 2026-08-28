@@ -24,6 +24,13 @@ Unless the user says otherwise, assume that you are assisting a student working 
 
 # Project-specific requirements
 
+### Java coding standard
+
+All Java source and test code in this repository must follow the project-specific
+`.codex/skills/seedu-java-coding-standard/SKILL.md`, based on the
+[SE-EDU intermediate Java conventions](https://se-education.org/guides/conventions/java/intermediate.html).
+Review changed Java files against that skill before finishing any code change.
+
 ### UI testing
 
 After every code update, review and update `test/ui-test-plan.md` when the console behavior or test coverage changes, then invoke the project-specific `test-ui` skill. The skill must run all listed cases in order, show each console input/output transcript, and stop immediately on the first failure.
