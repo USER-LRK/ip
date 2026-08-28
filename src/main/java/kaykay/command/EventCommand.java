@@ -18,9 +18,9 @@ public final class EventCommand extends AddCommand {
     /**
      * Creates an event command with its description and date/time range.
      *
-     * @param description description of the event
-     * @param from date and time when the event starts
-     * @param to date and time when the event ends
+     * @param description description of the event.
+     * @param from date and time when the event starts.
+     * @param to date and time when the event ends.
      */
     public EventCommand(String description, LocalDateTime from, LocalDateTime to) {
         super(description);
@@ -31,7 +31,7 @@ public final class EventCommand extends AddCommand {
     /**
      * Creates the event represented by this command.
      *
-     * @return an event with the command's description and date/time range
+     * @return an event with the command's description and date/time range.
      */
     @Override
     protected Task createTask() {

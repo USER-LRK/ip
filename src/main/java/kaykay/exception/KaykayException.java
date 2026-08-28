@@ -9,7 +9,7 @@ public class KaykayException extends Exception {
     /**
      * Creates an input error with a message that can be shown to the user.
      *
-     * @param message explanation of the error and how to correct it
+     * @param message explanation of the error and how to correct it.
      */
     public KaykayException(String message) {
         super(message);

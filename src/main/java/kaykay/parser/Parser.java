@@ -25,9 +25,9 @@ public final class Parser {
     /**
      * Parses a complete user input line.
      *
-     * @param input user input to interpret
-     * @return an executable command
-     * @throws KaykayException if the input is not a valid Kaykay command
+     * @param input user input to interpret.
+     * @return an executable command.
+     * @throws KaykayException if the input is not a valid Kaykay command.
      */
     public Command parse(String input) throws KaykayException {
         if (input.equals("bye")) {
@@ -151,6 +151,7 @@ public final class Parser {
     private static KaykayException invalidDateTime(String field, String value) {
         return new KaykayException(String.format(
                 "The %s date/time '%s' is invalid. Please use %s, for example %s.",
-                field, value, DateTimeParser.INPUT_FORMAT, DateTimeParser.EXAMPLE));
+                field, value, DateTimeParser.DATE_TIME_INPUT_FORMAT,
+                DateTimeParser.DATE_TIME_EXAMPLE));
     }
 }

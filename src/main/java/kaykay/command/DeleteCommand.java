@@ -18,7 +18,7 @@ public final class DeleteCommand extends Command {
     /**
      * Creates a delete command for a task number.
      *
-     * @param taskNumber one-based number of the task to delete
+     * @param taskNumber one-based number of the task to delete.
      */
     public DeleteCommand(String taskNumber) {
         this.taskNumber = taskNumber;
@@ -28,11 +28,11 @@ public final class DeleteCommand extends Command {
      * Deletes the selected task, saves the result, and confirms the deletion.
      * The task is restored if saving fails.
      *
-     * @param tasks task list to modify
-     * @param ui UI used to show the confirmation
-     * @param storage storage used to persist the updated task list
-     * @throws KaykayException if the task number is invalid
-     * @throws IOException if the updated task list cannot be saved
+     * @param tasks task list to modify.
+     * @param ui UI used to show the confirmation.
+     * @param storage storage used to persist the updated task list.
+     * @throws KaykayException if the task number is invalid.
+     * @throws IOException if the updated task list cannot be saved.
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws KaykayException, IOException {

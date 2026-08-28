@@ -31,7 +31,7 @@ public class Kaykay {
     /**
      * Creates a Kaykay chatbot using the given task data file.
      *
-     * @param filePath path of the task data file
+     * @param filePath path of the task data file.
      */
     public Kaykay(String filePath) {
         ui = new Ui();
@@ -76,7 +76,7 @@ public class Kaykay {
     /**
      * Starts Kaykay with its default task data file.
      *
-     * @param args command-line arguments, which are not used
+     * @param args command-line arguments, which are not used.
      */
     public static void main(String[] args) {
         new Kaykay("data/kaykay.txt").run();
