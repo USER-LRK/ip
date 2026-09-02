@@ -1,6 +1,7 @@
 package kaykay.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -23,6 +24,15 @@ public class TaskList {
      */
     public TaskList(List<Task> tasks) {
         this.tasks = new ArrayList<>(tasks);
+    }
+
+    /**
+     * Creates a task list containing the supplied tasks.
+     *
+     * @param tasks tasks to add to the list.
+     */
+    public TaskList(Task... tasks) {
+        this.tasks = new ArrayList<>(Arrays.asList(tasks));
     }
 
     /**
