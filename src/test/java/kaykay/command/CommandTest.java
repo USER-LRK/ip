@@ -56,7 +56,7 @@ class CommandTest {
     void findCommand_execute_displaysMatchingTasks() throws IOException, KaykayException {
         Task first = new Todo("read book");
         Task second = new Todo("buy milk");
-        TaskList tasks = new TaskList(List.of(first, second));
+        TaskList tasks = new TaskList(first, second);
         RecordingUi ui = new RecordingUi();
 
         new FindCommand("BOOK").execute(tasks, ui,

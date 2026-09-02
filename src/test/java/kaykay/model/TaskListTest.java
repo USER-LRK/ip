@@ -18,7 +18,7 @@ class TaskListTest {
         Task first = new Todo("first");
         Task second = new Todo("second");
         Task inserted = new Todo("inserted");
-        TaskList tasks = new TaskList(List.of(first, second));
+        TaskList tasks = new TaskList(first, second);
 
         assertEquals(2, tasks.size());
         assertSame(first, tasks.getTask(0));
@@ -38,7 +38,7 @@ class TaskListTest {
     /** Checks valid, invalid, non-numeric, and null task numbers. */
     @Test
     void isValidTaskNumber_taskNumber_isAcceptedOnlyWhenInRange() {
-        TaskList tasks = new TaskList(List.of(new Todo("first"), new Todo("second")));
+        TaskList tasks = new TaskList(new Todo("first"), new Todo("second"));
 
         assertTrue(tasks.isValidTaskNumber("1"));
         assertTrue(tasks.isValidTaskNumber("2"));
@@ -54,7 +54,7 @@ class TaskListTest {
         Task first = new Todo("Read the BOOK");
         Task second = new Todo("buy milk");
         Task third = new Todo("return book");
-        TaskList tasks = new TaskList(List.of(first, second, third));
+        TaskList tasks = new TaskList(first, second, third);
 
         List<Task> matchingTasks = tasks.findTasks("book");
 
