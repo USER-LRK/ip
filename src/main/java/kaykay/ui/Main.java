@@ -10,14 +10,16 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import kaykay.Kaykay;
 
 /**
  * Provides the initial JavaFX application window for Kaykay.
  *
- * <p>This class owns the JavaFX scene and its top-level controls. User input
- * handling will be added in the next increment.</p>
+ * <p>This class owns the JavaFX scene and connects its controls to Kaykay's
+ * command-processing logic.</p>
  */
 public final class Main extends Application {
+    private static final String DEFAULT_FILE_PATH = "data/kaykay.txt";
     private static final String WINDOW_TITLE = "Kaykay";
     private static final double WINDOW_WIDTH = 400.0;
     private static final double WINDOW_HEIGHT = 600.0;
@@ -35,8 +37,17 @@ public final class Main extends Application {
     /** Accepts a command from the user. */
     private TextField userInput;
 
-    /** Will submit the command once input handling is added. */
+    /** Submits the command entered by the user. */
     private Button sendButton;
+
+    /** Buffers rendered Kaykay output before it is shown in one dialog. */
+    private final StringBuilder responseBuffer = new StringBuilder();
+
+    /** Renders chatbot output into the response buffer. */
+    private final Ui ui = new Ui(this::captureResponse);
+
+    /** Processes commands and manages the task data. */
+    private final Kaykay kaykay = new Kaykay(DEFAULT_FILE_PATH, ui);
 
     /**
      * Starts the JavaFX application window.
@@ -53,7 +64,7 @@ public final class Main extends Application {
         userInput = new TextField();
         sendButton = new Button("Send");
 
-        dialogContainer.getChildren().add(new DialogBox("Hello! I'm kaykay.", false));
+        dialogContainer.getChildren().add(DialogBox.getKaykayDialog("Hello! I'm kaykay."));
 
         AnchorPane mainLayout = new AnchorPane();
         mainLayout.getChildren().addAll(scrollPane, userInput, sendButton);
@@ -83,6 +94,45 @@ public final class Main extends Application {
         AnchorPane.setLeftAnchor(userInput, 1.0);
         AnchorPane.setBottomAnchor(userInput, 1.0);
 
+        sendButton.setOnAction(event -> handleUserInput());
+        userInput.setOnAction(event -> handleUserInput());
+        dialogContainer.heightProperty().addListener((observable, oldHeight, newHeight) ->
+                scrollPane.setVvalue(1.0));
+
         stage.show();
+    }
+
+    /** Processes the entered command and appends the resulting dialog boxes. */
+    private void handleUserInput() {
+        String userText = userInput.getText().trim();
+        dialogContainer.getChildren().add(DialogBox.getUserDialog(userText));
+
+        boolean isExit = kaykay.processCommand(userText);
+        if (isExit) {
+            ui.showFarewell();
+        }
+
+        String kaykayText = takeResponse();
+        if (!kaykayText.isEmpty()) {
+            dialogContainer.getChildren().add(DialogBox.getKaykayDialog(kaykayText));
+        }
+        userInput.clear();
+
+        if (isExit) {
+            userInput.setDisable(true);
+            sendButton.setDisable(true);
+        }
+    }
+
+    /** Captures one rendered UI line for the current chatbot response. */
+    private void captureResponse(String line) {
+        responseBuffer.append(line).append(System.lineSeparator());
+    }
+
+    /** Returns the buffered response and clears it for the next command. */
+    private String takeResponse() {
+        String response = responseBuffer.toString().stripTrailing();
+        responseBuffer.setLength(0);
+        return response;
     }
 }

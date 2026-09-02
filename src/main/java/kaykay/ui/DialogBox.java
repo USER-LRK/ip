@@ -16,6 +16,12 @@ public final class DialogBox extends HBox {
     private static final String USER_AVATAR = "U";
     private static final double AVATAR_WIDTH = 30.0;
 
+    /** Text displayed in the dialog box. */
+    private final Label text;
+
+    /** Avatar displayed beside the dialog text. */
+    private final Label avatar;
+
     /**
      * Creates a dialog box for a message from Kaykay or the user.
      *
@@ -23,13 +29,41 @@ public final class DialogBox extends HBox {
      * @param isUserMessage whether the message came from the user.
      */
     public DialogBox(String message, boolean isUserMessage) {
-        Label avatar = new Label(isUserMessage ? USER_AVATAR : KAYKAY_AVATAR);
-        Label text = new Label(message);
+        avatar = new Label(isUserMessage ? USER_AVATAR : KAYKAY_AVATAR);
+        text = new Label(message);
 
         avatar.setMinWidth(AVATAR_WIDTH);
         text.setWrapText(true);
         setAlignment(isUserMessage ? Pos.TOP_RIGHT : Pos.TOP_LEFT);
         setSpacing(8.0);
-        getChildren().addAll(avatar, text);
+        getChildren().addAll(text, avatar);
+    }
+
+    /**
+     * Creates a dialog box aligned as a user message.
+     *
+     * @param message message to display.
+     * @return a user-aligned dialog box.
+     */
+    public static DialogBox getUserDialog(String message) {
+        return new DialogBox(message, true);
+    }
+
+    /**
+     * Creates a dialog box aligned as a Kaykay message.
+     *
+     * @param message message to display.
+     * @return a Kaykay-aligned dialog box.
+     */
+    public static DialogBox getKaykayDialog(String message) {
+        DialogBox dialogBox = new DialogBox(message, false);
+        dialogBox.flip();
+        return dialogBox;
+    }
+
+    /** Places Kaykay's avatar after the response text. */
+    private void flip() {
+        setAlignment(Pos.TOP_LEFT);
+        getChildren().setAll(avatar, text);
     }
 }
