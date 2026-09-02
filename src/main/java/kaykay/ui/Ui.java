@@ -2,6 +2,7 @@ package kaykay.ui;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.function.Consumer;
 
 import kaykay.model.Task;
 import kaykay.model.TaskList;
@@ -20,9 +21,36 @@ public class Ui {
     /** Reads commands typed by the user. */
     private final Scanner scanner;
 
+    /** Receives rendered output lines from the UI. */
+    private final Consumer<String> output;
+
+    /** Whether console-style separators should be rendered. */
+    private final boolean shouldShowSeparators;
+
     /** Creates a UI that reads from standard input and writes to standard output. */
     public Ui() {
+        this(System.out::println, true);
+    }
+
+    /**
+     * Creates a UI that reads from standard input and sends output to a consumer.
+     *
+     * @param output receiver for rendered output lines.
+     */
+    public Ui(Consumer<String> output) {
+        this(output, true);
+    }
+
+    /**
+     * Creates a UI that reads from standard input and configures separator rendering.
+     *
+     * @param output receiver for rendered output lines.
+     * @param shouldShowSeparators whether console-style separators should be rendered.
+     */
+    public Ui(Consumer<String> output, boolean shouldShowSeparators) {
         scanner = new Scanner(System.in);
+        this.output = output;
+        this.shouldShowSeparators = shouldShowSeparators;
     }
 
     /**
@@ -45,12 +73,12 @@ public class Ui {
 
     /** Shows Kaykay's greeting. */
     public void showWelcome() {
-        System.out.println(SEPARATOR);
-        System.out.println(BANNER);
-        System.out.println(SEPARATOR);
-        System.out.println("Hello! I'm kaykay.");
-        System.out.println("What can I do for you?");
-        System.out.println(SEPARATOR);
+        showLine(SEPARATOR);
+        showLine(BANNER);
+        showLine(SEPARATOR);
+        showLine("Hello! I'm kaykay.");
+        showLine("What can I do for you?");
+        showLine(SEPARATOR);
     }
 
     /** Shows the message used when saved tasks cannot be loaded. */
@@ -64,12 +92,12 @@ public class Ui {
      * @param tasks tasks to display.
      */
     public void showTaskList(TaskList tasks) {
-        System.out.println(SEPARATOR);
-        System.out.println("Here are the tasks in your list:");
+        showLine(SEPARATOR);
+        showLine("Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i += 1) {
-            System.out.printf("%d. %s\n", i + 1, tasks.getTask(i));
+            showLine(String.format("%d. %s", i + 1, tasks.getTask(i)));
         }
-        System.out.println(SEPARATOR);
+        showLine(SEPARATOR);
     }
 
     /**
@@ -78,12 +106,12 @@ public class Ui {
      * @param matchingTasks tasks that matched the user's search keyword.
      */
     public void showMatchingTasks(List<Task> matchingTasks) {
-        System.out.println(SEPARATOR);
-        System.out.println("Here are the matching tasks in your list:");
+        showLine(SEPARATOR);
+        showLine("Here are the matching tasks in your list:");
         for (int i = 0; i < matchingTasks.size(); i += 1) {
-            System.out.printf("%d. %s\n", i + 1, matchingTasks.get(i));
+            showLine(String.format("%d. %s", i + 1, matchingTasks.get(i)));
         }
-        System.out.println(SEPARATOR);
+        showLine(SEPARATOR);
     }
 
     /**
@@ -93,11 +121,11 @@ public class Ui {
      * @param taskCount number of tasks after the addition.
      */
     public void showAddedTask(Task task, int taskCount) {
-        System.out.println(SEPARATOR);
-        System.out.println("Got it. I've added this task:");
-        System.out.println(task);
-        System.out.printf("Now you have %d tasks in the list.\n", taskCount);
-        System.out.println(SEPARATOR);
+        showLine(SEPARATOR);
+        showLine("Got it. I've added this task:");
+        showLine(task.toString());
+        showLine(String.format("Now you have %d tasks in the list.", taskCount));
+        showLine(SEPARATOR);
     }
 
     /**
@@ -107,11 +135,11 @@ public class Ui {
      * @param taskCount number of tasks after the deletion.
      */
     public void showDeletedTask(Task task, int taskCount) {
-        System.out.println(SEPARATOR);
-        System.out.println("Noted. I've removed this task:");
-        System.out.println("  " + task);
-        System.out.printf("Now you have %d tasks in the list.\n", taskCount);
-        System.out.println(SEPARATOR);
+        showLine(SEPARATOR);
+        showLine("Noted. I've removed this task:");
+        showLine("  " + task);
+        showLine(String.format("Now you have %d tasks in the list.", taskCount));
+        showLine(SEPARATOR);
     }
 
     /**
@@ -121,14 +149,14 @@ public class Ui {
      * @param marked whether the task was marked as done.
      */
     public void showMarkedTask(Task task, boolean marked) {
-        System.out.println(SEPARATOR);
+        showLine(SEPARATOR);
         if (marked) {
-            System.out.println("Nice! I've marked this task as done:");
+            showLine("Nice! I've marked this task as done:");
         } else {
-            System.out.println("OK, I've marked this task as not done yet:");
+            showLine("OK, I've marked this task as not done yet:");
         }
-        System.out.println(task);
-        System.out.println(SEPARATOR);
+        showLine(task.toString());
+        showLine(SEPARATOR);
     }
 
     /**
@@ -137,15 +165,22 @@ public class Ui {
      * @param message error message to display.
      */
     public void showError(String message) {
-        System.out.println(SEPARATOR);
-        System.out.println("OOPS! " + message);
-        System.out.println(SEPARATOR);
+        showLine(SEPARATOR);
+        showLine("OOPS! " + message);
+        showLine(SEPARATOR);
     }
 
     /** Shows Kaykay's farewell. */
     public void showFarewell() {
-        System.out.println(SEPARATOR);
-        System.out.println("Bye. Hope to see you again soon!");
-        System.out.println(SEPARATOR);
+        showLine(SEPARATOR);
+        showLine("Bye. Hope to see you again soon!");
+        showLine(SEPARATOR);
+    }
+
+    /** Sends one rendered line to the configured output receiver. */
+    private void showLine(String line) {
+        if (shouldShowSeparators || !line.equals(SEPARATOR)) {
+            output.accept(line);
+        }
     }
 }

@@ -34,7 +34,17 @@ public class Kaykay {
      * @param filePath path of the task data file.
      */
     public Kaykay(String filePath) {
-        ui = new Ui();
+        this(filePath, new Ui());
+    }
+
+    /**
+     * Creates a Kaykay chatbot using the given data file and UI.
+     *
+     * @param filePath path of the task data file.
+     * @param ui UI used to render chatbot output.
+     */
+    public Kaykay(String filePath, Ui ui) {
+        this.ui = ui;
         storage = new Storage(filePath);
         parser = new Parser();
         TaskList loadedTasks;
@@ -50,6 +60,25 @@ public class Kaykay {
         loadFailed = failedToLoad;
     }
 
+    /**
+     * Processes one command and renders its result through the configured UI.
+     *
+     * @param input command entered by the user.
+     * @return true if the command ends the chatbot session.
+     */
+    public boolean processCommand(String input) {
+        try {
+            Command command = parser.parse(input);
+            command.execute(tasks, ui, storage);
+            return command.isExit();
+        } catch (KaykayException exception) {
+            ui.showError(exception.getMessage());
+        } catch (IOException exception) {
+            ui.showError("I couldn't save your tasks. Please check the data folder.");
+        }
+        return false;
+    }
+
     /** Runs the chatbot until the user says bye or input ends. */
     public void run() {
         ui.showWelcome();
@@ -58,16 +87,8 @@ public class Kaykay {
         }
         while (ui.hasNextLine()) {
             String input = ui.readCommand();
-            try {
-                Command command = parser.parse(input);
-                command.execute(tasks, ui, storage);
-                if (command.isExit()) {
-                    break;
-                }
-            } catch (KaykayException exception) {
-                ui.showError(exception.getMessage());
-            } catch (IOException exception) {
-                ui.showError("I couldn't save your tasks. Please check the data folder.");
+            if (processCommand(input)) {
+                break;
             }
         }
         ui.showFarewell();

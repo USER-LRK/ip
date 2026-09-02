@@ -1,0 +1,59 @@
+.root {
+    -fx-background-color: #f4f7fb;
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.dialog-container {
+    -fx-padding: 14px;
+}
+
+.scroll-pane,
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.text-field {
+    -fx-background-color: white;
+    -fx-background-radius: 18px;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 18px;
+    -fx-border-width: 1px;
+    -fx-font-size: 14px;
+    -fx-padding: 8px 14px;
+}
+
+.text-field:focused {
+    -fx-border-color: #4f46e5;
+    -fx-border-width: 2px;
+}
+
+.button {
+    -fx-background-color: #4f46e5;
+    -fx-background-radius: 18px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.button:hover {
+    -fx-background-color: #4338ca;
+}
+
+.button:pressed {
+    -fx-background-color: #3730a3;
+}
+
+.scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #cbd5e1;
+    -fx-background-radius: 1em;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-pref-height: 0;
+    -fx-opacity: 0;
+}
