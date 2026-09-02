@@ -1,5 +1,9 @@
 package kaykay.ui;
 
+import java.io.IOException;
+
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -7,9 +11,8 @@ import javafx.scene.layout.HBox;
 /**
  * Displays one message in Kaykay's conversation area.
  *
- * <p>The avatar is represented by a text label for now. This keeps the Part 2
- * layout self-contained while leaving room for image assets in a later
- * refinement.</p>
+ * <p>The avatar is represented by a text label for now. This keeps the view
+ * self-contained while leaving room for image assets in a later refinement.</p>
  */
 public final class DialogBox extends HBox {
     private static final String KAYKAY_AVATAR = "K";
@@ -17,10 +20,12 @@ public final class DialogBox extends HBox {
     private static final double AVATAR_WIDTH = 30.0;
 
     /** Text displayed in the dialog box. */
-    private final Label text;
+    @FXML
+    private Label text;
 
     /** Avatar displayed beside the dialog text. */
-    private final Label avatar;
+    @FXML
+    private Label avatar;
 
     /**
      * Creates a dialog box for a message from Kaykay or the user.
@@ -29,14 +34,21 @@ public final class DialogBox extends HBox {
      * @param isUserMessage whether the message came from the user.
      */
     public DialogBox(String message, boolean isUserMessage) {
-        avatar = new Label(isUserMessage ? USER_AVATAR : KAYKAY_AVATAR);
-        text = new Label(message);
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(MainWindow.class.getResource("/view/DialogBox.fxml"));
+            fxmlLoader.setController(this);
+            fxmlLoader.setRoot(this);
+            fxmlLoader.load();
+        } catch (IOException exception) {
+            throw new IllegalStateException("Unable to load a Kaykay dialog box.", exception);
+        }
 
         avatar.setMinWidth(AVATAR_WIDTH);
+        avatar.setText(isUserMessage ? USER_AVATAR : KAYKAY_AVATAR);
+        text.setText(message);
         text.setWrapText(true);
         setAlignment(isUserMessage ? Pos.TOP_RIGHT : Pos.TOP_LEFT);
         setSpacing(8.0);
-        getChildren().addAll(text, avatar);
     }
 
     /**
