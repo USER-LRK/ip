@@ -47,6 +47,7 @@ public final class DialogBox extends HBox {
         avatar.setText(isUserMessage ? USER_AVATAR : KAYKAY_AVATAR);
         text.setText(message);
         text.setWrapText(true);
+        text.getStyleClass().add(isUserMessage ? "user-dialog" : "kaykay-dialog");
         setAlignment(isUserMessage ? Pos.TOP_RIGHT : Pos.TOP_LEFT);
         setSpacing(8.0);
     }

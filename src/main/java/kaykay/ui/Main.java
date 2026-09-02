@@ -12,6 +12,9 @@ import javafx.stage.Stage;
  * Provides the initial JavaFX application window for Kaykay using FXML.
  */
 public final class Main extends Application {
+    private static final double MIN_WINDOW_WIDTH = 420.0;
+    private static final double MIN_WINDOW_HEIGHT = 300.0;
+
     /**
      * Starts the JavaFX application window.
      *
@@ -25,6 +28,10 @@ public final class Main extends Application {
             Scene scene = new Scene(mainLayout);
             stage.setTitle("Kaykay");
             stage.setScene(scene);
+            stage.setMinWidth(MIN_WINDOW_WIDTH);
+            stage.setMinHeight(MIN_WINDOW_HEIGHT);
+            scene.getStylesheets().add(Main.class.getResource("/css/main.css").toExternalForm());
+            scene.getStylesheets().add(Main.class.getResource("/css/dialog-box.css").toExternalForm());
             stage.show();
         } catch (IOException exception) {
             throw new IllegalStateException("Unable to load the Kaykay GUI.", exception);

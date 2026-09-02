@@ -1,0 +1,31 @@
+.dialog-text {
+    -fx-border-width: 1px;
+    -fx-font-size: 14px;
+    -fx-padding: 9px 13px;
+}
+
+.user-dialog {
+    -fx-background-color: #dbeafe;
+    -fx-background-radius: 16px 16px 4px 16px;
+    -fx-border-color: #93c5fd;
+    -fx-border-radius: 16px 16px 4px 16px;
+    -fx-text-fill: #1e3a8a;
+}
+
+.kaykay-dialog {
+    -fx-background-color: #e2e8f0;
+    -fx-background-radius: 16px 16px 16px 4px;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 16px 16px 16px 4px;
+    -fx-text-fill: #1e293b;
+}
+
+.avatar {
+    -fx-alignment: center;
+    -fx-background-color: #4f46e5;
+    -fx-background-radius: 50%;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-min-height: 30px;
+    -fx-text-fill: white;
+}

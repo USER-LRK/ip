@@ -24,9 +24,12 @@ public class Ui {
     /** Receives rendered output lines from the UI. */
     private final Consumer<String> output;
 
+    /** Whether console-style separators should be rendered. */
+    private final boolean shouldShowSeparators;
+
     /** Creates a UI that reads from standard input and writes to standard output. */
     public Ui() {
-        this(System.out::println);
+        this(System.out::println, true);
     }
 
     /**
@@ -35,8 +38,19 @@ public class Ui {
      * @param output receiver for rendered output lines.
      */
     public Ui(Consumer<String> output) {
+        this(output, true);
+    }
+
+    /**
+     * Creates a UI that reads from standard input and configures separator rendering.
+     *
+     * @param output receiver for rendered output lines.
+     * @param shouldShowSeparators whether console-style separators should be rendered.
+     */
+    public Ui(Consumer<String> output, boolean shouldShowSeparators) {
         scanner = new Scanner(System.in);
         this.output = output;
+        this.shouldShowSeparators = shouldShowSeparators;
     }
 
     /**
@@ -165,6 +179,8 @@ public class Ui {
 
     /** Sends one rendered line to the configured output receiver. */
     private void showLine(String line) {
-        output.accept(line);
+        if (shouldShowSeparators || !line.equals(SEPARATOR)) {
+            output.accept(line);
+        }
     }
 }

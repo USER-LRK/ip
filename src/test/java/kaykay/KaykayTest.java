@@ -27,4 +27,17 @@ class KaykayTest {
         assertTrue(output.toString().contains("[T][ ] buy milk"));
         assertTrue(kaykay.processCommand("bye"));
     }
+
+    /** Checks that GUI output omits separators while retaining response text. */
+    @Test
+    void processCommand_guiOutput_omitsConsoleSeparators() {
+        StringBuilder output = new StringBuilder();
+        Ui ui = new Ui(line -> output.append(line).append(System.lineSeparator()), false);
+        Kaykay kaykay = new Kaykay(temporaryDirectory.resolve("gui-tasks.txt").toString(), ui);
+
+        kaykay.processCommand("todo buy milk");
+
+        assertFalse(output.toString().contains("____________________________________________________________"));
+        assertTrue(output.toString().contains("I've added this task:"));
+    }
 }

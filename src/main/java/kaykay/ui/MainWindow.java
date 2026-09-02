@@ -34,7 +34,7 @@ public final class MainWindow extends AnchorPane {
     private final StringBuilder responseBuffer = new StringBuilder();
 
     /** Renders chatbot output into the response buffer. */
-    private final Ui ui = new Ui(this::captureResponse);
+    private final Ui ui = new Ui(this::captureResponse, false);
 
     /** Processes commands and manages the task data. */
     private final Kaykay kaykay = new Kaykay(DEFAULT_FILE_PATH, ui);
