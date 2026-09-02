@@ -48,8 +48,7 @@ class CommandTest {
         assertEquals("[T][ ] revise notes", tasks.getTask(0).toString());
         new DeleteCommand("1").execute(tasks, new RecordingUi(), storage);
         assertEquals(0, tasks.size());
-        assertThrows(KaykayException.class,
-                () -> new DeleteCommand("1").execute(tasks, new RecordingUi(), storage));
+        assertThrows(KaykayException.class, () -> new DeleteCommand("1").execute(tasks, new RecordingUi(), storage));
     }
 
     /** Checks that find delegates the ordered matches to the UI without changing task state. */
