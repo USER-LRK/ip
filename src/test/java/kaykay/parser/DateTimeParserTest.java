@@ -44,8 +44,7 @@ class DateTimeParserTest {
         };
 
         for (String invalidValue : invalidValues) {
-            assertThrows(DateTimeParseException.class,
-                    () -> DateTimeParser.parse(invalidValue),
+            assertThrows(DateTimeParseException.class, () -> DateTimeParser.parse(invalidValue),
                     "Expected parsing to fail for: " + invalidValue);
         }
     }
