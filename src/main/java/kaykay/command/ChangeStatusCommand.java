@@ -56,7 +56,7 @@ public abstract class ChangeStatusCommand extends Command {
             changedTask.unmark();
         }
         try {
-            storage.saveTasks(tasks);
+            storage.saveData(data);
         } catch (IOException exception) {
             if (wasDone) {
                 changedTask.mark();

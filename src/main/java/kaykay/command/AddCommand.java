@@ -55,7 +55,7 @@ public abstract class AddCommand extends Command {
         Task addedTask = createTask();
         tasks.add(addedTask);
         try {
-            storage.saveTasks(tasks);
+            storage.saveData(data);
         } catch (IOException exception) {
             tasks.remove(addedTask);
             throw exception;

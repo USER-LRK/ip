@@ -33,7 +33,7 @@ class CommandTest {
 
         assertEquals(1, tasks.size());
         assertEquals("[T][ ] buy milk", tasks.getTask(0).toString());
-        assertEquals("T | 0 | buy milk", storage.loadTasks().get(0).toFileFormat());
+        assertEquals("T | 0 | buy milk", storage.loadData().getTasks().getTask(0).toFileFormat());
     }
 
     /** Checks marking, unmarking, deletion, and rejection of an invalid task number. */

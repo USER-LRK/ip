@@ -5,7 +5,6 @@ import java.io.IOException;
 import kaykay.command.Command;
 import kaykay.exception.KaykayException;
 import kaykay.model.ApplicationData;
-import kaykay.model.TaskList;
 import kaykay.parser.Parser;
 import kaykay.storage.Storage;
 import kaykay.ui.Ui;
@@ -48,16 +47,16 @@ public class Kaykay {
         this.ui = ui;
         storage = new Storage(filePath);
         parser = new Parser();
-        TaskList loadedTasks;
+        ApplicationData loadedData;
         boolean failedToLoad;
         try {
-            loadedTasks = new TaskList(storage.loadTasks());
+            loadedData = storage.loadData();
             failedToLoad = false;
         } catch (IOException exception) {
-            loadedTasks = new TaskList();
+            loadedData = new ApplicationData();
             failedToLoad = true;
         }
-        data = new ApplicationData(loadedTasks);
+        data = loadedData;
         loadFailed = failedToLoad;
     }
 

@@ -44,7 +44,7 @@ public final class DeleteCommand extends Command {
         int index = Integer.parseInt(taskNumber) - 1;
         Task deletedTask = tasks.remove(index);
         try {
-            storage.saveTasks(tasks);
+            storage.saveData(data);
         } catch (IOException exception) {
             tasks.add(index, deletedTask);
             throw exception;
