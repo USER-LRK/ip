@@ -47,7 +47,7 @@ public abstract class ChangeStatusCommand extends Command {
         }
         int index = Integer.parseInt(taskNumber) - 1;
         Task changedTask = tasks.getTask(index);
-        boolean wasDone = changedTask.getStatusIcon().equals("X");
+        boolean wasDone = changedTask.isDone();
         if (marked) {
             changedTask.mark();
         } else {
