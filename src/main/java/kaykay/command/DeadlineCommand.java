@@ -10,17 +10,17 @@ import kaykay.model.Task;
  */
 public final class DeadlineCommand extends AddCommand {
     /** Date and time by which the task should be completed. */
-    private final LocalDateTime by;
+    private final LocalDateTime deadlineDateTime;
 
     /**
      * Creates a deadline command with its description and due date/time.
      *
      * @param description description of the deadline task.
-     * @param by date and time by which the task should be completed.
+     * @param deadlineDateTime date and time by which the task should be completed.
      */
-    public DeadlineCommand(String description, LocalDateTime by) {
+    public DeadlineCommand(String description, LocalDateTime deadlineDateTime) {
         super(description);
-        this.by = by;
+        this.deadlineDateTime = deadlineDateTime;
     }
 
     /**
@@ -30,6 +30,6 @@ public final class DeadlineCommand extends AddCommand {
      */
     @Override
     protected Task createTask() {
-        return new Deadline(getDescription(), by);
+        return new Deadline(getDescription(), deadlineDateTime);
     }
 }

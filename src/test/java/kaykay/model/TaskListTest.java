@@ -31,7 +31,7 @@ class TaskListTest {
         assertSame(first, tasks.remove(0));
         tasks.remove(inserted);
         assertEquals(2, tasks.size());
-        assertEquals("middle", tasks.getTask(0).description);
+        assertEquals("middle", tasks.getTask(0).getDescription());
         assertSame(second, tasks.getTask(1));
     }
 

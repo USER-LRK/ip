@@ -1,6 +1,8 @@
 package kaykay.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDateTime;
 
@@ -14,10 +16,13 @@ class TaskModelTest {
     void task_markAndUnmark_updatesStatusIcon() {
         Task task = new Task("read notes");
 
+        assertFalse(task.isDone());
         assertEquals(" ", task.getStatusIcon());
         task.mark();
+        assertTrue(task.isDone());
         assertEquals("X", task.getStatusIcon());
         task.unmark();
+        assertFalse(task.isDone());
         assertEquals(" ", task.getStatusIcon());
     }
 

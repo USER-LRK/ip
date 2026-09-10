@@ -10,22 +10,22 @@ import kaykay.model.Task;
  */
 public final class EventCommand extends AddCommand {
     /** Event start date and time. */
-    private final LocalDateTime from;
+    private final LocalDateTime startDateTime;
 
     /** Event end date and time. */
-    private final LocalDateTime to;
+    private final LocalDateTime endDateTime;
 
     /**
      * Creates an event command with its description and date/time range.
      *
      * @param description description of the event.
-     * @param from date and time when the event starts.
-     * @param to date and time when the event ends.
+     * @param startDateTime date and time when the event starts.
+     * @param endDateTime date and time when the event ends.
      */
-    public EventCommand(String description, LocalDateTime from, LocalDateTime to) {
+    public EventCommand(String description, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         super(description);
-        this.from = from;
-        this.to = to;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
     }
 
     /**
@@ -35,6 +35,6 @@ public final class EventCommand extends AddCommand {
      */
     @Override
     protected Task createTask() {
-        return new Event(getDescription(), from, to);
+        return new Event(getDescription(), startDateTime, endDateTime);
     }
 }
