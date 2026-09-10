@@ -52,6 +52,7 @@ public abstract class AddCommand extends Command {
     @Override
     public final void execute(ApplicationData data, Ui ui, Storage storage) throws IOException {
         TaskList tasks = data.getTasks();
+        int originalTaskCount = tasks.size();
         Task addedTask = createTask();
         assert addedTask != null : "An add command must create a task";
 

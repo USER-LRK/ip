@@ -58,7 +58,7 @@ public abstract class ChangeStatusCommand extends Command {
         } else {
             changedTask.unmark();
         }
-        assert changedTask.getStatusIcon().equals(marked ? "X" : " ")
+        assert changedTask.getStatusIcon().equals(shouldMark ? "X" : " ")
                 : "Changing a task status must produce the requested state";
         try {
             storage.saveData(data);

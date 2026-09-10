@@ -48,16 +48,16 @@ public class Kaykay {
         storage = new Storage(filePath);
         parser = new Parser();
         ApplicationData loadedData;
-        boolean failedToLoad;
+        boolean didLoadFail;
         try {
             loadedData = storage.loadData();
-            failedToLoad = false;
+            didLoadFail = false;
         } catch (IOException exception) {
             loadedData = new ApplicationData();
-            failedToLoad = true;
+            didLoadFail = true;
         }
         data = loadedData;
-        loadFailed = failedToLoad;
+        this.didLoadFail = didLoadFail;
     }
 
     /**
@@ -69,6 +69,7 @@ public class Kaykay {
     public boolean processCommand(String input) {
         try {
             Command command = parser.parse(input);
+            assert command != null : "Parser must return a command for valid input";
             command.execute(data, ui, storage);
             return command.isExit();
         } catch (KaykayException exception) {
