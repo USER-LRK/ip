@@ -111,16 +111,30 @@ public final class Storage {
             throw new IOException("Invalid task data: " + line);
         }
 
+        int status = parseStatus(parts[1], line);
+        Task task = createTask(parts, line);
+        if (status == 1) {
+            task.mark();
+        }
+        return task;
+    }
+
+    /** Parses and validates the stored completion status. */
+    private static int parseStatus(String value, String line) throws IOException {
         int status;
         try {
-            status = Integer.parseInt(parts[1]);
+            status = Integer.parseInt(value);
         } catch (NumberFormatException exception) {
             throw new IOException("Invalid task status: " + line, exception);
         }
         if (status != 0 && status != 1) {
             throw new IOException("Invalid task status: " + line);
         }
+        return status;
+    }
 
+    /** Creates the task subtype identified by the stored type field. */
+    private static Task createTask(String[] parts, String line) throws IOException {
         Task task;
         try {
             switch (parts[0]) {
@@ -148,10 +162,6 @@ public final class Storage {
             }
         } catch (DateTimeParseException exception) {
             throw new IOException("Invalid date/time data: " + line, exception);
-        }
-
-        if (status == 1) {
-            task.mark();
         }
         return task;
     }
