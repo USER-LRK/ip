@@ -2,7 +2,7 @@ package kaykay.command;
 
 import java.io.IOException;
 
-import kaykay.model.TaskList;
+import kaykay.model.ApplicationData;
 import kaykay.storage.Storage;
 import kaykay.ui.Ui;
 
@@ -17,13 +17,13 @@ public final class ExitCommand extends Command {
     /**
      * Performs no task action because the caller checks {@link #isExit()} after execution.
      *
-     * @param tasks task list managed by the chatbot.
+     * @param data application data managed by the chatbot.
      * @param ui UI managed by the chatbot.
      * @param storage storage managed by the chatbot.
      * @throws IOException declared by the command interface; not thrown by exiting.
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) throws IOException {
+    public void execute(ApplicationData data, Ui ui, Storage storage) throws IOException {
         // The run loop checks isExit() after execution.
     }
 

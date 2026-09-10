@@ -3,6 +3,7 @@ package kaykay.command;
 import java.io.IOException;
 
 import kaykay.exception.KaykayException;
+import kaykay.model.ApplicationData;
 import kaykay.model.Task;
 import kaykay.model.TaskList;
 import kaykay.storage.Storage;
@@ -28,14 +29,15 @@ public final class DeleteCommand extends Command {
      * Deletes the selected task, saves the result, and confirms the deletion.
      * The task is restored if saving fails.
      *
-     * @param tasks task list to modify.
+     * @param data application data containing the task list to modify.
      * @param ui UI used to show the confirmation.
      * @param storage storage used to persist the updated task list.
      * @throws KaykayException if the task number is invalid.
      * @throws IOException if the updated task list cannot be saved.
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) throws KaykayException, IOException {
+    public void execute(ApplicationData data, Ui ui, Storage storage) throws KaykayException, IOException {
+        TaskList tasks = data.getTasks();
         if (!tasks.isValidTaskNumber(taskNumber)) {
             throw new KaykayException("Please provide an existing task number to delete.");
         }

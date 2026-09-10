@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import kaykay.command.Command;
 import kaykay.exception.KaykayException;
+import kaykay.model.ApplicationData;
 import kaykay.model.TaskList;
 import kaykay.parser.Parser;
 import kaykay.storage.Storage;
@@ -19,8 +20,8 @@ public class Kaykay {
     /** Loads and saves the chatbot's tasks. */
     private final Storage storage;
 
-    /** Holds the tasks managed during this run. */
-    private final TaskList tasks;
+    /** Holds the information managed during this run. */
+    private final ApplicationData data;
 
     /** Interprets each line of user input. */
     private final Parser parser;
@@ -56,7 +57,7 @@ public class Kaykay {
             loadedTasks = new TaskList();
             failedToLoad = true;
         }
-        tasks = loadedTasks;
+        data = new ApplicationData(loadedTasks);
         loadFailed = failedToLoad;
     }
 
@@ -69,7 +70,7 @@ public class Kaykay {
     public boolean processCommand(String input) {
         try {
             Command command = parser.parse(input);
-            command.execute(tasks, ui, storage);
+            command.execute(data, ui, storage);
             return command.isExit();
         } catch (KaykayException exception) {
             ui.showError(exception.getMessage());

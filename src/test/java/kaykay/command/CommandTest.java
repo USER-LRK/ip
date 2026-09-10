@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import kaykay.exception.KaykayException;
+import kaykay.model.ApplicationData;
 import kaykay.model.Task;
 import kaykay.model.TaskList;
 import kaykay.model.Todo;
@@ -28,7 +29,7 @@ class CommandTest {
         TaskList tasks = new TaskList();
         Storage storage = new Storage(temporaryDirectory.resolve("tasks.txt").toString());
 
-        new TodoCommand("buy milk").execute(tasks, new RecordingUi(), storage);
+        new TodoCommand("buy milk").execute(new ApplicationData(tasks), new RecordingUi(), storage);
 
         assertEquals(1, tasks.size());
         assertEquals("[T][ ] buy milk", tasks.getTask(0).toString());
@@ -40,15 +41,17 @@ class CommandTest {
     void statusAndDeleteCommands_execute_updateTaskList() throws IOException, KaykayException {
         TaskList tasks = new TaskList();
         Storage storage = new Storage(temporaryDirectory.resolve("tasks.txt").toString());
-        new TodoCommand("revise notes").execute(tasks, new RecordingUi(), storage);
+        ApplicationData data = new ApplicationData(tasks);
+        new TodoCommand("revise notes").execute(data, new RecordingUi(), storage);
 
-        new MarkCommand("1").execute(tasks, new RecordingUi(), storage);
+        new MarkCommand("1").execute(data, new RecordingUi(), storage);
         assertEquals("[T][X] revise notes", tasks.getTask(0).toString());
-        new UnmarkCommand("1").execute(tasks, new RecordingUi(), storage);
+        new UnmarkCommand("1").execute(data, new RecordingUi(), storage);
         assertEquals("[T][ ] revise notes", tasks.getTask(0).toString());
-        new DeleteCommand("1").execute(tasks, new RecordingUi(), storage);
+        new DeleteCommand("1").execute(data, new RecordingUi(), storage);
         assertEquals(0, tasks.size());
-        assertThrows(KaykayException.class, () -> new DeleteCommand("1").execute(tasks, new RecordingUi(), storage));
+        assertThrows(KaykayException.class, () ->
+                new DeleteCommand("1").execute(data, new RecordingUi(), storage));
     }
 
     /** Checks that find delegates the ordered matches to the UI without changing task state. */
@@ -59,7 +62,7 @@ class CommandTest {
         TaskList tasks = new TaskList(first, second);
         RecordingUi ui = new RecordingUi();
 
-        new FindCommand("BOOK").execute(tasks, ui,
+        new FindCommand("BOOK").execute(new ApplicationData(tasks), ui,
                 new Storage(temporaryDirectory.resolve("tasks.txt").toString()));
 
         assertEquals(List.of(first), ui.getMatchingTasks());
