@@ -176,15 +176,15 @@ public final class Storage {
     private static String[] splitFields(String line) throws IOException {
         ArrayList<String> fields = new ArrayList<>();
         StringBuilder field = new StringBuilder();
-        boolean skipSeparatorSpace = false;
+        boolean shouldSkipSeparatorSpace = false;
 
         for (int i = 0; i < line.length(); i += 1) {
             char character = line.charAt(i);
-            if (skipSeparatorSpace && character == ' ') {
-                skipSeparatorSpace = false;
+            if (shouldSkipSeparatorSpace && character == ' ') {
+                shouldSkipSeparatorSpace = false;
                 continue;
             }
-            skipSeparatorSpace = false;
+            shouldSkipSeparatorSpace = false;
 
             if (character == '\\') {
                 if (i + 1 >= line.length()) {
@@ -197,7 +197,7 @@ public final class Storage {
                 removeSeparatorSpace(field);
                 fields.add(unescape(field.toString()));
                 field.setLength(0);
-                skipSeparatorSpace = true;
+                shouldSkipSeparatorSpace = true;
             } else {
                 field.append(character);
             }
