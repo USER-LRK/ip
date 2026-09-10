@@ -3,7 +3,7 @@ package kaykay.command;
 import java.io.IOException;
 
 import kaykay.exception.KaykayException;
-import kaykay.model.TaskList;
+import kaykay.model.ApplicationData;
 import kaykay.storage.Storage;
 import kaykay.ui.Ui;
 
@@ -18,13 +18,13 @@ public abstract class Command {
     /**
      * Executes this command using the supplied application components.
      *
-     * @param tasks task list to read or modify.
+     * @param data application data to read or modify.
      * @param ui UI used to display command results.
      * @param storage storage used to persist task changes.
      * @throws KaykayException if the command cannot be applied to the task list.
      * @throws IOException if a task change cannot be saved.
      */
-    public abstract void execute(TaskList tasks, Ui ui, Storage storage)
+    public abstract void execute(ApplicationData data, Ui ui, Storage storage)
             throws KaykayException, IOException;
 
     /**

@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import kaykay.command.Command;
 import kaykay.exception.KaykayException;
-import kaykay.model.TaskList;
+import kaykay.model.ApplicationData;
 import kaykay.parser.Parser;
 import kaykay.storage.Storage;
 import kaykay.ui.Ui;
@@ -19,8 +19,8 @@ public class Kaykay {
     /** Loads and saves the chatbot's tasks. */
     private final Storage storage;
 
-    /** Holds the tasks managed during this run. */
-    private final TaskList tasks;
+    /** Holds the information managed during this run. */
+    private final ApplicationData data;
 
     /** Interprets each line of user input. */
     private final Parser parser;
@@ -47,17 +47,17 @@ public class Kaykay {
         this.ui = ui;
         storage = new Storage(filePath);
         parser = new Parser();
-        TaskList loadedTasks;
-        boolean didLoadFail;
+        ApplicationData loadedData;
+        boolean failedToLoad;
         try {
-            loadedTasks = new TaskList(storage.loadTasks());
-            didLoadFail = false;
+            loadedData = storage.loadData();
+            failedToLoad = false;
         } catch (IOException exception) {
-            loadedTasks = new TaskList();
-            didLoadFail = true;
+            loadedData = new ApplicationData();
+            failedToLoad = true;
         }
-        tasks = loadedTasks;
-        this.didLoadFail = didLoadFail;
+        data = loadedData;
+        loadFailed = failedToLoad;
     }
 
     /**
@@ -69,13 +69,12 @@ public class Kaykay {
     public boolean processCommand(String input) {
         try {
             Command command = parser.parse(input);
-            assert command != null : "Parser must return a command for valid input";
-            command.execute(tasks, ui, storage);
+            command.execute(data, ui, storage);
             return command.isExit();
         } catch (KaykayException exception) {
             ui.showError(exception.getMessage());
         } catch (IOException exception) {
-            ui.showError("I couldn't save your tasks. Please check the data folder.");
+            ui.showError("I couldn't save your data. Please check the data folder.");
         }
         return false;
     }

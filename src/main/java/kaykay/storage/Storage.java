@@ -5,19 +5,23 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import kaykay.model.ApplicationData;
 import kaykay.model.Deadline;
 import kaykay.model.Event;
+import kaykay.model.Place;
+import kaykay.model.PlaceList;
 import kaykay.model.Task;
 import kaykay.model.TaskList;
 import kaykay.model.Todo;
 import kaykay.parser.DateTimeParser;
 
 /**
- * Saves and loads the current task list from the chatbot's data file.
+ * Saves and loads application data from the chatbot's data file.
  */
 public final class Storage {
     /** The file used to persist tasks for this storage instance. */
@@ -33,12 +37,12 @@ public final class Storage {
     }
 
     /**
-     * Replaces the data file with the current contents of the task list.
+     * Replaces the data file with the current application data.
      *
-     * @param tasks task list to save.
+     * @param data application data to save.
      * @throws IOException if the data directory or file cannot be written.
      */
-    public void saveTasks(TaskList tasks) throws IOException {
+    public void saveData(ApplicationData data) throws IOException {
         File dataDirectory = dataFile.getParentFile();
         if (dataDirectory != null && !dataDirectory.exists() && !dataDirectory.mkdirs()) {
             throw new IOException("Could not create the data directory.");
@@ -47,9 +51,16 @@ public final class Storage {
         File temporaryFile = new File(dataFile.getPath() + ".tmp");
         try {
             try (FileWriter writer = new FileWriter(temporaryFile)) {
+                TaskList tasks = data.getTasks();
                 for (int i = 0; i < tasks.size(); i += 1) {
                     Task task = tasks.getTask(i);
                     writer.write(task.toFileFormat());
+                    writer.write(System.lineSeparator());
+                }
+                PlaceList places = data.getPlaces();
+                for (int i = 0; i < places.size(); i += 1) {
+                    Place place = places.getPlace(i);
+                    writer.write(place.toFileFormat());
                     writer.write(System.lineSeparator());
                 }
             }
@@ -60,29 +71,35 @@ public final class Storage {
     }
 
     /**
-     * Loads tasks from the data file, or returns an empty list if the file does not exist.
+     * Loads application data, or returns empty data if the file does not exist.
      *
-     * @return tasks stored in the data file.
-     * @throws IOException if the data file contains an invalid task or cannot be read.
+     * @return tasks and places stored in the data file.
+     * @throws IOException if the data file contains an invalid record or cannot be read.
      */
-    public ArrayList<Task> loadTasks() throws IOException {
+    public ApplicationData loadData() throws IOException {
         ArrayList<Task> tasks = new ArrayList<>();
+        ArrayList<Place> places = new ArrayList<>();
         if (!dataFile.exists()) {
-            return tasks;
+            return new ApplicationData(new TaskList(tasks), new PlaceList(places));
         }
 
         try (Scanner scanner = new Scanner(dataFile)) {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 if (!line.isBlank()) {
-                    tasks.add(parseTask(line));
+                    String[] parts = splitFields(line);
+                    if (parts.length > 0 && parts[0].equals("P")) {
+                        places.add(parsePlace(parts, line));
+                    } else {
+                        tasks.add(parseTask(parts, line));
+                    }
                 }
             }
             if (scanner.ioException() != null) {
                 throw scanner.ioException();
             }
         }
-        return tasks;
+        return new ApplicationData(new TaskList(tasks), new PlaceList(places));
     }
 
     /**
@@ -105,8 +122,7 @@ public final class Storage {
      * @return the reconstructed task.
      * @throws IOException if the line does not follow the storage format.
      */
-    private static Task parseTask(String line) throws IOException {
-        String[] parts = splitFields(line);
+    private static Task parseTask(String[] parts, String line) throws IOException {
         if (parts.length < 3) {
             throw new IOException("Invalid task data: " + line);
         }
@@ -164,6 +180,42 @@ public final class Storage {
             throw new IOException("Invalid date/time data: " + line, exception);
         }
         return task;
+    }
+
+    /**
+     * Creates a place from decoded fields in one data-file line.
+     *
+     * @param parts decoded fields from the line.
+     * @param line original serialized place data.
+     * @return the reconstructed place.
+     * @throws IOException if the fields do not describe a valid place.
+     */
+    private static Place parsePlace(String[] parts, String line) throws IOException {
+        if (parts.length != 7 || parts[1].isBlank()) {
+            throw new IOException("Invalid place data: " + line);
+        }
+
+        LocalDate visitedOn = null;
+        if (!parts[4].isBlank()) {
+            try {
+                visitedOn = LocalDate.parse(parts[4], Place.VISIT_DATE_FORMATTER);
+            } catch (DateTimeParseException exception) {
+                throw new IOException("Invalid place visit date: " + line, exception);
+            }
+        }
+
+        Integer rating = null;
+        if (!parts[5].isBlank()) {
+            try {
+                rating = Integer.parseInt(parts[5]);
+            } catch (NumberFormatException exception) {
+                throw new IOException("Invalid place rating: " + line, exception);
+            }
+            if (rating < 1 || rating > 5) {
+                throw new IOException("Invalid place rating: " + line);
+            }
+        }
+        return new Place(parts[1], parts[2], parts[3], visitedOn, rating, parts[6]);
     }
 
     /**

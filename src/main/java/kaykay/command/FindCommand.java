@@ -2,7 +2,7 @@ package kaykay.command;
 
 import java.io.IOException;
 
-import kaykay.model.TaskList;
+import kaykay.model.ApplicationData;
 import kaykay.storage.Storage;
 import kaykay.ui.Ui;
 
@@ -23,13 +23,13 @@ public final class FindCommand extends Command {
     /**
      * Displays tasks whose descriptions contain the command keyword.
      *
-     * @param tasks task list to search.
+     * @param data application data containing the task list to search.
      * @param ui UI used to display matching tasks.
      * @param storage unused storage component supplied by the command interface.
      * @throws IOException declared by the command interface; not thrown by searching.
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) throws IOException {
-        ui.showMatchingTasks(tasks.findTasks(keyword));
+    public void execute(ApplicationData data, Ui ui, Storage storage) throws IOException {
+        ui.showMatchingTasks(data.getTasks().findTasks(keyword));
     }
 }

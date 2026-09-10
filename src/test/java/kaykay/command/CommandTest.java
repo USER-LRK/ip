@@ -5,12 +5,15 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import kaykay.exception.KaykayException;
+import kaykay.model.ApplicationData;
+import kaykay.model.Place;
 import kaykay.model.Task;
 import kaykay.model.TaskList;
 import kaykay.model.Todo;
@@ -28,11 +31,11 @@ class CommandTest {
         TaskList tasks = new TaskList();
         Storage storage = new Storage(temporaryDirectory.resolve("tasks.txt").toString());
 
-        new TodoCommand("buy milk").execute(tasks, new RecordingUi(), storage);
+        new TodoCommand("buy milk").execute(new ApplicationData(tasks), new RecordingUi(), storage);
 
         assertEquals(1, tasks.size());
         assertEquals("[T][ ] buy milk", tasks.getTask(0).toString());
-        assertEquals("T | 0 | buy milk", storage.loadTasks().get(0).toFileFormat());
+        assertEquals("T | 0 | buy milk", storage.loadData().getTasks().getTask(0).toFileFormat());
     }
 
     /** Checks marking, unmarking, deletion, and rejection of an invalid task number. */
@@ -40,15 +43,17 @@ class CommandTest {
     void statusAndDeleteCommands_execute_updateTaskList() throws IOException, KaykayException {
         TaskList tasks = new TaskList();
         Storage storage = new Storage(temporaryDirectory.resolve("tasks.txt").toString());
-        new TodoCommand("revise notes").execute(tasks, new RecordingUi(), storage);
+        ApplicationData data = new ApplicationData(tasks);
+        new TodoCommand("revise notes").execute(data, new RecordingUi(), storage);
 
-        new MarkCommand("1").execute(tasks, new RecordingUi(), storage);
+        new MarkCommand("1").execute(data, new RecordingUi(), storage);
         assertEquals("[T][X] revise notes", tasks.getTask(0).toString());
-        new UnmarkCommand("1").execute(tasks, new RecordingUi(), storage);
+        new UnmarkCommand("1").execute(data, new RecordingUi(), storage);
         assertEquals("[T][ ] revise notes", tasks.getTask(0).toString());
-        new DeleteCommand("1").execute(tasks, new RecordingUi(), storage);
+        new DeleteCommand("1").execute(data, new RecordingUi(), storage);
         assertEquals(0, tasks.size());
-        assertThrows(KaykayException.class, () -> new DeleteCommand("1").execute(tasks, new RecordingUi(), storage));
+        assertThrows(KaykayException.class, () ->
+                new DeleteCommand("1").execute(data, new RecordingUi(), storage));
     }
 
     /** Checks that find delegates the ordered matches to the UI without changing task state. */
@@ -59,17 +64,48 @@ class CommandTest {
         TaskList tasks = new TaskList(first, second);
         RecordingUi ui = new RecordingUi();
 
-        new FindCommand("BOOK").execute(tasks, ui,
+        new FindCommand("BOOK").execute(new ApplicationData(tasks), ui,
                 new Storage(temporaryDirectory.resolve("tasks.txt").toString()));
 
         assertEquals(List.of(first), ui.getMatchingTasks());
         assertEquals(2, tasks.size());
     }
 
+    /** Checks adding, editing, finding, and deleting places with persistence. */
+    @Test
+    void placeCommands_execute_manageAndSavePlaces() throws IOException, KaykayException {
+        ApplicationData data = new ApplicationData();
+        RecordingUi ui = new RecordingUi();
+        Storage storage = new Storage(temporaryDirectory.resolve("data.txt").toString());
+        Place place = new Place("Burnt Ends", "restaurant", "Dempsey",
+                LocalDate.of(2026, 9, 10), 5, "Great brisket");
+
+        new AddPlaceCommand(place).execute(data, ui, storage);
+        assertEquals(1, data.getPlaces().size());
+        assertEquals(place.toString(), storage.loadData().getPlaces().getPlace(0).toString());
+
+        new EditPlaceCommand("1", null, null, null, null, 4, "Worth revisiting")
+                .execute(data, ui, storage);
+        assertEquals(4, data.getPlaces().getPlace(0).getRating());
+        assertEquals("Worth revisiting", data.getPlaces().getPlace(0).getNotes());
+
+        new FindPlacesCommand("REVISITING").execute(data, ui, storage);
+        assertEquals(List.of(data.getPlaces().getPlace(0)), ui.getMatchingPlaces());
+
+        new DeletePlaceCommand("1").execute(data, ui, storage);
+        assertEquals(0, data.getPlaces().size());
+        assertEquals(0, storage.loadData().getPlaces().size());
+        assertThrows(KaykayException.class, () ->
+                new DeletePlaceCommand("1").execute(data, ui, storage));
+    }
+
     /** Suppresses UI output while allowing commands to execute in isolation. */
     private static final class RecordingUi extends Ui {
         /** Most recent search results shown by this UI. */
         private List<Task> matchingTasks;
+
+        /** Most recent place search results shown by this UI. */
+        private List<Place> matchingPlaces;
 
         /** Does nothing because these tests verify command state changes directly. */
         @Override
@@ -95,9 +131,34 @@ class CommandTest {
             this.matchingTasks = matchingTasks;
         }
 
+        @Override
+        public void showAddedPlace(Place place, int placeCount) {
+            // Intentionally empty: command tests assert state, not console formatting.
+        }
+
+        @Override
+        public void showEditedPlace(Place place) {
+            // Intentionally empty: command tests assert state, not console formatting.
+        }
+
+        @Override
+        public void showDeletedPlace(Place place, int placeCount) {
+            // Intentionally empty: command tests assert state, not console formatting.
+        }
+
+        @Override
+        public void showMatchingPlaces(List<Place> matchingPlaces) {
+            this.matchingPlaces = matchingPlaces;
+        }
+
         /** Returns the search results recorded by this UI. */
         private List<Task> getMatchingTasks() {
             return matchingTasks;
+        }
+
+        /** Returns the place search results recorded for command assertions. */
+        private List<Place> getMatchingPlaces() {
+            return matchingPlaces;
         }
     }
 }

@@ -3,6 +3,7 @@ package kaykay.command;
 import java.io.IOException;
 
 import kaykay.exception.KaykayException;
+import kaykay.model.ApplicationData;
 import kaykay.model.Task;
 import kaykay.model.TaskList;
 import kaykay.storage.Storage;
@@ -33,15 +34,16 @@ public abstract class ChangeStatusCommand extends Command {
      * Changes the selected task's completion status, saves the result, and confirms it.
      * The previous status is restored if saving fails.
      *
-     * @param tasks task list containing the task to change.
+     * @param data application data containing the task to change.
      * @param ui UI used to show the confirmation.
      * @param storage storage used to persist the updated task list.
      * @throws KaykayException if the task number is invalid.
      * @throws IOException if the updated task list cannot be saved.
      */
     @Override
-    public final void execute(TaskList tasks, Ui ui, Storage storage)
+    public final void execute(ApplicationData data, Ui ui, Storage storage)
             throws KaykayException, IOException {
+        TaskList tasks = data.getTasks();
         if (!tasks.isValidTaskNumber(taskNumber)) {
             throw new KaykayException("Please provide an existing task number to mark or unmark.");
         }
@@ -59,7 +61,7 @@ public abstract class ChangeStatusCommand extends Command {
         assert changedTask.getStatusIcon().equals(marked ? "X" : " ")
                 : "Changing a task status must produce the requested state";
         try {
-            storage.saveTasks(tasks);
+            storage.saveData(data);
         } catch (IOException exception) {
             if (wasDone) {
                 changedTask.mark();
