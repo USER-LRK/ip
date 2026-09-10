@@ -55,6 +55,8 @@ class ParserTest {
     /** Checks the parser's guidance for malformed commands and date/time values. */
     @Test
     void parse_invalidCommands_throwsKaykayExceptionWithGuidance() {
+        assertParseError("", "Please enter a command.");
+        assertParseError("   ", "Please enter a command.");
         assertParseError("todo", "A todo needs a description. Try: todo <description>.");
         assertParseError("find", "A find command needs a keyword. Try: find <keyword>.");
         assertParseError("deadline missing",

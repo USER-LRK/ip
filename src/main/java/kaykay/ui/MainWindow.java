@@ -51,7 +51,9 @@ public final class MainWindow extends AnchorPane {
     @FXML
     private void handleUserInput() {
         String userText = userInput.getText().trim();
-        dialogContainer.getChildren().add(DialogBox.getUserDialog(userText));
+        if (!userText.isEmpty()) {
+            dialogContainer.getChildren().add(DialogBox.getUserDialog(userText));
+        }
 
         boolean isExit = kaykay.processCommand(userText);
         if (isExit) {

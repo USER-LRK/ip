@@ -54,7 +54,9 @@ public final class Parser {
      * @throws KaykayException if the input is not a valid Kaykay command.
      */
     public Command parse(String input) throws KaykayException {
-        if (input.equals("bye")) {
+        if (input.isBlank()) {
+            throw new KaykayException("Please enter a command.");
+        } else if (input.equals("bye")) {
             return new ExitCommand();
         } else if (input.equals("list")) {
             return new ListCommand();

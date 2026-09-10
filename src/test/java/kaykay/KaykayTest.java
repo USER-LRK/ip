@@ -44,6 +44,18 @@ class KaykayTest {
         assertTrue(output.toString().contains("I've added this task:"));
     }
 
+    /** Checks that a blank command produces concise and predictable guidance. */
+    @Test
+    void processCommand_blankCommand_showsInputWarning() {
+        StringBuilder output = new StringBuilder();
+        Ui ui = new Ui(line -> output.append(line).append(System.lineSeparator()), false);
+        Kaykay kaykay = new Kaykay(temporaryDirectory.resolve("blank-command.txt").toString(), ui);
+
+        assertFalse(kaykay.processCommand("   "));
+
+        assertEquals("OOPS! Please enter a command." + System.lineSeparator(), output.toString());
+    }
+
     /** Checks that place commands work together through the application coordinator. */
     @Test
     void processCommand_placeWorkflow_managesPersistedPlaces() throws IOException {

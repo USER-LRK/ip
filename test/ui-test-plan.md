@@ -175,11 +175,12 @@ ____________________________________________________________
 
 ## Case 4: Reject empty and unknown commands
 
-**Aim:** Verify that an empty todo and arbitrary text produce errors without adding tasks.
+**Aim:** Verify that blank input, an empty todo, and arbitrary text produce predictable errors without adding tasks.
 
 Commands / console input:
 
 ```
+
 todo
 blah
 list
@@ -198,6 +199,9 @@ ____________________________________________________________
 ____________________________________________________________
 Hello! I'm kaykay.
 What can I do for you?
+____________________________________________________________
+____________________________________________________________
+OOPS! Please enter a command.
 ____________________________________________________________
 ____________________________________________________________
 OOPS! A todo needs a description. Try: todo <description>.
