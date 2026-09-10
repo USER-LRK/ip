@@ -16,17 +16,17 @@ public abstract class ChangeStatusCommand extends Command {
     private final String taskNumber;
 
     /** Whether the command marks the task done rather than not done. */
-    private final boolean marked;
+    private final boolean shouldMark;
 
     /**
      * Creates a status-change command.
      *
      * @param taskNumber one-based number of the task to change.
-     * @param marked whether the task should be marked as done.
+     * @param shouldMark whether the task should be marked as done.
      */
-    protected ChangeStatusCommand(String taskNumber, boolean marked) {
+    protected ChangeStatusCommand(String taskNumber, boolean shouldMark) {
         this.taskNumber = taskNumber;
-        this.marked = marked;
+        this.shouldMark = shouldMark;
     }
 
     /**
@@ -48,7 +48,7 @@ public abstract class ChangeStatusCommand extends Command {
         int index = Integer.parseInt(taskNumber) - 1;
         Task changedTask = tasks.getTask(index);
         boolean wasDone = changedTask.isDone();
-        if (marked) {
+        if (shouldMark) {
             changedTask.mark();
         } else {
             changedTask.unmark();
@@ -63,6 +63,6 @@ public abstract class ChangeStatusCommand extends Command {
             }
             throw exception;
         }
-        ui.showMarkedTask(changedTask, marked);
+        ui.showMarkedTask(changedTask, shouldMark);
     }
 }
