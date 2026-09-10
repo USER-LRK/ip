@@ -2,6 +2,7 @@ package kaykay.model;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.ResolverStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -13,7 +14,8 @@ import kaykay.storage.Storage;
  */
 public final class Place {
     /** Format used to display and store visit dates. */
-    public static final DateTimeFormatter VISIT_DATE_FORMATTER = DateTimeFormatter.ofPattern("dd MM uuuu");
+    public static final DateTimeFormatter VISIT_DATE_FORMATTER = DateTimeFormatter.ofPattern("dd MM uuuu")
+            .withResolverStyle(ResolverStyle.STRICT);
 
     /** Name used to identify the place. */
     private final String name;
@@ -84,7 +86,10 @@ public final class Place {
      * @return true if any displayed detail contains the keyword.
      */
     public boolean matches(String keyword) {
-        return toString().toLowerCase(Locale.ROOT).contains(keyword.toLowerCase(Locale.ROOT));
+        String visitedOnText = visitedOn == null ? "" : visitedOn.format(VISIT_DATE_FORMATTER);
+        String ratingText = rating == null ? "" : rating.toString();
+        String searchableDetails = String.join("\n", name, type, location, visitedOnText, ratingText, notes);
+        return searchableDetails.toLowerCase(Locale.ROOT).contains(keyword.toLowerCase(Locale.ROOT));
     }
 
     /**

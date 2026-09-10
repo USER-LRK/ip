@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 import kaykay.exception.KaykayException;
 import kaykay.model.ApplicationData;
+import kaykay.model.Place;
 import kaykay.model.Task;
 import kaykay.model.TaskList;
 import kaykay.model.Todo;
@@ -69,10 +71,41 @@ class CommandTest {
         assertEquals(2, tasks.size());
     }
 
+    /** Checks adding, editing, finding, and deleting places with persistence. */
+    @Test
+    void placeCommands_execute_manageAndSavePlaces() throws IOException, KaykayException {
+        ApplicationData data = new ApplicationData();
+        RecordingUi ui = new RecordingUi();
+        Storage storage = new Storage(temporaryDirectory.resolve("data.txt").toString());
+        Place place = new Place("Burnt Ends", "restaurant", "Dempsey",
+                LocalDate.of(2026, 9, 10), 5, "Great brisket");
+
+        new AddPlaceCommand(place).execute(data, ui, storage);
+        assertEquals(1, data.getPlaces().size());
+        assertEquals(place.toString(), storage.loadData().getPlaces().getPlace(0).toString());
+
+        new EditPlaceCommand("1", null, null, null, null, 4, "Worth revisiting")
+                .execute(data, ui, storage);
+        assertEquals(4, data.getPlaces().getPlace(0).getRating());
+        assertEquals("Worth revisiting", data.getPlaces().getPlace(0).getNotes());
+
+        new FindPlacesCommand("REVISITING").execute(data, ui, storage);
+        assertEquals(List.of(data.getPlaces().getPlace(0)), ui.getMatchingPlaces());
+
+        new DeletePlaceCommand("1").execute(data, ui, storage);
+        assertEquals(0, data.getPlaces().size());
+        assertEquals(0, storage.loadData().getPlaces().size());
+        assertThrows(KaykayException.class, () ->
+                new DeletePlaceCommand("1").execute(data, ui, storage));
+    }
+
     /** Suppresses UI output while allowing commands to execute in isolation. */
     private static final class RecordingUi extends Ui {
         /** Most recent search results shown by this UI. */
         private List<Task> matchingTasks;
+
+        /** Most recent place search results shown by this UI. */
+        private List<Place> matchingPlaces;
 
         /** Does nothing because these tests verify command state changes directly. */
         @Override
@@ -98,9 +131,34 @@ class CommandTest {
             this.matchingTasks = matchingTasks;
         }
 
+        @Override
+        public void showAddedPlace(Place place, int placeCount) {
+            // Intentionally empty: command tests assert state, not console formatting.
+        }
+
+        @Override
+        public void showEditedPlace(Place place) {
+            // Intentionally empty: command tests assert state, not console formatting.
+        }
+
+        @Override
+        public void showDeletedPlace(Place place, int placeCount) {
+            // Intentionally empty: command tests assert state, not console formatting.
+        }
+
+        @Override
+        public void showMatchingPlaces(List<Place> matchingPlaces) {
+            this.matchingPlaces = matchingPlaces;
+        }
+
         /** Returns the search results recorded by this UI. */
         private List<Task> getMatchingTasks() {
             return matchingTasks;
+        }
+
+        /** Returns the place search results recorded for command assertions. */
+        private List<Place> getMatchingPlaces() {
+            return matchingPlaces;
         }
     }
 }

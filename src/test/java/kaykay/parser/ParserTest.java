@@ -8,12 +8,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import kaykay.command.AddPlaceCommand;
 import kaykay.command.DeadlineCommand;
 import kaykay.command.DeleteCommand;
+import kaykay.command.DeletePlaceCommand;
+import kaykay.command.EditPlaceCommand;
 import kaykay.command.EventCommand;
 import kaykay.command.ExitCommand;
 import kaykay.command.FindCommand;
+import kaykay.command.FindPlacesCommand;
 import kaykay.command.ListCommand;
+import kaykay.command.ListPlacesCommand;
 import kaykay.command.MarkCommand;
 import kaykay.command.TodoCommand;
 import kaykay.command.UnmarkCommand;
@@ -36,6 +41,12 @@ class ParserTest {
         assertInstanceOf(UnmarkCommand.class, parser.parse("unmark 1"));
         assertInstanceOf(ListCommand.class, parser.parse("list"));
         assertInstanceOf(FindCommand.class, parser.parse("find notes"));
+        assertInstanceOf(AddPlaceCommand.class,
+                parser.parse("place add Burnt Ends /type restaurant /rating 5"));
+        assertInstanceOf(ListPlacesCommand.class, parser.parse("place list"));
+        assertInstanceOf(FindPlacesCommand.class, parser.parse("place find restaurant"));
+        assertInstanceOf(EditPlaceCommand.class, parser.parse("place edit 1 /rating 4"));
+        assertInstanceOf(DeletePlaceCommand.class, parser.parse("place delete 1"));
         assertInstanceOf(ExitCommand.class, parser.parse("bye"));
         assertTrue(parser.parse("bye").isExit());
         assertFalse(parser.parse("list").isExit());
@@ -56,7 +67,33 @@ class ParserTest {
                         + "for example 01 01 2026 18:30.");
         assertParseError("blah",
                 "I don't recognise that command. Try todo, deadline, event, list, find, delete, mark, "
-                        + "unmark, or bye.");
+                        + "unmark, place, or bye.");
+    }
+
+    /** Checks validation and guidance for malformed place commands. */
+    @Test
+    void parse_invalidPlaceCommands_throwsKaykayExceptionWithGuidance() {
+        assertParseError("place add",
+                "A place needs a name. Try: place add <name> [/type <type>] "
+                        + "[/location <location>] [/visited <date>] [/rating <1-5>] "
+                        + "[/notes <notes>].");
+        assertParseError("place add Cafe /rating 6",
+                "A place rating must be a whole number from 1 to 5.");
+        assertParseError("place add Cafe /visited 31 02 2026",
+                "The place visit date '31 02 2026' is invalid. Please use dd MM yyyy, "
+                        + "for example 10 09 2026.");
+        assertParseError("place add Cafe /rating 5 /rating 4",
+                "The /rating field can only be used once.");
+        assertParseError("place find",
+                "A place find command needs a keyword. Try: place find <keyword>.");
+        assertParseError("place edit 1",
+                "A place edit needs a place number and at least one field. "
+                        + "Try: place edit <number> /rating <1-5>.");
+        assertParseError("place delete nope",
+                "Please provide an existing place number to delete.");
+        assertParseError("place dance",
+                "I don't recognise that place command. "
+                        + "Try place add, place list, place find, place edit, or place delete.");
     }
 
     /** Verifies one parser failure and its user-facing message. */

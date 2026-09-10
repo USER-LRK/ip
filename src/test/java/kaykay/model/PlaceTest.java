@@ -38,5 +38,6 @@ class PlaceTest {
         assertTrue(place.matches("brisket"));
         assertTrue(place.matches("10 09 2026"));
         assertFalse(place.matches("museum"));
+        assertFalse(place.matches("notes:"));
     }
 }

@@ -203,7 +203,7 @@ ____________________________________________________________
 OOPS! A todo needs a description. Try: todo <description>.
 ____________________________________________________________
 ____________________________________________________________
-OOPS! I don't recognise that command. Try todo, deadline, event, list, find, delete, mark, unmark, or bye.
+OOPS! I don't recognise that command. Try todo, deadline, event, list, find, delete, mark, unmark, place, or bye.
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
@@ -250,7 +250,7 @@ Got it. I've added this task:
 Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
-OOPS! I don't recognise that command. Try todo, deadline, event, list, find, delete, mark, unmark, or bye.
+OOPS! I don't recognise that command. Try todo, deadline, event, list, find, delete, mark, unmark, place, or bye.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
@@ -554,7 +554,7 @@ Hello! I'm kaykay.
 What can I do for you?
 ____________________________________________________________
 ____________________________________________________________
-OOPS! I couldn't load your tasks. Please check the data file.
+OOPS! I couldn't load your data. Please check the data file.
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
@@ -732,6 +732,172 @@ Here are the matching tasks in your list:
 ____________________________________________________________
 ____________________________________________________________
 OOPS! A find command needs a keyword. Try: find <keyword>.
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## Case 13: Manage and persist places
+
+**Aim:** Verify that places can be added with optional details, edited, searched, listed, deleted, saved, and reloaded independently of tasks.
+
+Commands / console input:
+
+```
+place add Burnt Ends /type restaurant /location Dempsey /visited 10 09 2026 /rating 5 /notes Great brisket
+place add NUS Computing
+place edit 1 /rating 4 /notes Worth revisiting
+place find RESTAURANT
+place list
+place delete 2
+place list
+bye
+```
+
+Expected output:
+
+```
+____________________________________________________________
+#   #   ###   #   #  #   #   ###   #   #
+#  #   #   #   # #   #  #   #   #   # #
+###    #####    #    ###    #####    #
+#  #   #   #    #    #  #   #   #    #
+#   #  #   #    #    #   #  #   #    #
+____________________________________________________________
+Hello! I'm kaykay.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Got it. I've saved this place:
+[P] Burnt Ends (type: restaurant; location: Dempsey; visited: 10 09 2026; rating: 5/5; notes: Great brisket)
+Now you have 1 place saved.
+____________________________________________________________
+____________________________________________________________
+Got it. I've saved this place:
+[P] NUS Computing
+Now you have 2 places saved.
+____________________________________________________________
+____________________________________________________________
+Got it. I've updated this place:
+[P] Burnt Ends (type: restaurant; location: Dempsey; visited: 10 09 2026; rating: 4/5; notes: Worth revisiting)
+____________________________________________________________
+____________________________________________________________
+Here are the matching places:
+1. [P] Burnt Ends (type: restaurant; location: Dempsey; visited: 10 09 2026; rating: 4/5; notes: Worth revisiting)
+____________________________________________________________
+____________________________________________________________
+Here are the places you've saved:
+1. [P] Burnt Ends (type: restaurant; location: Dempsey; visited: 10 09 2026; rating: 4/5; notes: Worth revisiting)
+2. [P] NUS Computing
+____________________________________________________________
+____________________________________________________________
+Noted. I've removed this place:
+  [P] NUS Computing
+Now you have 1 place saved.
+____________________________________________________________
+____________________________________________________________
+Here are the places you've saved:
+1. [P] Burnt Ends (type: restaurant; location: Dempsey; visited: 10 09 2026; rating: 4/5; notes: Worth revisiting)
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+Expected file contents:
+
+```
+P | Burnt Ends | restaurant | Dempsey | 10 09 2026 | 4 | Worth revisiting
+```
+
+Restart console input:
+
+```
+place list
+bye
+```
+
+Expected restart output:
+
+```
+____________________________________________________________
+#   #   ###   #   #  #   #   ###   #   #
+#  #   #   #   # #   #  #   #   #   # #
+###    #####    #    ###    #####    #
+#  #   #   #    #    #  #   #   #    #
+#   #  #   #    #    #   #  #   #    #
+____________________________________________________________
+Hello! I'm kaykay.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Here are the places you've saved:
+1. [P] Burnt Ends (type: restaurant; location: Dempsey; visited: 10 09 2026; rating: 4/5; notes: Worth revisiting)
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## Case 14: Reject invalid place commands
+
+**Aim:** Verify that invalid place details and commands provide guidance without adding places.
+
+Commands / console input:
+
+```
+place add
+place add Cafe /rating 6
+place add Cafe /visited 31 02 2026
+place find
+place edit 1
+place edit 1 /rating 4
+place delete nope
+place dance
+place list
+bye
+```
+
+Expected output:
+
+```
+____________________________________________________________
+#   #   ###   #   #  #   #   ###   #   #
+#  #   #   #   # #   #  #   #   #   # #
+###    #####    #    ###    #####    #
+#  #   #   #    #    #  #   #   #    #
+#   #  #   #    #    #   #  #   #    #
+____________________________________________________________
+Hello! I'm kaykay.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+OOPS! A place needs a name. Try: place add <name> [/type <type>] [/location <location>] [/visited <date>] [/rating <1-5>] [/notes <notes>].
+____________________________________________________________
+____________________________________________________________
+OOPS! A place rating must be a whole number from 1 to 5.
+____________________________________________________________
+____________________________________________________________
+OOPS! The place visit date '31 02 2026' is invalid. Please use dd MM yyyy, for example 10 09 2026.
+____________________________________________________________
+____________________________________________________________
+OOPS! A place find command needs a keyword. Try: place find <keyword>.
+____________________________________________________________
+____________________________________________________________
+OOPS! A place edit needs a place number and at least one field. Try: place edit <number> /rating <1-5>.
+____________________________________________________________
+____________________________________________________________
+OOPS! Please provide an existing place number to edit.
+____________________________________________________________
+____________________________________________________________
+OOPS! Please provide an existing place number to delete.
+____________________________________________________________
+____________________________________________________________
+OOPS! I don't recognise that place command. Try place add, place list, place find, place edit, or place delete.
+____________________________________________________________
+____________________________________________________________
+Here are the places you've saved:
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!

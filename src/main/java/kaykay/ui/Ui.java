@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
+import kaykay.model.Place;
+import kaykay.model.PlaceList;
 import kaykay.model.Task;
 import kaykay.model.TaskList;
 
@@ -81,9 +83,9 @@ public class Ui {
         showLine(SEPARATOR);
     }
 
-    /** Shows the message used when saved tasks cannot be loaded. */
+    /** Shows the message used when saved application data cannot be loaded. */
     public void showLoadingError() {
-        showError("I couldn't load your tasks. Please check the data file.");
+        showError("I couldn't load your data. Please check the data file.");
     }
 
     /**
@@ -112,6 +114,80 @@ public class Ui {
             showLine(String.format("%d. %s", i + 1, matchingTasks.get(i)));
         }
         showLine(SEPARATOR);
+    }
+
+    /**
+     * Shows all saved places with their one-based positions.
+     *
+     * @param places places to display.
+     */
+    public void showPlaceList(PlaceList places) {
+        showLine(SEPARATOR);
+        showLine("Here are the places you've saved:");
+        for (int i = 0; i < places.size(); i += 1) {
+            showLine(String.format("%d. %s", i + 1, places.getPlace(i)));
+        }
+        showLine(SEPARATOR);
+    }
+
+    /**
+     * Shows places that matched a search keyword.
+     *
+     * @param matchingPlaces places that matched the user's search keyword.
+     */
+    public void showMatchingPlaces(List<Place> matchingPlaces) {
+        showLine(SEPARATOR);
+        showLine("Here are the matching places:");
+        for (int i = 0; i < matchingPlaces.size(); i += 1) {
+            showLine(String.format("%d. %s", i + 1, matchingPlaces.get(i)));
+        }
+        showLine(SEPARATOR);
+    }
+
+    /**
+     * Shows the confirmation after adding a place.
+     *
+     * @param place place that was added.
+     * @param placeCount number of places after the addition.
+     */
+    public void showAddedPlace(Place place, int placeCount) {
+        showLine(SEPARATOR);
+        showLine("Got it. I've saved this place:");
+        showLine(place.toString());
+        showLine(formatPlaceCount(placeCount));
+        showLine(SEPARATOR);
+    }
+
+    /**
+     * Shows the confirmation after editing a place.
+     *
+     * @param place place containing the updated details.
+     */
+    public void showEditedPlace(Place place) {
+        showLine(SEPARATOR);
+        showLine("Got it. I've updated this place:");
+        showLine(place.toString());
+        showLine(SEPARATOR);
+    }
+
+    /**
+     * Shows the confirmation after deleting a place.
+     *
+     * @param place place that was deleted.
+     * @param placeCount number of places after the deletion.
+     */
+    public void showDeletedPlace(Place place, int placeCount) {
+        showLine(SEPARATOR);
+        showLine("Noted. I've removed this place:");
+        showLine("  " + place);
+        showLine(formatPlaceCount(placeCount));
+        showLine(SEPARATOR);
+    }
+
+    /** Returns a grammatically correct saved-place count. */
+    private static String formatPlaceCount(int placeCount) {
+        String placeWord = placeCount == 1 ? "place" : "places";
+        return String.format("Now you have %d %s saved.", placeCount, placeWord);
     }
 
     /**

@@ -74,7 +74,7 @@ public class Kaykay {
         } catch (KaykayException exception) {
             ui.showError(exception.getMessage());
         } catch (IOException exception) {
-            ui.showError("I couldn't save your tasks. Please check the data folder.");
+            ui.showError("I couldn't save your data. Please check the data folder.");
         }
         return false;
     }
