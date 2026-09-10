@@ -87,8 +87,8 @@ public final class Parser {
 
         String byText = deadlineParts[1].trim();
         try {
-            LocalDateTime by = DateTimeParser.parse(byText);
-            return new DeadlineCommand(deadlineParts[0], by);
+            LocalDateTime deadlineDateTime = DateTimeParser.parse(byText);
+            return new DeadlineCommand(deadlineParts[0], deadlineDateTime);
         } catch (DateTimeParseException exception) {
             throw invalidDateTime("deadline", byText);
         }
@@ -109,19 +109,19 @@ public final class Parser {
 
         String fromText = toParts[0].trim();
         String toText = toParts[1].trim();
-        LocalDateTime from;
-        LocalDateTime to;
+        LocalDateTime startDateTime;
+        LocalDateTime endDateTime;
         try {
-            from = DateTimeParser.parse(fromText);
+            startDateTime = DateTimeParser.parse(fromText);
         } catch (DateTimeParseException exception) {
             throw invalidDateTime("event start", fromText);
         }
         try {
-            to = DateTimeParser.parse(toText);
+            endDateTime = DateTimeParser.parse(toText);
         } catch (DateTimeParseException exception) {
             throw invalidDateTime("event end", toText);
         }
-        return new EventCommand(fromParts[0], from, to);
+        return new EventCommand(fromParts[0], startDateTime, endDateTime);
     }
 
     /** Parses the numeric argument shared by delete, mark, and unmark. */

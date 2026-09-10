@@ -11,22 +11,22 @@ import kaykay.storage.Storage;
  */
 public class Event extends Task {
     /** The date and time when this event starts. */
-    protected LocalDateTime from;
+    private final LocalDateTime startDateTime;
 
     /** The date and time when this event ends. */
-    protected LocalDateTime to;
+    private final LocalDateTime endDateTime;
 
     /**
      * Creates an event with typed starting and ending date/time values.
      *
      * @param description what the event is about.
-     * @param from when the event starts.
-     * @param to when the event ends.
+     * @param startDateTime when the event starts.
+     * @param endDateTime when the event ends.
      */
-    public Event(String description, LocalDateTime from, LocalDateTime to) {
+    public Event(String description, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         super(description);
-        this.from = from;
-        this.to = to;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
     }
 
     /**
@@ -36,8 +36,8 @@ public class Event extends Task {
      */
     @Override
     public String toString() {
-        return "[E]" + super.toString() + " (from: " + DateTimeParser.format(from)
-                + " to: " + DateTimeParser.format(to) + ")";
+        return "[E]" + super.toString() + " (from: " + DateTimeParser.format(startDateTime)
+                + " to: " + DateTimeParser.format(endDateTime) + ")";
     }
 
     /**
@@ -48,7 +48,7 @@ public class Event extends Task {
     @Override
     public String toFileFormat() {
         return String.format("E | %d | %s | %s | %s", isDone() ? 1 : 0,
-                Storage.escape(getDescription()), Storage.escape(DateTimeParser.format(from)),
-                Storage.escape(DateTimeParser.format(to)));
+                Storage.escape(getDescription()), Storage.escape(DateTimeParser.format(startDateTime)),
+                Storage.escape(DateTimeParser.format(endDateTime)));
     }
 }
