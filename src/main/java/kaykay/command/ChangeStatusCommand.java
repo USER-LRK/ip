@@ -17,17 +17,17 @@ public abstract class ChangeStatusCommand extends Command {
     private final String taskNumber;
 
     /** Whether the command marks the task done rather than not done. */
-    private final boolean marked;
+    private final boolean shouldMark;
 
     /**
      * Creates a status-change command.
      *
      * @param taskNumber one-based number of the task to change.
-     * @param marked whether the task should be marked as done.
+     * @param shouldMark whether the task should be marked as done.
      */
-    protected ChangeStatusCommand(String taskNumber, boolean marked) {
+    protected ChangeStatusCommand(String taskNumber, boolean shouldMark) {
         this.taskNumber = taskNumber;
-        this.marked = marked;
+        this.shouldMark = shouldMark;
     }
 
     /**
@@ -48,13 +48,18 @@ public abstract class ChangeStatusCommand extends Command {
             throw new KaykayException("Please provide an existing task number to mark or unmark.");
         }
         int index = Integer.parseInt(taskNumber) - 1;
+        assert index >= 0 && index < tasks.size()
+                : "A validated task number must map to an existing task index";
+
         Task changedTask = tasks.getTask(index);
-        boolean wasDone = changedTask.getStatusIcon().equals("X");
-        if (marked) {
+        boolean wasDone = changedTask.isDone();
+        if (shouldMark) {
             changedTask.mark();
         } else {
             changedTask.unmark();
         }
+        assert changedTask.getStatusIcon().equals(marked ? "X" : " ")
+                : "Changing a task status must produce the requested state";
         try {
             storage.saveData(data);
         } catch (IOException exception) {
@@ -63,8 +68,10 @@ public abstract class ChangeStatusCommand extends Command {
             } else {
                 changedTask.unmark();
             }
+            assert changedTask.getStatusIcon().equals(wasDone ? "X" : " ")
+                    : "A failed save must restore the original task status";
             throw exception;
         }
-        ui.showMarkedTask(changedTask, marked);
+        ui.showMarkedTask(changedTask, shouldMark);
     }
 }

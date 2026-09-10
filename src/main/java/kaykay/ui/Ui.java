@@ -222,11 +222,11 @@ public class Ui {
      * Shows the standard confirmation after marking or unmarking a task.
      *
      * @param task task whose status changed.
-     * @param marked whether the task was marked as done.
+     * @param isMarked whether the task was marked as done.
      */
-    public void showMarkedTask(Task task, boolean marked) {
+    public void showMarkedTask(Task task, boolean isMarked) {
         showLine(SEPARATOR);
-        if (marked) {
+        if (isMarked) {
             showLine("Nice! I've marked this task as done:");
         } else {
             showLine("OK, I've marked this task as not done yet:");

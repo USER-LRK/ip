@@ -121,7 +121,7 @@ class CommandTest {
 
         /** Does nothing because these tests verify command state changes directly. */
         @Override
-        public void showMarkedTask(Task task, boolean marked) {
+        public void showMarkedTask(Task task, boolean isMarked) {
             // Intentionally empty: command tests assert state, not console formatting.
         }
 

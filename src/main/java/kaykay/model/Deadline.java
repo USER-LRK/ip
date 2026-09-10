@@ -11,17 +11,17 @@ import kaykay.storage.Storage;
  */
 public class Deadline extends Task {
     /** The date and time by which this task should be completed. */
-    protected LocalDateTime by;
+    private final LocalDateTime deadlineDateTime;
 
     /**
      * Creates a deadline with a typed date/time value.
      *
      * @param description what needs to be done.
-     * @param by the deadline date and time.
+     * @param deadlineDateTime the deadline date and time.
      */
-    public Deadline(String description, LocalDateTime by) {
+    public Deadline(String description, LocalDateTime deadlineDateTime) {
         super(description);
-        this.by = by;
+        this.deadlineDateTime = deadlineDateTime;
     }
 
     /**
@@ -31,7 +31,7 @@ public class Deadline extends Task {
      */
     @Override
     public String toString() {
-        return "[D]" + super.toString() + " (by: " + DateTimeParser.format(by) + ")";
+        return "[D]" + super.toString() + " (by: " + DateTimeParser.format(deadlineDateTime) + ")";
     }
 
     /**
@@ -41,7 +41,7 @@ public class Deadline extends Task {
      */
     @Override
     public String toFileFormat() {
-        return String.format("D | %d | %s | %s", isDone ? 1 : 0,
-                Storage.escape(description), Storage.escape(DateTimeParser.format(by)));
+        return String.format("D | %d | %s | %s", isDone() ? 1 : 0,
+                Storage.escape(getDescription()), Storage.escape(DateTimeParser.format(deadlineDateTime)));
     }
 }

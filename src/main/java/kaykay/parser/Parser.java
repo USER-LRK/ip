@@ -57,22 +57,19 @@ public final class Parser {
         if (input.isBlank()) {
             throw new KaykayException("Please enter a command.");
         } else if (input.equals("bye")) {
-            return new ExitCommand();
+            return parseExit();
         } else if (input.equals("list")) {
-            return new ListCommand();
+            return parseList();
         } else if (isCommand(input, "find")) {
             return parseFind(input);
         } else if (isCommand(input, "place")) {
             return parsePlaceCommand(input);
         } else if (isCommand(input, "delete")) {
-            return new DeleteCommand(parseTaskNumber(input,
-                    "Please provide an existing task number to delete."));
+            return parseDelete(input);
         } else if (isCommand(input, "mark")) {
-            return new MarkCommand(parseTaskNumber(input,
-                    "Please provide an existing task number to mark or unmark."));
+            return parseMark(input);
         } else if (isCommand(input, "unmark")) {
-            return new UnmarkCommand(parseTaskNumber(input,
-                    "Please provide an existing task number to mark or unmark."));
+            return parseUnmark(input);
         } else if (isCommand(input, "todo")) {
             return parseTodo(input);
         } else if (isCommand(input, "deadline")) {
@@ -239,6 +236,16 @@ public final class Parser {
                 + "list, find, delete, mark, unmark, place, or bye.");
     }
 
+    /** Parses an exit command. */
+    private Command parseExit() {
+        return new ExitCommand();
+    }
+
+    /** Parses a list command. */
+    private Command parseList() {
+        return new ListCommand();
+    }
+
     /** Parses a find command and extracts its search keyword. */
     private Command parseFind(String input) throws KaykayException {
         String keyword = argumentAfter(input, "find").trim();
@@ -246,6 +253,27 @@ public final class Parser {
             throw new KaykayException("A find command needs a keyword. Try: find <keyword>.");
         }
         return new FindCommand(keyword);
+    }
+
+    /** Parses a delete command and extracts its task number. */
+    private Command parseDelete(String input) throws KaykayException {
+        String taskNumber = parseTaskNumber(input,
+                "Please provide an existing task number to delete.");
+        return new DeleteCommand(taskNumber);
+    }
+
+    /** Parses a mark command and extracts its task number. */
+    private Command parseMark(String input) throws KaykayException {
+        String taskNumber = parseTaskNumber(input,
+                "Please provide an existing task number to mark or unmark.");
+        return new MarkCommand(taskNumber);
+    }
+
+    /** Parses an unmark command and extracts its task number. */
+    private Command parseUnmark(String input) throws KaykayException {
+        String taskNumber = parseTaskNumber(input,
+                "Please provide an existing task number to mark or unmark.");
+        return new UnmarkCommand(taskNumber);
     }
 
     /** Parses a todo command and extracts its description. */
@@ -268,12 +296,8 @@ public final class Parser {
         }
 
         String byText = deadlineParts[1].trim();
-        try {
-            LocalDateTime by = DateTimeParser.parse(byText);
-            return new DeadlineCommand(deadlineParts[0], by);
-        } catch (DateTimeParseException exception) {
-            throw invalidDateTime("deadline", byText);
-        }
+        LocalDateTime deadlineDateTime = parseDateTime("deadline", byText);
+        return new DeadlineCommand(deadlineParts[0], deadlineDateTime);
     }
 
     /** Parses an event command and converts its start and end date/times. */
@@ -291,19 +315,18 @@ public final class Parser {
 
         String fromText = toParts[0].trim();
         String toText = toParts[1].trim();
-        LocalDateTime from;
-        LocalDateTime to;
+        LocalDateTime startDateTime = parseDateTime("event start", fromText);
+        LocalDateTime endDateTime = parseDateTime("event end", toText);
+        return new EventCommand(fromParts[0], startDateTime, endDateTime);
+    }
+
+    /** Parses a date/time and reports invalid input in the command's context. */
+    private static LocalDateTime parseDateTime(String field, String value) throws KaykayException {
         try {
-            from = DateTimeParser.parse(fromText);
+            return DateTimeParser.parse(value);
         } catch (DateTimeParseException exception) {
-            throw invalidDateTime("event start", fromText);
+            throw invalidDateTime(field, value);
         }
-        try {
-            to = DateTimeParser.parse(toText);
-        } catch (DateTimeParseException exception) {
-            throw invalidDateTime("event end", toText);
-        }
-        return new EventCommand(fromParts[0], from, to);
     }
 
     /** Parses the numeric argument shared by delete, mark, and unmark. */
@@ -317,6 +340,7 @@ public final class Parser {
 
     /** Returns the text after a command name while preserving existing spacing behavior. */
     private static String argumentAfter(String input, String command) {
+        assert isCommand(input, command) : "Input must match the command before extracting its argument";
         return input.length() == command.length() ? "" : input.substring(command.length() + 1);
     }
 

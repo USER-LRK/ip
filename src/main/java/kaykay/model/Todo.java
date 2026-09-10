@@ -1,7 +1,5 @@
 package kaykay.model;
 
-import kaykay.storage.Storage;
-
 /**
  * A task without an associated date or time.
  *
@@ -24,15 +22,5 @@ public class Todo extends Task {
     @Override
     public String toString() {
         return "[T]" + super.toString();
-    }
-
-    /**
-     * Returns the todo in the format used by the task storage file.
-     *
-     * @return the serialized todo.
-     */
-    @Override
-    public String toFileFormat() {
-        return String.format("T | %d | %s", isDone ? 1 : 0, Storage.escape(description));
     }
 }

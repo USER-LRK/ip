@@ -26,7 +26,7 @@ public class Kaykay {
     private final Parser parser;
 
     /** Whether loading the initial task data failed. */
-    private final boolean loadFailed;
+    private final boolean didLoadFail;
 
     /**
      * Creates a Kaykay chatbot using the given task data file.
@@ -82,7 +82,7 @@ public class Kaykay {
     /** Runs the chatbot until the user says bye or input ends. */
     public void run() {
         ui.showWelcome();
-        if (loadFailed) {
+        if (didLoadFail) {
             ui.showLoadingError();
         }
         while (ui.hasNextLine()) {

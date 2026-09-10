@@ -42,6 +42,11 @@ public final class MainWindow extends AnchorPane {
     /** Initializes the controls injected from the FXML view. */
     @FXML
     private void initialize() {
+        assert scrollPane != null : "FXML loader must inject the scroll pane";
+        assert dialogContainer != null : "FXML loader must inject the dialog container";
+        assert userInput != null : "FXML loader must inject the user input field";
+        assert sendButton != null : "FXML loader must inject the send button";
+
         dialogContainer.getChildren().add(DialogBox.getKaykayDialog("Hello! I'm kaykay."));
         dialogContainer.heightProperty().addListener((observable, oldHeight, newHeight) ->
                 scrollPane.setVvalue(1.0));
