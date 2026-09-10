@@ -8,10 +8,10 @@ import kaykay.storage.Storage;
  */
 public class Task {
     /** The text describing what needs to be done. */
-    protected String description;
+    private final String description;
 
     /** Whether this task has been completed. */
-    protected boolean isDone;
+    private boolean isDone;
 
     /**
      * Creates an unfinished task with the given description.

@@ -41,7 +41,7 @@ public class Deadline extends Task {
      */
     @Override
     public String toFileFormat() {
-        return String.format("D | %d | %s | %s", isDone ? 1 : 0,
-                Storage.escape(description), Storage.escape(DateTimeParser.format(by)));
+        return String.format("D | %d | %s | %s", isDone() ? 1 : 0,
+                Storage.escape(getDescription()), Storage.escape(DateTimeParser.format(by)));
     }
 }
