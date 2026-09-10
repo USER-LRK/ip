@@ -46,6 +46,9 @@ public abstract class ChangeStatusCommand extends Command {
             throw new KaykayException("Please provide an existing task number to mark or unmark.");
         }
         int index = Integer.parseInt(taskNumber) - 1;
+        assert index >= 0 && index < tasks.size()
+                : "A validated task number must map to an existing task index";
+
         Task changedTask = tasks.getTask(index);
         boolean wasDone = changedTask.getStatusIcon().equals("X");
         if (marked) {
@@ -53,6 +56,8 @@ public abstract class ChangeStatusCommand extends Command {
         } else {
             changedTask.unmark();
         }
+        assert changedTask.getStatusIcon().equals(marked ? "X" : " ")
+                : "Changing a task status must produce the requested state";
         try {
             storage.saveTasks(tasks);
         } catch (IOException exception) {
@@ -61,6 +66,8 @@ public abstract class ChangeStatusCommand extends Command {
             } else {
                 changedTask.unmark();
             }
+            assert changedTask.getStatusIcon().equals(wasDone ? "X" : " ")
+                    : "A failed save must restore the original task status";
             throw exception;
         }
         ui.showMarkedTask(changedTask, marked);

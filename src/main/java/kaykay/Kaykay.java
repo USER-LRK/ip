@@ -69,6 +69,7 @@ public class Kaykay {
     public boolean processCommand(String input) {
         try {
             Command command = parser.parse(input);
+            assert command != null : "Parser must return a command for valid input";
             command.execute(tasks, ui, storage);
             return command.isExit();
         } catch (KaykayException exception) {

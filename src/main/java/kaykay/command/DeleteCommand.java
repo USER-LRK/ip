@@ -40,11 +40,17 @@ public final class DeleteCommand extends Command {
             throw new KaykayException("Please provide an existing task number to delete.");
         }
         int index = Integer.parseInt(taskNumber) - 1;
+        assert index >= 0 && index < tasks.size()
+                : "A validated task number must map to an existing task index";
+
+        int originalTaskCount = tasks.size();
         Task deletedTask = tasks.remove(index);
+        assert tasks.size() == originalTaskCount - 1 : "Deleting a task must reduce the task count by one";
         try {
             storage.saveTasks(tasks);
         } catch (IOException exception) {
             tasks.add(index, deletedTask);
+            assert tasks.size() == originalTaskCount : "A failed save must restore the original task count";
             throw exception;
         }
         ui.showDeletedTask(deletedTask, tasks.size());

@@ -135,6 +135,7 @@ public final class Parser {
 
     /** Returns the text after a command name while preserving existing spacing behavior. */
     private static String argumentAfter(String input, String command) {
+        assert isCommand(input, command) : "Input must match the command before extracting its argument";
         return input.length() == command.length() ? "" : input.substring(command.length() + 1);
     }
 

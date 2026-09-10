@@ -50,12 +50,17 @@ public abstract class AddCommand extends Command {
      */
     @Override
     public final void execute(TaskList tasks, Ui ui, Storage storage) throws IOException {
+        int originalTaskCount = tasks.size();
         Task addedTask = createTask();
+        assert addedTask != null : "An add command must create a task";
+
         tasks.add(addedTask);
+        assert tasks.size() == originalTaskCount + 1 : "Adding a task must increase the task count by one";
         try {
             storage.saveTasks(tasks);
         } catch (IOException exception) {
             tasks.remove(addedTask);
+            assert tasks.size() == originalTaskCount : "A failed save must restore the original task count";
             throw exception;
         }
         ui.showAddedTask(addedTask, tasks.size());
