@@ -1,5 +1,5 @@
 .root {
-    -fx-background-color: #f4f7fb;
+    -fx-background-color: #0b1020;
     -fx-font-family: "Segoe UI", Arial, sans-serif;
 }
 
@@ -13,22 +13,26 @@
 }
 
 .text-field {
-    -fx-background-color: white;
+    -fx-background-color: #151c2e;
     -fx-background-radius: 18px;
-    -fx-border-color: #cbd5e1;
+    -fx-border-color: #334155;
     -fx-border-radius: 18px;
     -fx-border-width: 1px;
     -fx-font-size: 14px;
+    -fx-highlight-fill: #4f46e5;
+    -fx-highlight-text-fill: white;
     -fx-padding: 8px 14px;
+    -fx-prompt-text-fill: #94a3b8;
+    -fx-text-fill: #f1f5f9;
 }
 
 .text-field:focused {
-    -fx-border-color: #4f46e5;
+    -fx-border-color: #a5b4fc;
     -fx-border-width: 2px;
 }
 
 .button {
-    -fx-background-color: #4f46e5;
+    -fx-background-color: #6366f1;
     -fx-background-radius: 18px;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
@@ -36,11 +40,16 @@
 }
 
 .button:hover {
-    -fx-background-color: #4338ca;
+    -fx-background-color: #4f46e5;
 }
 
 .button:pressed {
-    -fx-background-color: #3730a3;
+    -fx-background-color: #4338ca;
+}
+
+.button:disabled,
+.text-field:disabled {
+    -fx-opacity: 0.55;
 }
 
 .scroll-bar {
@@ -48,8 +57,12 @@
 }
 
 .scroll-bar .thumb {
-    -fx-background-color: #cbd5e1;
+    -fx-background-color: #475569;
     -fx-background-radius: 1em;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #64748b;
 }
 
 .scroll-bar .increment-button,

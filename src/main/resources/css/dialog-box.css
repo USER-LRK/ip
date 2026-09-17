@@ -7,20 +7,20 @@
 .user-dialog {
     -fx-background-color: #4f46e5;
     -fx-background-radius: 16px 16px 4px 16px;
-    -fx-border-color: #4338ca;
+    -fx-border-color: #6366f1;
     -fx-border-radius: 16px 16px 4px 16px;
     -fx-padding: 7px 11px;
     -fx-text-fill: white;
 }
 
 .kaykay-dialog {
-    -fx-background-color: #e2e8f0;
+    -fx-background-color: #1e293b;
     -fx-background-radius: 16px 16px 16px 4px;
-    -fx-border-color: #cbd5e1;
+    -fx-border-color: #334155;
     -fx-border-radius: 16px 16px 16px 4px;
-    -fx-text-fill: #1e293b;
+    -fx-text-fill: #e2e8f0;
 }
 
 .avatar {
-    -fx-effect: dropshadow(gaussian, rgba(30, 41, 59, 0.18), 4, 0.15, 0, 1);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.35), 5, 0.15, 0, 1);
 }
