@@ -71,11 +71,7 @@ class StorageTest {
         String[] invalidContents = {
             "T | 0 |   ",
             "E | 0 | meeting | 26 12 2026 14:00 | 26 12 2026 14:00",
-            "T | 0 | bad\\q escape",
-            "T | 0 | duplicate" + System.lineSeparator() + "T | 1 | duplicate",
-            "P | Cafe | restaurant | Kent Ridge |  | 4 | good"
-                    + System.lineSeparator()
-                    + "P | Cafe | restaurant | Kent Ridge |  | 4 | good"
+            "T | 0 | bad\\q escape"
         };
 
         for (String invalidContent : invalidContents) {
@@ -83,6 +79,21 @@ class StorageTest {
             Storage storage = new Storage(dataFile.toString());
             assertThrows(IOException.class, storage::loadData);
         }
+    }
+
+    /** Checks that duplicates from older save files remain loadable. */
+    @Test
+    void loadData_duplicateLegacyRecords_preservesAllRecords() throws IOException {
+        Path dataFile = temporaryDirectory.resolve("legacy-duplicates.txt");
+        Files.writeString(dataFile, "T | 0 | duplicate" + System.lineSeparator()
+                + "T | 1 | duplicate" + System.lineSeparator()
+                + "P | Cafe | restaurant | Kent Ridge |  | 4 | good" + System.lineSeparator()
+                + "P | Cafe | restaurant | Kent Ridge |  | 4 | good" + System.lineSeparator());
+
+        ApplicationData loadedData = new Storage(dataFile.toString()).loadData();
+
+        assertEquals(2, loadedData.getTasks().size());
+        assertEquals(2, loadedData.getPlaces().size());
     }
 
     /** Checks that a failed load prevents the damaged file from being overwritten. */

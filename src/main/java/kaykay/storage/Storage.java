@@ -129,13 +129,9 @@ public final class Storage {
                 if (!line.isBlank()) {
                     String[] parts = splitFields(line);
                     if (parts.length > 0 && parts[0].equals("P")) {
-                        Place place = parsePlace(parts, line);
-                        ensurePlaceIsUnique(places, place, line);
-                        places.add(place);
+                        places.add(parsePlace(parts, line));
                     } else {
-                        Task task = parseTask(parts, line);
-                        ensureTaskIsUnique(tasks, task, line);
-                        tasks.add(task);
+                        tasks.add(parseTask(parts, line));
                     }
                 }
             }
@@ -144,24 +140,6 @@ public final class Storage {
             }
         }
         return new ApplicationData(new TaskList(tasks), new PlaceList(places));
-    }
-
-    /** Rejects a task record that duplicates an earlier stored task. */
-    private static void ensureTaskIsUnique(ArrayList<Task> tasks, Task task, String line) throws IOException {
-        for (Task existingTask : tasks) {
-            if (existingTask.hasSameDetails(task)) {
-                throw new IOException("Duplicate task data: " + line);
-            }
-        }
-    }
-
-    /** Rejects a place record that duplicates an earlier stored place. */
-    private static void ensurePlaceIsUnique(ArrayList<Place> places, Place place, String line) throws IOException {
-        for (Place existingPlace : places) {
-            if (existingPlace.hasSameDetails(place)) {
-                throw new IOException("Duplicate place data: " + line);
-            }
-        }
     }
 
     /**

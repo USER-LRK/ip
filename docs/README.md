@@ -33,6 +33,8 @@ event project meeting /from 26 12 2026 14:00 /to 26 12 2026 16:00
 If a task has the same type and details as an existing task, Kaykay reports the
 existing mission instead of adding a duplicate. Tasks with the same description
 but different types or date/time details are still allowed.
+Duplicates already present in an older save file remain loadable for backward
+compatibility.
 
 ## Date and time format
 
