@@ -29,12 +29,15 @@ public class Ui {
     /** Receives rendered error lines from the UI. */
     private final Consumer<String> errorOutput;
 
+    /** Receives rendered success lines from the UI. */
+    private final Consumer<String> successOutput;
+
     /** Whether console-style separators should be rendered. */
     private final boolean shouldShowSeparators;
 
     /** Creates a UI that reads from standard input and writes to standard output. */
     public Ui() {
-        this(System.out::println, System.out::println, true);
+        this(System.out::println, System.out::println, System.out::println, true);
     }
 
     /**
@@ -43,7 +46,7 @@ public class Ui {
      * @param output receiver for rendered output lines.
      */
     public Ui(Consumer<String> output) {
-        this(output, output, true);
+        this(output, output, output, true);
     }
 
     /**
@@ -53,7 +56,7 @@ public class Ui {
      * @param shouldShowSeparators whether console-style separators should be rendered.
      */
     public Ui(Consumer<String> output, boolean shouldShowSeparators) {
-        this(output, output, shouldShowSeparators);
+        this(output, output, output, shouldShowSeparators);
     }
 
     /**
@@ -64,9 +67,23 @@ public class Ui {
      * @param shouldShowSeparators whether console-style separators should be rendered.
      */
     public Ui(Consumer<String> output, Consumer<String> errorOutput, boolean shouldShowSeparators) {
+        this(output, errorOutput, output, shouldShowSeparators);
+    }
+
+    /**
+     * Creates a UI that can route normal, error, and success output to different consumers.
+     *
+     * @param output receiver for normal rendered output lines.
+     * @param errorOutput receiver for rendered error lines.
+     * @param successOutput receiver for rendered success lines.
+     * @param shouldShowSeparators whether console-style separators should be rendered.
+     */
+    public Ui(Consumer<String> output, Consumer<String> errorOutput, Consumer<String> successOutput,
+            boolean shouldShowSeparators) {
         scanner = new Scanner(System.in);
         this.output = output;
         this.errorOutput = errorOutput;
+        this.successOutput = successOutput;
         this.shouldShowSeparators = shouldShowSeparators;
     }
 
@@ -167,9 +184,9 @@ public class Ui {
      */
     public void showAddedPlace(Place place, int placeCount) {
         showLine(SEPARATOR);
-        showLine("Got it. I've saved this place:");
-        showLine(place.toString());
-        showLine(formatPlaceCount(placeCount));
+        showSuccessLine("Got it. I've saved this place:");
+        showSuccessLine(place.toString());
+        showSuccessLine(formatPlaceCount(placeCount));
         showLine(SEPARATOR);
     }
 
@@ -180,8 +197,8 @@ public class Ui {
      */
     public void showEditedPlace(Place place) {
         showLine(SEPARATOR);
-        showLine("Got it. I've updated this place:");
-        showLine(place.toString());
+        showSuccessLine("Got it. I've updated this place:");
+        showSuccessLine(place.toString());
         showLine(SEPARATOR);
     }
 
@@ -193,9 +210,9 @@ public class Ui {
      */
     public void showDeletedPlace(Place place, int placeCount) {
         showLine(SEPARATOR);
-        showLine("Noted. I've removed this place:");
-        showLine("  " + place);
-        showLine(formatPlaceCount(placeCount));
+        showSuccessLine("Noted. I've removed this place:");
+        showSuccessLine("  " + place);
+        showSuccessLine(formatPlaceCount(placeCount));
         showLine(SEPARATOR);
     }
 
@@ -213,9 +230,9 @@ public class Ui {
      */
     public void showAddedTask(Task task, int taskCount) {
         showLine(SEPARATOR);
-        showLine("Got it. I've added this task:");
-        showLine(task.toString());
-        showLine(String.format("Now you have %d tasks in the list.", taskCount));
+        showSuccessLine("Got it. I've added this task:");
+        showSuccessLine(task.toString());
+        showSuccessLine(String.format("Now you have %d tasks in the list.", taskCount));
         showLine(SEPARATOR);
     }
 
@@ -227,9 +244,9 @@ public class Ui {
      */
     public void showDeletedTask(Task task, int taskCount) {
         showLine(SEPARATOR);
-        showLine("Noted. I've removed this task:");
-        showLine("  " + task);
-        showLine(String.format("Now you have %d tasks in the list.", taskCount));
+        showSuccessLine("Noted. I've removed this task:");
+        showSuccessLine("  " + task);
+        showSuccessLine(String.format("Now you have %d tasks in the list.", taskCount));
         showLine(SEPARATOR);
     }
 
@@ -242,11 +259,11 @@ public class Ui {
     public void showMarkedTask(Task task, boolean isMarked) {
         showLine(SEPARATOR);
         if (isMarked) {
-            showLine("Nice! I've marked this task as done:");
+            showSuccessLine("Nice! I've marked this task as done:");
         } else {
-            showLine("OK, I've marked this task as not done yet:");
+            showSuccessLine("OK, I've marked this task as not done yet:");
         }
-        showLine(task.toString());
+        showSuccessLine(task.toString());
         showLine(SEPARATOR);
     }
 
@@ -266,6 +283,11 @@ public class Ui {
         showLine(SEPARATOR);
         showLine("Bye. Hope to see you again soon!");
         showLine(SEPARATOR);
+    }
+
+    /** Sends one rendered success line to the configured success receiver. */
+    private void showSuccessLine(String line) {
+        successOutput.accept(line);
     }
 
     /** Sends one rendered line to the configured output receiver. */

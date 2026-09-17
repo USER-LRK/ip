@@ -21,6 +21,14 @@
     -fx-text-fill: #e2e8f0;
 }
 
+.success-dialog {
+    -fx-background-color: #1e293b;
+    -fx-background-radius: 16px 16px 16px 4px;
+    -fx-border-color: #34d399;
+    -fx-border-radius: 16px 16px 16px 4px;
+    -fx-text-fill: #d1fae5;
+}
+
 .error-dialog {
     -fx-background-color: #3b1828;
     -fx-background-radius: 16px 16px 16px 4px;
