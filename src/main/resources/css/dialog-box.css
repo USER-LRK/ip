@@ -21,6 +21,14 @@
     -fx-text-fill: #e2e8f0;
 }
 
+.error-dialog {
+    -fx-background-color: #3b1828;
+    -fx-background-radius: 16px 16px 16px 4px;
+    -fx-border-color: #fb7185;
+    -fx-border-radius: 16px 16px 16px 4px;
+    -fx-text-fill: #ffe4e6;
+}
+
 .avatar {
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.35), 5, 0.15, 0, 1);
 }

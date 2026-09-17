@@ -19,6 +19,7 @@ import javafx.scene.layout.HBox;
  */
 public final class DialogBox extends HBox {
     private static final String KAYKAY_AVATAR_PATH = "/images/kaykay-avatar.png";
+    private static final String WARNING_PREFIX = "\u26A0  ";
     private static final double USER_MESSAGE_MAX_WIDTH_RATIO = 0.72;
     private static final double KAYKAY_MESSAGE_MAX_WIDTH_RATIO = 0.82;
     private static final Image KAYKAY_AVATAR = new Image(Objects.requireNonNull(
@@ -39,6 +40,11 @@ public final class DialogBox extends HBox {
      * @param isUserMessage whether the message came from the user.
      */
     public DialogBox(String message, boolean isUserMessage) {
+        this(message, isUserMessage, false);
+    }
+
+    /** Creates a dialog box with an optional error presentation. */
+    private DialogBox(String message, boolean isUserMessage, boolean isErrorMessage) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(MainWindow.class.getResource("/view/DialogBox.fxml"));
             fxmlLoader.setController(this);
@@ -48,9 +54,15 @@ public final class DialogBox extends HBox {
             throw new IllegalStateException("Unable to load a Kaykay dialog box.", exception);
         }
 
-        text.setText(message);
+        text.setText(isErrorMessage ? WARNING_PREFIX + message : message);
         text.setWrapText(true);
-        text.getStyleClass().add(isUserMessage ? "user-dialog" : "kaykay-dialog");
+        String dialogStyleClass = "kaykay-dialog";
+        if (isUserMessage) {
+            dialogStyleClass = "user-dialog";
+        } else if (isErrorMessage) {
+            dialogStyleClass = "error-dialog";
+        }
+        text.getStyleClass().add(dialogStyleClass);
         double messageMaxWidthRatio = isUserMessage
                 ? USER_MESSAGE_MAX_WIDTH_RATIO
                 : KAYKAY_MESSAGE_MAX_WIDTH_RATIO;
@@ -85,5 +97,15 @@ public final class DialogBox extends HBox {
      */
     public static DialogBox getKaykayDialog(String message) {
         return new DialogBox(message, false);
+    }
+
+    /**
+     * Creates a dialog box that highlights an error reported by Kaykay.
+     *
+     * @param message error message to display.
+     * @return a Kaykay-aligned error dialog box.
+     */
+    public static DialogBox getKaykayErrorDialog(String message) {
+        return new DialogBox(message, false, true);
     }
 }

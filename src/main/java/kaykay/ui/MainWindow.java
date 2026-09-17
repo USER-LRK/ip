@@ -33,8 +33,11 @@ public final class MainWindow extends AnchorPane {
     /** Buffers rendered Kaykay output before it is shown in one dialog. */
     private final StringBuilder responseBuffer = new StringBuilder();
 
-    /** Renders chatbot output into the response buffer. */
-    private final Ui ui = new Ui(this::captureResponse, false);
+    /** Whether the buffered chatbot response represents an error. */
+    private boolean hasErrorResponse;
+
+    /** Renders chatbot output into the response buffer with its semantic state. */
+    private final Ui ui = new Ui(this::captureResponse, this::captureErrorResponse, false);
 
     /** Processes commands and manages the task data. */
     private final Kaykay kaykay = new Kaykay(DEFAULT_FILE_PATH, ui);
@@ -65,9 +68,14 @@ public final class MainWindow extends AnchorPane {
             ui.showFarewell();
         }
 
+        boolean isErrorResponse = hasErrorResponse;
         String kaykayText = takeResponse();
+        hasErrorResponse = false;
         if (!kaykayText.isEmpty()) {
-            dialogContainer.getChildren().add(DialogBox.getKaykayDialog(kaykayText));
+            DialogBox kaykayDialog = isErrorResponse
+                    ? DialogBox.getKaykayErrorDialog(kaykayText)
+                    : DialogBox.getKaykayDialog(kaykayText);
+            dialogContainer.getChildren().add(kaykayDialog);
         }
         userInput.clear();
 
@@ -80,6 +88,12 @@ public final class MainWindow extends AnchorPane {
     /** Captures one rendered UI line for the current chatbot response. */
     private void captureResponse(String line) {
         responseBuffer.append(line).append(System.lineSeparator());
+    }
+
+    /** Captures one error line and marks the current chatbot response as an error. */
+    private void captureErrorResponse(String line) {
+        hasErrorResponse = true;
+        captureResponse(line);
     }
 
     /** Returns the buffered response and clears it for the next command. */
