@@ -12,6 +12,15 @@
     -fx-background-color: transparent;
 }
 
+.composer-container {
+    -fx-background-color: #10182a;
+    -fx-background-radius: 22px;
+    -fx-border-color: #26344d;
+    -fx-border-radius: 22px;
+    -fx-border-width: 1px;
+    -fx-padding: 7px;
+}
+
 .text-field {
     -fx-background-color: #151c2e;
     -fx-background-radius: 18px;
