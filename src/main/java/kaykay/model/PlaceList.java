@@ -51,7 +51,7 @@ public final class PlaceList {
     public List<Place> findPlaces(String keyword) {
         List<Place> matchingPlaces = new ArrayList<>();
         for (Place place : places) {
-            if (place.matches(keyword)) {
+            if (place.hasMatchingDetail(keyword)) {
                 matchingPlaces.add(place);
             }
         }

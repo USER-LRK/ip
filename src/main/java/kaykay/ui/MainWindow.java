@@ -72,8 +72,8 @@ public final class MainWindow extends AnchorPane {
             dialogContainer.getChildren().add(DialogBox.getUserDialog(userText));
         }
 
-        boolean isExit = kaykay.processCommand(userText);
-        if (isExit) {
+        boolean shouldExit = kaykay.shouldExitAfterProcessingCommand(userText);
+        if (shouldExit) {
             ui.showFarewell();
         }
 
@@ -91,7 +91,7 @@ public final class MainWindow extends AnchorPane {
         }
         userInput.clear();
 
-        if (isExit) {
+        if (shouldExit) {
             userInput.setDisable(true);
             sendButton.setDisable(true);
         }

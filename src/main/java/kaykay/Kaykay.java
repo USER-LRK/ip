@@ -26,7 +26,7 @@ public class Kaykay {
     private final Parser parser;
 
     /** Whether loading the initial task data failed. */
-    private final boolean didLoadFail;
+    private final boolean hasInitialDataLoadFailed;
 
     /**
      * Creates a Kaykay chatbot using the given task data file.
@@ -48,16 +48,16 @@ public class Kaykay {
         storage = new Storage(filePath);
         parser = new Parser();
         ApplicationData loadedData;
-        boolean didLoadFail;
+        boolean hasInitialDataLoadFailed;
         try {
             loadedData = storage.loadData();
-            didLoadFail = false;
+            hasInitialDataLoadFailed = false;
         } catch (IOException exception) {
             loadedData = new ApplicationData();
-            didLoadFail = true;
+            hasInitialDataLoadFailed = true;
         }
         data = loadedData;
-        this.didLoadFail = didLoadFail;
+        this.hasInitialDataLoadFailed = hasInitialDataLoadFailed;
     }
 
     /**
@@ -66,7 +66,7 @@ public class Kaykay {
      * @param input command entered by the user.
      * @return true if the command ends the chatbot session.
      */
-    public boolean processCommand(String input) {
+    public boolean shouldExitAfterProcessingCommand(String input) {
         try {
             Command command = parser.parse(input);
             assert command != null : "Parser must return a command for valid input";
@@ -83,12 +83,12 @@ public class Kaykay {
     /** Runs the chatbot until the user says bye or input ends. */
     public void run() {
         ui.showWelcome();
-        if (didLoadFail) {
+        if (hasInitialDataLoadFailed) {
             ui.showLoadingError();
         }
         while (ui.hasNextLine()) {
             String input = ui.readCommand();
-            if (processCommand(input)) {
+            if (shouldExitAfterProcessingCommand(input)) {
                 break;
             }
         }

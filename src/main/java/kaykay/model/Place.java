@@ -85,7 +85,7 @@ public final class Place {
      * @param keyword text to search for.
      * @return true if any displayed detail contains the keyword.
      */
-    public boolean matches(String keyword) {
+    public boolean hasMatchingDetail(String keyword) {
         String visitedOnText = visitedOn == null ? "" : visitedOn.format(VISIT_DATE_FORMATTER);
         String ratingText = rating == null ? "" : rating.toString();
         String searchableDetails = String.join("\n", name, type, location, visitedOnText, ratingText, notes);
