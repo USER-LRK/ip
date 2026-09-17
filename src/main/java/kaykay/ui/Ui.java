@@ -251,6 +251,19 @@ public class Ui {
     }
 
     /**
+     * Shows that an event with identical details is already scheduled.
+     *
+     * @param event existing event that matches the requested event.
+     * @param taskNumber one-based mission number of the existing event.
+     */
+    public void showDuplicateEvent(Task event, int taskNumber) {
+        showLine(SEPARATOR);
+        showLine(String.format("That event is already scheduled as mission %d:", taskNumber));
+        showLine(event.toString());
+        showLine(SEPARATOR);
+    }
+
+    /**
      * Shows the standard confirmation after deleting a task.
      *
      * @param task task that was deleted.

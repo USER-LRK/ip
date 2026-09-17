@@ -30,6 +30,10 @@ end date/time.
 event project meeting /from 26 12 2026 14:00 /to 26 12 2026 16:00
 ```
 
+If an event has the same description, start, and end as an existing event,
+Kaykay reports the existing mission instead of adding a duplicate. Events with
+the same description at different times are still allowed.
+
 ## Date and time format
 
 Deadline and event date/times must use this exact format. The time is compulsory:

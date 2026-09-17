@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 import kaykay.exception.KaykayException;
 import kaykay.model.ApplicationData;
+import kaykay.model.Event;
 import kaykay.model.Place;
 import kaykay.model.Task;
 import kaykay.model.TaskList;
@@ -77,6 +79,23 @@ class CommandTest {
         assertTrue(ui.isUnchangedTaskMarked());
     }
 
+    /** Checks that an identical event is reported without being added or saved again. */
+    @Test
+    void eventCommand_duplicateEvent_reportsExistingEvent() throws IOException, KaykayException {
+        LocalDateTime start = LocalDateTime.of(2026, 12, 26, 14, 0);
+        LocalDateTime end = LocalDateTime.of(2026, 12, 26, 16, 0);
+        Event existingEvent = new Event("project meeting", start, end);
+        ApplicationData data = new ApplicationData(new TaskList(existingEvent));
+        RecordingUi ui = new RecordingUi();
+        Storage invalidStorage = new Storage(temporaryDirectory.toString());
+
+        new EventCommand("project meeting", start, end).execute(data, ui, invalidStorage);
+
+        assertEquals(1, data.getTasks().size());
+        assertEquals(existingEvent, ui.getDuplicateEvent());
+        assertEquals(1, ui.getDuplicateEventNumber());
+    }
+
     /** Checks that find delegates the ordered matches to the UI without changing task state. */
     @Test
     void findCommand_execute_displaysMatchingTasks() throws IOException, KaykayException {
@@ -134,6 +153,12 @@ class CommandTest {
         /** Whether the unchanged task was already marked. */
         private boolean isUnchangedTaskMarked;
 
+        /** Existing event reported after a duplicate event command. */
+        private Task duplicateEvent;
+
+        /** One-based mission number of the existing duplicate event. */
+        private int duplicateEventNumber;
+
         /** Does nothing because these tests verify command state changes directly. */
         @Override
         public void showAddedTask(Task task, int taskCount) {
@@ -157,6 +182,13 @@ class CommandTest {
         public void showUnchangedTaskStatus(Task task, boolean isMarked) {
             unchangedTask = task;
             isUnchangedTaskMarked = isMarked;
+        }
+
+        /** Records an existing event that prevented a duplicate addition. */
+        @Override
+        public void showDuplicateEvent(Task event, int taskNumber) {
+            duplicateEvent = event;
+            duplicateEventNumber = taskNumber;
         }
 
         /** Records search results for command assertions. */
@@ -203,6 +235,16 @@ class CommandTest {
         /** Checks whether the unchanged task was already marked. */
         private boolean isUnchangedTaskMarked() {
             return isUnchangedTaskMarked;
+        }
+
+        /** Returns the existing event reported for a duplicate addition. */
+        private Task getDuplicateEvent() {
+            return duplicateEvent;
+        }
+
+        /** Returns the mission number reported for a duplicate event. */
+        private int getDuplicateEventNumber() {
+            return duplicateEventNumber;
         }
     }
 }

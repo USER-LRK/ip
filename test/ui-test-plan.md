@@ -925,3 +925,54 @@ ____________________________________________________________
 All changes saved. Kaykay signing off!
 ____________________________________________________________
 ```
+
+## Case 15: Reject exact duplicate events
+
+**Aim:** Verify an identical event is reported without being added again, while the same description at a different time is allowed.
+
+Commands / console input:
+
+```
+event project meeting /from 26 12 2026 14:00 /to 26 12 2026 16:00
+event project meeting /from 26 12 2026 14:00 /to 26 12 2026 16:00
+event project meeting /from 26 12 2026 16:00 /to 26 12 2026 17:00
+list
+bye
+```
+
+Expected output:
+
+```
+____________________________________________________________
+#   #   ###   #   #  #   #   ###   #   #
+#  #   #   #   # #   #  #   #   #   # #
+###    #####    #    ###    #####    #
+#  #   #   #    #    #  #   #   #    #
+#   #  #   #    #    #   #  #   #    #
+____________________________________________________________
+Kaykay online!
+What's our next mission?
+____________________________________________________________
+____________________________________________________________
+Event scheduled:
+[E][ ] project meeting (from: 26 12 2026 14:00 to: 26 12 2026 16:00)
+Now you have 1 task in the list.
+____________________________________________________________
+____________________________________________________________
+That event is already scheduled as mission 1:
+[E][ ] project meeting (from: 26 12 2026 14:00 to: 26 12 2026 16:00)
+____________________________________________________________
+____________________________________________________________
+Event scheduled:
+[E][ ] project meeting (from: 26 12 2026 16:00 to: 26 12 2026 17:00)
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Here are your current missions:
+1. [E][ ] project meeting (from: 26 12 2026 14:00 to: 26 12 2026 16:00)
+2. [E][ ] project meeting (from: 26 12 2026 16:00 to: 26 12 2026 17:00)
+____________________________________________________________
+____________________________________________________________
+All changes saved. Kaykay signing off!
+____________________________________________________________
+```
