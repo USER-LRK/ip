@@ -20,25 +20,25 @@ class KaykayTest {
 
     /** Checks that commands execute and render their responses through the UI. */
     @Test
-    void processCommand_validCommand_updatesTasksAndRendersResponse() {
+    void shouldExitAfterProcessingCommand_validCommand_updatesTasksAndRendersResponse() {
         StringBuilder output = new StringBuilder();
         Ui ui = new Ui(line -> output.append(line).append(System.lineSeparator()));
         Kaykay kaykay = new Kaykay(temporaryDirectory.resolve("tasks.txt").toString(), ui);
 
-        assertFalse(kaykay.processCommand("todo buy milk"));
+        assertFalse(kaykay.shouldExitAfterProcessingCommand("todo buy milk"));
         assertTrue(output.toString().contains("Mission added:"));
         assertTrue(output.toString().contains("[T][ ] buy milk"));
-        assertTrue(kaykay.processCommand("bye"));
+        assertTrue(kaykay.shouldExitAfterProcessingCommand("bye"));
     }
 
     /** Checks that GUI output omits separators while retaining response text. */
     @Test
-    void processCommand_guiOutput_omitsConsoleSeparators() {
+    void shouldExitAfterProcessingCommand_guiOutput_omitsConsoleSeparators() {
         StringBuilder output = new StringBuilder();
         Ui ui = new Ui(line -> output.append(line).append(System.lineSeparator()), false);
         Kaykay kaykay = new Kaykay(temporaryDirectory.resolve("gui-tasks.txt").toString(), ui);
 
-        kaykay.processCommand("todo buy milk");
+        kaykay.shouldExitAfterProcessingCommand("todo buy milk");
 
         assertFalse(output.toString().contains("____________________________________________________________"));
         assertTrue(output.toString().contains("Mission added:"));
@@ -46,19 +46,19 @@ class KaykayTest {
 
     /** Checks that a blank command produces concise and predictable guidance. */
     @Test
-    void processCommand_blankCommand_showsInputWarning() {
+    void shouldExitAfterProcessingCommand_blankCommand_showsInputWarning() {
         StringBuilder output = new StringBuilder();
         Ui ui = new Ui(line -> output.append(line).append(System.lineSeparator()), false);
         Kaykay kaykay = new Kaykay(temporaryDirectory.resolve("blank-command.txt").toString(), ui);
 
-        assertFalse(kaykay.processCommand("   "));
+        assertFalse(kaykay.shouldExitAfterProcessingCommand("   "));
 
         assertEquals("Mission snag: Please enter a command." + System.lineSeparator(), output.toString());
     }
 
     /** Checks that GUI errors can be styled separately without changing their wording. */
     @Test
-    void processCommand_guiError_routesToErrorOutput() {
+    void shouldExitAfterProcessingCommand_guiError_routesToErrorOutput() {
         StringBuilder output = new StringBuilder();
         StringBuilder errorOutput = new StringBuilder();
         Ui ui = new Ui(
@@ -67,7 +67,7 @@ class KaykayTest {
                 false);
         Kaykay kaykay = new Kaykay(temporaryDirectory.resolve("gui-error.txt").toString(), ui);
 
-        assertFalse(kaykay.processCommand("unknown"));
+        assertFalse(kaykay.shouldExitAfterProcessingCommand("unknown"));
 
         assertEquals("", output.toString());
         assertEquals("Mission snag: I don't recognise that command. Try todo, deadline, event, list, find, delete, "
@@ -76,7 +76,7 @@ class KaykayTest {
 
     /** Checks that GUI action confirmations can be styled separately without changing their wording. */
     @Test
-    void processCommand_guiSuccess_routesToSuccessOutput() {
+    void shouldExitAfterProcessingCommand_guiSuccess_routesToSuccessOutput() {
         StringBuilder output = new StringBuilder();
         StringBuilder errorOutput = new StringBuilder();
         StringBuilder successOutput = new StringBuilder();
@@ -87,7 +87,7 @@ class KaykayTest {
                 false);
         Kaykay kaykay = new Kaykay(temporaryDirectory.resolve("gui-success.txt").toString(), ui);
 
-        assertFalse(kaykay.processCommand("todo buy milk"));
+        assertFalse(kaykay.shouldExitAfterProcessingCommand("todo buy milk"));
 
         assertEquals("", output.toString());
         assertEquals("", errorOutput.toString());
@@ -98,17 +98,17 @@ class KaykayTest {
 
     /** Checks that place commands work together through the application coordinator. */
     @Test
-    void processCommand_placeWorkflow_managesPersistedPlaces() throws IOException {
+    void shouldExitAfterProcessingCommand_placeWorkflow_managesPersistedPlaces() throws IOException {
         StringBuilder output = new StringBuilder();
         Ui ui = new Ui(line -> output.append(line).append(System.lineSeparator()), false);
         Path dataFile = temporaryDirectory.resolve("place-data.txt");
         Kaykay kaykay = new Kaykay(dataFile.toString(), ui);
 
-        kaykay.processCommand("place add Burnt Ends /type restaurant /location Dempsey "
+        kaykay.shouldExitAfterProcessingCommand("place add Burnt Ends /type restaurant /location Dempsey "
                 + "/visited 10 09 2026 /rating 5 /notes Great brisket");
-        kaykay.processCommand("place edit 1 /rating 4 /notes Worth revisiting");
-        kaykay.processCommand("place find REVISITING");
-        kaykay.processCommand("place list");
+        kaykay.shouldExitAfterProcessingCommand("place edit 1 /rating 4 /notes Worth revisiting");
+        kaykay.shouldExitAfterProcessingCommand("place find REVISITING");
+        kaykay.shouldExitAfterProcessingCommand("place list");
 
         assertTrue(output.toString().contains("Location logged:"));
         assertTrue(output.toString().contains("rating: 4/5; notes: Worth revisiting"));

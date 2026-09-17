@@ -30,14 +30,14 @@ class PlaceTest {
     }
 
     @Test
-    void matches_keyword_searchesAllDisplayedDetailsIgnoringCase() {
+    void hasMatchingDetail_keyword_searchesAllDisplayedDetailsIgnoringCase() {
         Place place = new Place("Burnt Ends", "restaurant", "Dempsey",
                 LocalDate.of(2026, 9, 10), 5, "Great brisket");
 
-        assertTrue(place.matches("BURNT"));
-        assertTrue(place.matches("brisket"));
-        assertTrue(place.matches("10 09 2026"));
-        assertFalse(place.matches("museum"));
-        assertFalse(place.matches("notes:"));
+        assertTrue(place.hasMatchingDetail("BURNT"));
+        assertTrue(place.hasMatchingDetail("brisket"));
+        assertTrue(place.hasMatchingDetail("10 09 2026"));
+        assertFalse(place.hasMatchingDetail("museum"));
+        assertFalse(place.hasMatchingDetail("notes:"));
     }
 }

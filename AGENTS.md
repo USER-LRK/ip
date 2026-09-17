@@ -51,6 +51,16 @@ All future commits and branch names in this repository must follow
 Review every commit subject, body, and branch name against that skill before
 creating it.
 
+Before creating any commit, verify the exact commit message rather than relying
+on visual wrapping in an editor. Every subject and body line must be at most 72
+characters, and the subject should aim for 50 characters. This verification is
+mandatory for all commits, including merges. Do not create the commit until the
+message passes this check.
+
+When merging a completed branch into `master`, use `git merge --no-ff` so the
+merge produces a dedicated commit that can be tagged. Do not fast-forward
+completed-branch merges.
+
 Use lightweight tags unless the user requests an annotated tag.
 When proposing or creating a commit message, include enough detail to explain the rationale for the change.
 Do not commit or push unless explicitly asked.
