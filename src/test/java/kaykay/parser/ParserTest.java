@@ -60,13 +60,19 @@ class ParserTest {
         assertParseError("todo", "A todo needs a description. Try: todo <description>.");
         assertParseError("find", "A find command needs a keyword. Try: find <keyword>.");
         assertParseError("deadline missing",
-                "A deadline needs a description and a date. Try: deadline <description> /by <date>.");
+                "A deadline needs a description, date, and time. "
+                        + "Use: deadline <description> /by dd MM yyyy HH:mm.");
         assertParseError("event meeting /from 31 12 2026 10:00",
-                "An event needs a description, start, and end. "
-                        + "Try: event <description> /from <start> /to <end>.");
+                "An event needs a description plus start and end date/times. "
+                        + "Use: event <description> /from dd MM yyyy HH:mm /to dd MM yyyy HH:mm.");
+        assertParseError("event meeting /from 12 02 2004 /to 30 04 2005",
+                "The event start date/time '12 02 2004' is invalid. Include both the date and 24-hour time: "
+                        + "dd MM yyyy HH:mm (spaces between day, month, and year), e.g. 01 01 2026 18:30.");
+        assertParseError("event meeting /from 31 12 2026 11:00 /to 31 12 2026 10:00",
+                "The event end cannot be before its start.");
         assertParseError("deadline report /by 31 02 2026 10:00",
-                "The deadline date/time '31 02 2026 10:00' is invalid. Please use dd MM yyyy HH:mm, "
-                        + "for example 01 01 2026 18:30.");
+                "The deadline date/time '31 02 2026 10:00' is invalid. Include both the date and 24-hour time: "
+                        + "dd MM yyyy HH:mm (spaces between day, month, and year), e.g. 01 01 2026 18:30.");
         assertParseError("blah",
                 "I don't recognise that command. Try todo, deadline, event, list, find, delete, mark, "
                         + "unmark, place, or bye.");

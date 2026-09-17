@@ -122,8 +122,10 @@ deadline do homework /by 28 12 2026 23:45
 event orientation week /from 29 12 2026 08:00 /to 29 12 2026 10:30
 deadline reject random /by Friday
 event reject random /from no idea /to no idea
+event reject missing time /from 12 02 2004 /to 30 04 2005
 deadline reject invalid date /by 31 02 2026 10:00
 event reject invalid time /from 30 12 2026 10:00 /to 30 12 2026 25:00
+event reject reversed time /from 30 12 2026 11:00 /to 30 12 2026 10:00
 list
 bye
 ```
@@ -152,16 +154,22 @@ Event scheduled:
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
-Mission snag: The deadline date/time 'Friday' is invalid. Please use dd MM yyyy HH:mm, for example 01 01 2026 18:30.
+Mission snag: The deadline date/time 'Friday' is invalid. Include both the date and 24-hour time: dd MM yyyy HH:mm (spaces between day, month, and year), e.g. 01 01 2026 18:30.
 ____________________________________________________________
 ____________________________________________________________
-Mission snag: The event start date/time 'no idea' is invalid. Please use dd MM yyyy HH:mm, for example 01 01 2026 18:30.
+Mission snag: The event start date/time 'no idea' is invalid. Include both the date and 24-hour time: dd MM yyyy HH:mm (spaces between day, month, and year), e.g. 01 01 2026 18:30.
 ____________________________________________________________
 ____________________________________________________________
-Mission snag: The deadline date/time '31 02 2026 10:00' is invalid. Please use dd MM yyyy HH:mm, for example 01 01 2026 18:30.
+Mission snag: The event start date/time '12 02 2004' is invalid. Include both the date and 24-hour time: dd MM yyyy HH:mm (spaces between day, month, and year), e.g. 01 01 2026 18:30.
 ____________________________________________________________
 ____________________________________________________________
-Mission snag: The event end date/time '30 12 2026 25:00' is invalid. Please use dd MM yyyy HH:mm, for example 01 01 2026 18:30.
+Mission snag: The deadline date/time '31 02 2026 10:00' is invalid. Include both the date and 24-hour time: dd MM yyyy HH:mm (spaces between day, month, and year), e.g. 01 01 2026 18:30.
+____________________________________________________________
+____________________________________________________________
+Mission snag: The event end date/time '30 12 2026 25:00' is invalid. Include both the date and 24-hour time: dd MM yyyy HH:mm (spaces between day, month, and year), e.g. 01 01 2026 18:30.
+____________________________________________________________
+____________________________________________________________
+Mission snag: The event end cannot be before its start.
 ____________________________________________________________
 ____________________________________________________________
 Here are your current missions:
@@ -262,7 +270,7 @@ Mission added:
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
-Mission snag: A deadline needs a description and a date. Try: deadline <description> /by <date>.
+Mission snag: A deadline needs a description, date, and time. Use: deadline <description> /by dd MM yyyy HH:mm.
 ____________________________________________________________
 ____________________________________________________________
 Event scheduled:
@@ -270,7 +278,7 @@ Event scheduled:
 Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
-Mission snag: An event needs a description, start, and end. Try: event <description> /from <start> /to <end>.
+Mission snag: An event needs a description plus start and end date/times. Use: event <description> /from dd MM yyyy HH:mm /to dd MM yyyy HH:mm.
 ____________________________________________________________
 ____________________________________________________________
 Mission snag: Please provide an existing task number to mark or unmark.

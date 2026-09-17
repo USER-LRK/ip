@@ -291,8 +291,8 @@ public final class Parser {
         String[] deadlineParts = deadlineInput.split(" /by ", 2);
         if (deadlineParts.length != 2 || deadlineParts[0].trim().isEmpty()
                 || deadlineParts[1].trim().isEmpty()) {
-            throw new KaykayException("A deadline needs a description and a date. "
-                    + "Try: deadline <description> /by <date>.");
+            throw new KaykayException("A deadline needs a description, date, and time. "
+                    + "Use: deadline <description> /by dd MM yyyy HH:mm.");
         }
 
         String byText = deadlineParts[1].trim();
@@ -317,6 +317,9 @@ public final class Parser {
         String toText = toParts[1].trim();
         LocalDateTime startDateTime = parseDateTime("event start", fromText);
         LocalDateTime endDateTime = parseDateTime("event end", toText);
+        if (endDateTime.isBefore(startDateTime)) {
+            throw new KaykayException("The event end cannot be before its start.");
+        }
         return new EventCommand(fromParts[0], startDateTime, endDateTime);
     }
 
@@ -361,14 +364,15 @@ public final class Parser {
 
     /** Builds the standard invalid-event-format error. */
     private static KaykayException invalidEventFormat() {
-        return new KaykayException("An event needs a description, start, and end. "
-                + "Try: event <description> /from <start> /to <end>.");
+        return new KaykayException("An event needs a description plus start and end date/times. "
+                + "Use: event <description> /from dd MM yyyy HH:mm /to dd MM yyyy HH:mm.");
     }
 
     /** Builds a date/time error that identifies the invalid input and expected format. */
     private static KaykayException invalidDateTime(String field, String value) {
         return new KaykayException(String.format(
-                "The %s date/time '%s' is invalid. Please use %s, for example %s.",
+                "The %s date/time '%s' is invalid. Include both the date and 24-hour time: %s "
+                        + "(spaces between day, month, and year), e.g. %s.",
                 field, value, DateTimeParser.DATE_TIME_INPUT_FORMAT,
                 DateTimeParser.DATE_TIME_EXAMPLE));
     }

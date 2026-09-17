@@ -32,13 +32,13 @@ event project meeting /from 26 12 2026 14:00 /to 26 12 2026 16:00
 
 ## Date and time format
 
-Deadline and event date/times must use this exact format:
+Deadline and event date/times must use this exact format. The time is compulsory:
 
 ```text
 dd MM yyyy HH:mm
 ```
 
-The format means:
+The day, month, and year are separated by spaces. The format means:
 
 - `dd`: two-digit day
 - `MM`: two-digit month
@@ -50,7 +50,8 @@ For example, `05 01 2026 06:07` means 5 January 2026 at 6:07 AM, while
 `05 01 2026 18:07` means 6:07 PM.
 
 Values such as `Friday`, `10am`, `2026-01-05`, or `31 02 2026 10:00` are not
-accepted. Kaykay will identify the invalid input and show the required format.
+accepted. An event's end also cannot be earlier than its start. Kaykay will
+identify invalid input and explain how to correct it.
 
 ## Managing tasks
 
