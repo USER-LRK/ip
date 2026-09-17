@@ -35,6 +35,13 @@ public final class AddPlaceCommand extends Command {
     @Override
     public void execute(ApplicationData data, Ui ui, Storage storage) throws IOException {
         PlaceList places = data.getPlaces();
+        for (int i = 0; i < places.size(); i += 1) {
+            Place existingPlace = places.getPlace(i);
+            if (existingPlace.hasSameDetails(place)) {
+                ui.showDuplicatePlace(existingPlace, i + 1);
+                return;
+            }
+        }
         places.add(place);
         try {
             storage.saveData(data);

@@ -30,9 +30,9 @@ end date/time.
 event project meeting /from 26 12 2026 14:00 /to 26 12 2026 16:00
 ```
 
-If an event has the same description, start, and end as an existing event,
-Kaykay reports the existing mission instead of adding a duplicate. Events with
-the same description at different times are still allowed.
+If a task has the same type and details as an existing task, Kaykay reports the
+existing mission instead of adding a duplicate. Tasks with the same description
+but different types or date/time details are still allowed.
 
 ## Date and time format
 

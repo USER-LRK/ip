@@ -24,6 +24,13 @@ public class Deadline extends Task {
         this.deadlineDateTime = deadlineDateTime;
     }
 
+    @Override
+    public boolean hasSameDetails(Task otherTask) {
+        return otherTask instanceof Deadline otherDeadline
+                && super.hasSameDetails(otherDeadline)
+                && deadlineDateTime.equals(otherDeadline.deadlineDateTime);
+    }
+
     /**
      * Returns the deadline's user-facing display text with its due date/time.
      *

@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 import kaykay.model.Event;
 import kaykay.model.Task;
-import kaykay.model.TaskList;
 import kaykay.ui.Ui;
 
 /**
@@ -38,20 +37,6 @@ public final class EventCommand extends AddCommand {
     @Override
     protected Task createTask() {
         return new Event(getDescription(), startDateTime, endDateTime);
-    }
-
-    /** Prevents an event with identical details from being added twice. */
-    @Override
-    protected boolean shouldAddTask(TaskList tasks, Ui ui) {
-        for (int i = 0; i < tasks.size(); i += 1) {
-            Task task = tasks.getTask(i);
-            if (task instanceof Event event
-                    && event.hasSameDetails(getDescription(), startDateTime, endDateTime)) {
-                ui.showDuplicateEvent(event, i + 1);
-                return false;
-            }
-        }
-        return true;
     }
 
     /** Shows an event-specific confirmation after the event is saved. */

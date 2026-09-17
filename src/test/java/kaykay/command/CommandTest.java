@@ -16,6 +16,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 import kaykay.exception.KaykayException;
 import kaykay.model.ApplicationData;
+import kaykay.model.Deadline;
 import kaykay.model.Event;
 import kaykay.model.Place;
 import kaykay.model.Task;
@@ -79,21 +80,31 @@ class CommandTest {
         assertTrue(ui.isUnchangedTaskMarked());
     }
 
-    /** Checks that an identical event is reported without being added or saved again. */
+    /** Checks that identical task details are reported without being added or saved again. */
     @Test
-    void eventCommand_duplicateEvent_reportsExistingEvent() throws IOException, KaykayException {
+    void addCommands_duplicateTasks_reportExistingTasks() throws IOException, KaykayException {
         LocalDateTime start = LocalDateTime.of(2026, 12, 26, 14, 0);
         LocalDateTime end = LocalDateTime.of(2026, 12, 26, 16, 0);
+        Todo existingTodo = new Todo("buy milk");
+        Deadline existingDeadline = new Deadline("submit report", start);
         Event existingEvent = new Event("project meeting", start, end);
-        ApplicationData data = new ApplicationData(new TaskList(existingEvent));
+        ApplicationData data = new ApplicationData(
+                new TaskList(existingTodo, existingDeadline, existingEvent));
         RecordingUi ui = new RecordingUi();
         Storage invalidStorage = new Storage(temporaryDirectory.toString());
 
-        new EventCommand("project meeting", start, end).execute(data, ui, invalidStorage);
+        new TodoCommand("buy milk").execute(data, ui, invalidStorage);
+        assertEquals(existingTodo, ui.getDuplicateTask());
+        assertEquals(1, ui.getDuplicateTaskNumber());
 
-        assertEquals(1, data.getTasks().size());
-        assertEquals(existingEvent, ui.getDuplicateEvent());
-        assertEquals(1, ui.getDuplicateEventNumber());
+        new DeadlineCommand("submit report", start).execute(data, ui, invalidStorage);
+        assertEquals(existingDeadline, ui.getDuplicateTask());
+        assertEquals(2, ui.getDuplicateTaskNumber());
+
+        new EventCommand("project meeting", start, end).execute(data, ui, invalidStorage);
+        assertEquals(3, data.getTasks().size());
+        assertEquals(existingEvent, ui.getDuplicateTask());
+        assertEquals(3, ui.getDuplicateTaskNumber());
     }
 
     /** Checks that find delegates the ordered matches to the UI without changing task state. */
@@ -124,6 +135,11 @@ class CommandTest {
         assertEquals(1, data.getPlaces().size());
         assertEquals(place.toString(), storage.loadData().getPlaces().getPlace(0).toString());
 
+        new AddPlaceCommand(place).execute(data, ui, storage);
+        assertEquals(1, data.getPlaces().size());
+        assertEquals(place, ui.getDuplicatePlace());
+        assertEquals(1, ui.getDuplicatePlaceNumber());
+
         new EditPlaceCommand("1", null, null, null, null, 4, "Worth revisiting")
                 .execute(data, ui, storage);
         assertEquals(4, data.getPlaces().getPlace(0).getRating());
@@ -153,11 +169,17 @@ class CommandTest {
         /** Whether the unchanged task was already marked. */
         private boolean isUnchangedTaskMarked;
 
-        /** Existing event reported after a duplicate event command. */
-        private Task duplicateEvent;
+        /** Existing task reported after a duplicate add command. */
+        private Task duplicateTask;
 
-        /** One-based mission number of the existing duplicate event. */
-        private int duplicateEventNumber;
+        /** One-based mission number of the existing duplicate task. */
+        private int duplicateTaskNumber;
+
+        /** Existing place reported after a duplicate add command. */
+        private Place duplicatePlace;
+
+        /** One-based place number of the existing duplicate place. */
+        private int duplicatePlaceNumber;
 
         /** Does nothing because these tests verify command state changes directly. */
         @Override
@@ -184,11 +206,18 @@ class CommandTest {
             isUnchangedTaskMarked = isMarked;
         }
 
-        /** Records an existing event that prevented a duplicate addition. */
+        /** Records an existing task that prevented a duplicate addition. */
         @Override
-        public void showDuplicateEvent(Task event, int taskNumber) {
-            duplicateEvent = event;
-            duplicateEventNumber = taskNumber;
+        public void showDuplicateTask(Task task, int taskNumber) {
+            duplicateTask = task;
+            duplicateTaskNumber = taskNumber;
+        }
+
+        /** Records an existing place that prevented a duplicate addition. */
+        @Override
+        public void showDuplicatePlace(Place place, int placeNumber) {
+            duplicatePlace = place;
+            duplicatePlaceNumber = placeNumber;
         }
 
         /** Records search results for command assertions. */
@@ -237,14 +266,24 @@ class CommandTest {
             return isUnchangedTaskMarked;
         }
 
-        /** Returns the existing event reported for a duplicate addition. */
-        private Task getDuplicateEvent() {
-            return duplicateEvent;
+        /** Returns the existing task reported for a duplicate addition. */
+        private Task getDuplicateTask() {
+            return duplicateTask;
         }
 
-        /** Returns the mission number reported for a duplicate event. */
-        private int getDuplicateEventNumber() {
-            return duplicateEventNumber;
+        /** Returns the mission number reported for a duplicate task. */
+        private int getDuplicateTaskNumber() {
+            return duplicateTaskNumber;
+        }
+
+        /** Returns the existing place reported for a duplicate addition. */
+        private Place getDuplicatePlace() {
+            return duplicatePlace;
+        }
+
+        /** Returns the place number reported for a duplicate addition. */
+        private int getDuplicatePlaceNumber() {
+            return duplicatePlaceNumber;
         }
     }
 }

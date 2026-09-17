@@ -963,7 +963,7 @@ Event scheduled:
 Now you have 1 task in the list.
 ____________________________________________________________
 ____________________________________________________________
-That event is already scheduled as mission 1:
+Those task details already exist as mission 1:
 [E][ ] project meeting (from: 26 12 2026 14:00 to: 26 12 2026 16:00)
 ____________________________________________________________
 ____________________________________________________________
@@ -981,7 +981,79 @@ All changes saved. Kaykay signing off!
 ____________________________________________________________
 ```
 
-## Case 16: Handle whitespace and repeated parameters
+## Case 16: Reject exact duplicate tasks and places
+
+**Aim:** Verify that identical task and place details are not saved more than once.
+
+Commands / console input:
+
+```
+todo duplicate task
+todo duplicate task
+deadline duplicate deadline /by 04 01 2027 09:00
+deadline duplicate deadline /by 04 01 2027 09:00
+place add Duplicate Cafe /rating 4
+place add Duplicate Cafe /rating 4
+list
+place list
+bye
+```
+
+Expected output:
+
+```
+____________________________________________________________
+#   #   ###   #   #  #   #   ###   #   #
+#  #   #   #   # #   #  #   #   #   # #
+###    #####    #    ###    #####    #
+#  #   #   #    #    #  #   #   #    #
+#   #  #   #    #    #   #  #   #    #
+____________________________________________________________
+Kaykay online!
+What's our next mission?
+____________________________________________________________
+____________________________________________________________
+Mission added:
+[T][ ] duplicate task
+Now you have 1 task in the list.
+____________________________________________________________
+____________________________________________________________
+Those task details already exist as mission 1:
+[T][ ] duplicate task
+____________________________________________________________
+____________________________________________________________
+Mission added:
+[D][ ] duplicate deadline (by: 04 01 2027 09:00)
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Those task details already exist as mission 2:
+[D][ ] duplicate deadline (by: 04 01 2027 09:00)
+____________________________________________________________
+____________________________________________________________
+Location logged:
+[P] Duplicate Cafe (rating: 4/5)
+Now you have 1 place saved.
+____________________________________________________________
+____________________________________________________________
+Those place details already exist as place 1:
+[P] Duplicate Cafe (rating: 4/5)
+____________________________________________________________
+____________________________________________________________
+Here are your current missions:
+1. [T][ ] duplicate task
+2. [D][ ] duplicate deadline (by: 04 01 2027 09:00)
+____________________________________________________________
+____________________________________________________________
+Here are your logged locations:
+1. [P] Duplicate Cafe (rating: 4/5)
+____________________________________________________________
+____________________________________________________________
+All changes saved. Kaykay signing off!
+____________________________________________________________
+```
+
+## Case 17: Handle whitespace and repeated parameters
 
 **Aim:** Verify that harmless structural whitespace is accepted while repeated or unknown parameters are rejected.
 

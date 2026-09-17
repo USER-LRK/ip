@@ -44,10 +44,18 @@ public abstract class AddCommand extends Command {
      * Checks whether this command should add its task.
      *
      * @param tasks tasks that may already contain an equivalent entry.
+     * @param taskToAdd task that would be added.
      * @param ui UI used to explain why an addition is skipped.
      * @return true when the task should be added.
      */
-    protected boolean shouldAddTask(TaskList tasks, Ui ui) {
+    private boolean shouldAddTask(TaskList tasks, Task taskToAdd, Ui ui) {
+        for (int i = 0; i < tasks.size(); i += 1) {
+            Task existingTask = tasks.getTask(i);
+            if (existingTask.hasSameDetails(taskToAdd)) {
+                ui.showDuplicateTask(existingTask, i + 1);
+                return false;
+            }
+        }
         return true;
     }
 
@@ -63,12 +71,12 @@ public abstract class AddCommand extends Command {
     @Override
     public final void execute(ApplicationData data, Ui ui, Storage storage) throws IOException {
         TaskList tasks = data.getTasks();
-        if (!shouldAddTask(tasks, ui)) {
+        Task addedTask = createTask();
+        assert addedTask != null : "An add command must create a task";
+        if (!shouldAddTask(tasks, addedTask, ui)) {
             return;
         }
         int originalTaskCount = tasks.size();
-        Task addedTask = createTask();
-        assert addedTask != null : "An add command must create a task";
 
         tasks.add(addedTask);
         assert tasks.size() == originalTaskCount + 1 : "Adding a task must increase the task count by one";

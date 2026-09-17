@@ -30,18 +30,17 @@ public class Event extends Task {
     }
 
     /**
-     * Checks whether the supplied details identify the same scheduled event.
+     * Checks whether another task has the same event details.
      *
-     * @param description event description to compare.
-     * @param startDateTime event start to compare.
-     * @param endDateTime event end to compare.
-     * @return true if the description and both date/time values match.
+     * @param otherTask task to compare.
+     * @return true if the task is an event with matching details.
      */
-    public boolean hasSameDetails(String description, LocalDateTime startDateTime,
-            LocalDateTime endDateTime) {
-        return getDescription().equals(description)
-                && this.startDateTime.equals(startDateTime)
-                && this.endDateTime.equals(endDateTime);
+    @Override
+    public boolean hasSameDetails(Task otherTask) {
+        return otherTask instanceof Event otherEvent
+                && super.hasSameDetails(otherEvent)
+                && startDateTime.equals(otherEvent.startDateTime)
+                && endDateTime.equals(otherEvent.endDateTime);
     }
 
     /**
