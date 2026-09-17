@@ -1,7 +1,9 @@
 package kaykay.command;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -56,6 +58,25 @@ class CommandTest {
                 new DeleteCommand("1").execute(data, new RecordingUi(), storage));
     }
 
+    /** Checks that requesting an existing status reports it without trying to save. */
+    @Test
+    void changeStatusCommand_existingStatus_reportsNoChange() throws IOException, KaykayException {
+        Todo openTask = new Todo("open task");
+        Todo completedTask = new Todo("completed task");
+        completedTask.mark();
+        ApplicationData data = new ApplicationData(new TaskList(openTask, completedTask));
+        RecordingUi ui = new RecordingUi();
+        Storage invalidStorage = new Storage(temporaryDirectory.toString());
+
+        new UnmarkCommand("1").execute(data, ui, invalidStorage);
+        assertEquals(openTask, ui.getUnchangedTask());
+        assertFalse(ui.isUnchangedTaskMarked());
+
+        new MarkCommand("2").execute(data, ui, invalidStorage);
+        assertEquals(completedTask, ui.getUnchangedTask());
+        assertTrue(ui.isUnchangedTaskMarked());
+    }
+
     /** Checks that find delegates the ordered matches to the UI without changing task state. */
     @Test
     void findCommand_execute_displaysMatchingTasks() throws IOException, KaykayException {
@@ -107,6 +128,12 @@ class CommandTest {
         /** Most recent place search results shown by this UI. */
         private List<Place> matchingPlaces;
 
+        /** Most recent task reported as already having the requested status. */
+        private Task unchangedTask;
+
+        /** Whether the unchanged task was already marked. */
+        private boolean isUnchangedTaskMarked;
+
         /** Does nothing because these tests verify command state changes directly. */
         @Override
         public void showAddedTask(Task task, int taskCount) {
@@ -123,6 +150,13 @@ class CommandTest {
         @Override
         public void showMarkedTask(Task task, boolean isMarked) {
             // Intentionally empty: command tests assert state, not console formatting.
+        }
+
+        /** Records a redundant status request for command assertions. */
+        @Override
+        public void showUnchangedTaskStatus(Task task, boolean isMarked) {
+            unchangedTask = task;
+            isUnchangedTaskMarked = isMarked;
         }
 
         /** Records search results for command assertions. */
@@ -159,6 +193,16 @@ class CommandTest {
         /** Returns the place search results recorded for command assertions. */
         private List<Place> getMatchingPlaces() {
             return matchingPlaces;
+        }
+
+        /** Returns the task most recently reported as unchanged. */
+        private Task getUnchangedTask() {
+            return unchangedTask;
+        }
+
+        /** Checks whether the unchanged task was already marked. */
+        private boolean isUnchangedTaskMarked() {
+            return isUnchangedTaskMarked;
         }
     }
 }

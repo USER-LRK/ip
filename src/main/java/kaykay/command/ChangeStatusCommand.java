@@ -53,6 +53,10 @@ public abstract class ChangeStatusCommand extends Command {
 
         Task changedTask = tasks.getTask(index);
         boolean wasDone = changedTask.isDone();
+        if (wasDone == shouldMark) {
+            ui.showUnchangedTaskStatus(changedTask, shouldMark);
+            return;
+        }
         if (shouldMark) {
             changedTask.mark();
         } else {

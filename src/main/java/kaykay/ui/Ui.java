@@ -282,6 +282,23 @@ public class Ui {
     }
 
     /**
+     * Shows that a mission already has the requested completion status.
+     *
+     * @param task task whose status did not need to change.
+     * @param isMarked whether the mission was already complete.
+     */
+    public void showUnchangedTaskStatus(Task task, boolean isMarked) {
+        showLine(SEPARATOR);
+        if (isMarked) {
+            showLine("This mission is already complete:");
+        } else {
+            showLine("This mission is already open:");
+        }
+        showLine(task.toString());
+        showLine(SEPARATOR);
+    }
+
+    /**
      * Shows an error surrounded by the chatbot's standard separator.
      *
      * @param message error message to display.

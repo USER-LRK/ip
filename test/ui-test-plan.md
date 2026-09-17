@@ -57,7 +57,7 @@ ____________________________________________________________
 
 ## Case 2: Mark and unmark typed tasks
 
-**Aim:** Verify inherited mark/unmark behavior works for tasks stored polymorphically.
+**Aim:** Verify mark/unmark changes task status and reports requests that would not change it.
 
 Commands / console input:
 
@@ -65,7 +65,9 @@ Commands / console input:
 todo revise notes
 deadline submit report /by 27 12 2026 09:00
 mark 1
+mark 1
 unmark 2
+unmark 1
 list
 bye
 ```
@@ -98,12 +100,20 @@ Mission complete! Nicely done.
 [T][X] revise notes
 ____________________________________________________________
 ____________________________________________________________
-Mission reopened. Let's get back to it.
+This mission is already complete:
+[T][X] revise notes
+____________________________________________________________
+____________________________________________________________
+This mission is already open:
 [D][ ] submit report (by: 27 12 2026 09:00)
 ____________________________________________________________
 ____________________________________________________________
+Mission reopened. Let's get back to it.
+[T][ ] revise notes
+____________________________________________________________
+____________________________________________________________
 Here are your current missions:
-1. [T][X] revise notes
+1. [T][ ] revise notes
 2. [D][ ] submit report (by: 27 12 2026 09:00)
 ____________________________________________________________
 ____________________________________________________________
