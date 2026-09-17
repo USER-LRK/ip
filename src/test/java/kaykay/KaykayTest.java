@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
@@ -114,5 +115,24 @@ class KaykayTest {
         assertTrue(output.toString().contains("rating: 4/5; notes: Worth revisiting"));
         assertTrue(output.toString().contains("Here are the matching locations:"));
         assertEquals(1, new Storage(dataFile.toString()).loadData().getPlaces().size());
+    }
+
+    /** Checks that malformed startup data is reported and protected from later writes. */
+    @Test
+    void startup_invalidData_reportsErrorAndPreventsOverwrite() throws IOException {
+        Path dataFile = temporaryDirectory.resolve("invalid-data.txt");
+        String invalidData = "Q | 2 | broken task" + System.lineSeparator();
+        Files.writeString(dataFile, invalidData);
+        StringBuilder errorOutput = new StringBuilder();
+        Ui ui = new Ui(line -> { },
+                line -> errorOutput.append(line).append(System.lineSeparator()), false);
+        Kaykay kaykay = new Kaykay(dataFile.toString(), ui);
+
+        kaykay.showInitialDataLoadError();
+        kaykay.shouldExitAfterProcessingCommand("todo do not overwrite");
+
+        assertTrue(errorOutput.toString().contains("I couldn't load your data"));
+        assertTrue(errorOutput.toString().contains("I couldn't save your data"));
+        assertEquals(invalidData, Files.readString(dataFile));
     }
 }

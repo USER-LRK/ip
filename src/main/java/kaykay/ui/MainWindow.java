@@ -60,6 +60,12 @@ public final class MainWindow extends AnchorPane {
 
         dialogContainer.getChildren().add(DialogBox.getKaykayDialog(
                 "Kaykay online!" + System.lineSeparator() + "What's our next mission?"));
+        kaykay.showInitialDataLoadError();
+        String loadingError = takeResponse();
+        responseType = ResponseType.NORMAL;
+        if (!loadingError.isEmpty()) {
+            dialogContainer.getChildren().add(DialogBox.getKaykayErrorDialog(loadingError));
+        }
         dialogContainer.heightProperty().addListener((observable, oldHeight, newHeight) ->
                 scrollPane.setVvalue(1.0));
     }
@@ -74,7 +80,7 @@ public final class MainWindow extends AnchorPane {
 
         boolean shouldExit = kaykay.shouldExitAfterProcessingCommand(userText);
         if (shouldExit) {
-            ui.showFarewell();
+            kaykay.showFarewell();
         }
 
         ResponseType bufferedResponseType = responseType;

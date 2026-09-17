@@ -1,11 +1,14 @@
 package kaykay.storage;
 
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -27,6 +30,9 @@ public final class Storage {
     /** The file used to persist tasks for this storage instance. */
     private final File dataFile;
 
+    /** Whether reading the existing data failed during this run. */
+    private boolean hasLoadFailed;
+
     /**
      * Creates a storage component for a specific data file.
      *
@@ -43,30 +49,49 @@ public final class Storage {
      * @throws IOException if the data directory or file cannot be written.
      */
     public void saveData(ApplicationData data) throws IOException {
-        File dataDirectory = dataFile.getParentFile();
-        if (dataDirectory != null && !dataDirectory.exists() && !dataDirectory.mkdirs()) {
-            throw new IOException("Could not create the data directory.");
+        if (hasLoadFailed) {
+            throw new IOException("Cannot save because the existing data could not be loaded.");
         }
 
-        File temporaryFile = new File(dataFile.getPath() + ".tmp");
         try {
-            try (FileWriter writer = new FileWriter(temporaryFile)) {
-                TaskList tasks = data.getTasks();
-                for (int i = 0; i < tasks.size(); i += 1) {
-                    Task task = tasks.getTask(i);
-                    writer.write(task.toFileFormat());
-                    writer.write(System.lineSeparator());
-                }
-                PlaceList places = data.getPlaces();
-                for (int i = 0; i < places.size(); i += 1) {
-                    Place place = places.getPlace(i);
-                    writer.write(place.toFileFormat());
-                    writer.write(System.lineSeparator());
-                }
+            File dataDirectory = dataFile.getParentFile();
+            if (dataDirectory != null && !dataDirectory.exists() && !dataDirectory.mkdirs()) {
+                throw new IOException("Could not create the data directory.");
             }
+
+            File temporaryFile = new File(dataFile.getPath() + ".tmp");
+            try {
+                try (BufferedWriter writer = Files.newBufferedWriter(
+                        temporaryFile.toPath(), StandardCharsets.UTF_8)) {
+                    TaskList tasks = data.getTasks();
+                    for (int i = 0; i < tasks.size(); i += 1) {
+                        Task task = tasks.getTask(i);
+                        writer.write(task.toFileFormat());
+                        writer.write(System.lineSeparator());
+                    }
+                    PlaceList places = data.getPlaces();
+                    for (int i = 0; i < places.size(); i += 1) {
+                        Place place = places.getPlace(i);
+                        writer.write(place.toFileFormat());
+                        writer.write(System.lineSeparator());
+                    }
+                }
+                replaceDataFile(temporaryFile);
+            } finally {
+                Files.deleteIfExists(temporaryFile.toPath());
+            }
+        } catch (SecurityException exception) {
+            throw new IOException("Access to the data file was denied.", exception);
+        }
+    }
+
+    /** Replaces the data file atomically when the file system supports it. */
+    private void replaceDataFile(File temporaryFile) throws IOException {
+        try {
+            Files.move(temporaryFile.toPath(), dataFile.toPath(),
+                    StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+        } catch (AtomicMoveNotSupportedException exception) {
             Files.move(temporaryFile.toPath(), dataFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        } finally {
-            Files.deleteIfExists(temporaryFile.toPath());
         }
     }
 
@@ -77,21 +102,40 @@ public final class Storage {
      * @throws IOException if the data file contains an invalid record or cannot be read.
      */
     public ApplicationData loadData() throws IOException {
+        try {
+            ApplicationData data = readData();
+            hasLoadFailed = false;
+            return data;
+        } catch (IOException exception) {
+            hasLoadFailed = true;
+            throw exception;
+        } catch (SecurityException exception) {
+            hasLoadFailed = true;
+            throw new IOException("Access to the data file was denied.", exception);
+        }
+    }
+
+    /** Reads and validates all records in the data file. */
+    private ApplicationData readData() throws IOException {
         ArrayList<Task> tasks = new ArrayList<>();
         ArrayList<Place> places = new ArrayList<>();
         if (!dataFile.exists()) {
             return new ApplicationData(new TaskList(tasks), new PlaceList(places));
         }
 
-        try (Scanner scanner = new Scanner(dataFile)) {
+        try (Scanner scanner = new Scanner(dataFile, StandardCharsets.UTF_8)) {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 if (!line.isBlank()) {
                     String[] parts = splitFields(line);
                     if (parts.length > 0 && parts[0].equals("P")) {
-                        places.add(parsePlace(parts, line));
+                        Place place = parsePlace(parts, line);
+                        ensurePlaceIsUnique(places, place, line);
+                        places.add(place);
                     } else {
-                        tasks.add(parseTask(parts, line));
+                        Task task = parseTask(parts, line);
+                        ensureTaskIsUnique(tasks, task, line);
+                        tasks.add(task);
                     }
                 }
             }
@@ -100,6 +144,24 @@ public final class Storage {
             }
         }
         return new ApplicationData(new TaskList(tasks), new PlaceList(places));
+    }
+
+    /** Rejects a task record that duplicates an earlier stored task. */
+    private static void ensureTaskIsUnique(ArrayList<Task> tasks, Task task, String line) throws IOException {
+        for (Task existingTask : tasks) {
+            if (existingTask.hasSameDetails(task)) {
+                throw new IOException("Duplicate task data: " + line);
+            }
+        }
+    }
+
+    /** Rejects a place record that duplicates an earlier stored place. */
+    private static void ensurePlaceIsUnique(ArrayList<Place> places, Place place, String line) throws IOException {
+        for (Place existingPlace : places) {
+            if (existingPlace.hasSameDetails(place)) {
+                throw new IOException("Duplicate place data: " + line);
+            }
+        }
     }
 
     /**
@@ -123,7 +185,7 @@ public final class Storage {
      * @throws IOException if the line does not follow the storage format.
      */
     private static Task parseTask(String[] parts, String line) throws IOException {
-        if (parts.length < 3) {
+        if (parts.length < 3 || parts[2].isBlank()) {
             throw new IOException("Invalid task data: " + line);
         }
 
@@ -170,8 +232,12 @@ public final class Storage {
                     if (parts.length != 5) {
                         throw new IOException("Invalid event data: " + line);
                     }
-                    task = new Event(parts[2], DateTimeParser.parse(parts[3]),
-                            DateTimeParser.parse(parts[4]));
+                    LocalDateTime startDateTime = DateTimeParser.parse(parts[3]);
+                    LocalDateTime endDateTime = DateTimeParser.parse(parts[4]);
+                    if (!endDateTime.isAfter(startDateTime)) {
+                        throw new IOException("Invalid event date range: " + line);
+                    }
+                    task = new Event(parts[2], startDateTime, endDateTime);
                     break;
                 default:
                     throw new IOException("Unknown task type: " + line);
@@ -293,8 +359,7 @@ public final class Storage {
                     result.append('\\');
                     break;
                 default:
-                    result.append('\\').append(escapedCharacter);
-                    break;
+                    throw new IOException("Unknown escape sequence in data: \\" + escapedCharacter);
             }
             i += 1;
         }

@@ -562,6 +562,7 @@ Q | 2 | broken task
 Commands / console input:
 
 ```
+todo do not overwrite
 list
 bye
 ```
@@ -583,11 +584,20 @@ ____________________________________________________________
 Mission snag: I couldn't load your data. Please check the data file.
 ____________________________________________________________
 ____________________________________________________________
+Mission snag: I couldn't save your data. Please check the data folder.
+____________________________________________________________
+____________________________________________________________
 Here are your current missions:
 ____________________________________________________________
 ____________________________________________________________
-All changes saved. Kaykay signing off!
+Kaykay signing off. Your existing data file was not changed.
 ____________________________________________________________
+```
+
+Expected file contents:
+
+```
+Q | 2 | broken task
 ```
 
 ## Case 10: Exit cleanly when input ends without bye

@@ -80,19 +80,33 @@ public class Kaykay {
         return false;
     }
 
-    /** Runs the chatbot until the user says bye or input ends. */
-    public void run() {
-        ui.showWelcome();
+    /** Shows a startup warning when the existing data could not be loaded. */
+    public void showInitialDataLoadError() {
         if (hasInitialDataLoadFailed) {
             ui.showLoadingError();
         }
+    }
+
+    /** Shows a farewell that accurately describes whether startup data was protected. */
+    public void showFarewell() {
+        if (hasInitialDataLoadFailed) {
+            ui.showProtectedDataFarewell();
+        } else {
+            ui.showFarewell();
+        }
+    }
+
+    /** Runs the chatbot until the user says bye or input ends. */
+    public void run() {
+        ui.showWelcome();
+        showInitialDataLoadError();
         while (ui.hasNextLine()) {
             String input = ui.readCommand();
             if (shouldExitAfterProcessingCommand(input)) {
                 break;
             }
         }
-        ui.showFarewell();
+        showFarewell();
     }
 
     /**

@@ -342,6 +342,13 @@ public class Ui {
         showLine(SEPARATOR);
     }
 
+    /** Shows the farewell used when invalid startup data was left unchanged. */
+    public void showProtectedDataFarewell() {
+        showLine(SEPARATOR);
+        showLine("Kaykay signing off. Your existing data file was not changed.");
+        showLine(SEPARATOR);
+    }
+
     /** Sends one rendered success line to the configured success receiver. */
     private void showSuccessLine(String line) {
         successOutput.accept(line);

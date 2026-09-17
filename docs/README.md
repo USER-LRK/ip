@@ -86,3 +86,7 @@ standard format shown above.
 Save files created before the standard date/time format was introduced are not
 supported if they contain free-form deadline or event date strings. Such files
 must be cleared or recreated using the new format.
+
+If Kaykay cannot load a save file, it reports the problem and blocks further
+writes for that run. The existing file remains unchanged so it can be repaired
+before Kaykay is restarted.
