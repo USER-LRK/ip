@@ -54,7 +54,7 @@ For example, `05 01 2026 06:07` means 5 January 2026 at 6:07 AM, while
 `05 01 2026 18:07` means 6:07 PM.
 
 Values such as `Friday`, `10am`, `2026-01-05`, or `31 02 2026 10:00` are not
-accepted. An event's end also cannot be earlier than its start. Kaykay will
+accepted. An event's end must be later than its start. Kaykay will
 identify invalid input and explain how to correct it.
 
 ## Managing tasks
