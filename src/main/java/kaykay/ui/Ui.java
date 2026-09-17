@@ -251,15 +251,28 @@ public class Ui {
     }
 
     /**
-     * Shows that an event with identical details is already scheduled.
+     * Shows that a task with identical details already exists.
      *
-     * @param event existing event that matches the requested event.
-     * @param taskNumber one-based mission number of the existing event.
+     * @param task existing task that matches the requested task.
+     * @param taskNumber one-based mission number of the existing task.
      */
-    public void showDuplicateEvent(Task event, int taskNumber) {
+    public void showDuplicateTask(Task task, int taskNumber) {
         showLine(SEPARATOR);
-        showLine(String.format("That event is already scheduled as mission %d:", taskNumber));
-        showLine(event.toString());
+        showLine(String.format("Those task details already exist as mission %d:", taskNumber));
+        showLine(task.toString());
+        showLine(SEPARATOR);
+    }
+
+    /**
+     * Shows that a place with identical details is already saved.
+     *
+     * @param place existing place that matches the requested place.
+     * @param placeNumber one-based number of the existing place.
+     */
+    public void showDuplicatePlace(Place place, int placeNumber) {
+        showLine(SEPARATOR);
+        showLine(String.format("Those place details already exist as place %d:", placeNumber));
+        showLine(place.toString());
         showLine(SEPARATOR);
     }
 
@@ -326,6 +339,13 @@ public class Ui {
     public void showFarewell() {
         showLine(SEPARATOR);
         showLine("All changes saved. Kaykay signing off!");
+        showLine(SEPARATOR);
+    }
+
+    /** Shows the farewell used when invalid startup data was left unchanged. */
+    public void showProtectedDataFarewell() {
+        showLine(SEPARATOR);
+        showLine("Kaykay signing off. Your existing data file was not changed.");
         showLine(SEPARATOR);
     }
 

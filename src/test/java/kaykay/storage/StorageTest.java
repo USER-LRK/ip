@@ -64,6 +64,52 @@ class StorageTest {
         assertThrows(IOException.class, malformedStorage::loadData);
     }
 
+    /** Checks semantic validation of task data that is structurally complete. */
+    @Test
+    void loadData_invalidSemanticRecords_throwsError() throws IOException {
+        Path dataFile = temporaryDirectory.resolve("invalid-semantic-data.txt");
+        String[] invalidContents = {
+            "T | 0 |   ",
+            "E | 0 | meeting | 26 12 2026 14:00 | 26 12 2026 14:00",
+            "T | 0 | bad\\q escape"
+        };
+
+        for (String invalidContent : invalidContents) {
+            Files.writeString(dataFile, invalidContent + System.lineSeparator());
+            Storage storage = new Storage(dataFile.toString());
+            assertThrows(IOException.class, storage::loadData);
+        }
+    }
+
+    /** Checks that duplicates from older save files remain loadable. */
+    @Test
+    void loadData_duplicateLegacyRecords_preservesAllRecords() throws IOException {
+        Path dataFile = temporaryDirectory.resolve("legacy-duplicates.txt");
+        Files.writeString(dataFile, "T | 0 | duplicate" + System.lineSeparator()
+                + "T | 1 | duplicate" + System.lineSeparator()
+                + "P | Cafe | restaurant | Kent Ridge |  | 4 | good" + System.lineSeparator()
+                + "P | Cafe | restaurant | Kent Ridge |  | 4 | good" + System.lineSeparator());
+
+        ApplicationData loadedData = new Storage(dataFile.toString()).loadData();
+
+        assertEquals(2, loadedData.getTasks().size());
+        assertEquals(2, loadedData.getPlaces().size());
+    }
+
+    /** Checks that a failed load prevents the damaged file from being overwritten. */
+    @Test
+    void saveData_afterFailedLoad_preservesExistingFile() throws IOException {
+        Path dataFile = temporaryDirectory.resolve("protected-data.txt");
+        String invalidData = "Q | 2 | broken task" + System.lineSeparator();
+        Files.writeString(dataFile, invalidData);
+        Storage storage = new Storage(dataFile.toString());
+        assertThrows(IOException.class, storage::loadData);
+
+        assertThrows(IOException.class, () ->
+                storage.saveData(new ApplicationData(new TaskList(new Todo("replacement")))));
+        assertEquals(invalidData, Files.readString(dataFile));
+    }
+
     /** Checks that task and place records survive a combined save/load cycle. */
     @Test
     void saveDataThenLoadData_mixedRecords_preservesTasksAndPlaces() throws IOException {
@@ -88,5 +134,16 @@ class StorageTest {
     void escape_specialCharacters_returnsStorageSafeText() {
         assertEquals("line\\nreturn\\rpipe\\|slash\\\\",
                 Storage.escape("line\nreturn\rpipe|slash\\"));
+    }
+
+    /** Checks that non-ASCII text survives explicit UTF-8 persistence. */
+    @Test
+    void saveDataThenLoadData_unicodeText_preservesText() throws IOException {
+        Storage storage = new Storage(temporaryDirectory.resolve("unicode.txt").toString());
+        Todo todo = new Todo("买牛奶 at the café");
+
+        storage.saveData(new ApplicationData(new TaskList(todo)));
+
+        assertEquals(todo.toString(), storage.loadData().getTasks().getTask(0).toString());
     }
 }

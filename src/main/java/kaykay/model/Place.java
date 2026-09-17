@@ -6,6 +6,7 @@ import java.time.format.ResolverStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import kaykay.storage.Storage;
 
@@ -77,6 +78,21 @@ public final class Place {
 
     public String getNotes() {
         return notes;
+    }
+
+    /**
+     * Checks whether another place contains exactly the same recorded details.
+     *
+     * @param otherPlace place to compare.
+     * @return true if every recorded detail is equal.
+     */
+    public boolean hasSameDetails(Place otherPlace) {
+        return name.equals(otherPlace.name)
+                && type.equals(otherPlace.type)
+                && location.equals(otherPlace.location)
+                && Objects.equals(visitedOn, otherPlace.visitedOn)
+                && Objects.equals(rating, otherPlace.rating)
+                && notes.equals(otherPlace.notes);
     }
 
     /**

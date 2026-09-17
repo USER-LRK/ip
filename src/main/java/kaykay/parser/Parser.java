@@ -32,7 +32,16 @@ import kaykay.model.Place;
  */
 public final class Parser {
     /** Recognizes slash-prefixed fields in place details. */
-    private static final Pattern PLACE_FIELD_PATTERN = Pattern.compile(" /([a-z]+)(?: |$)");
+    private static final Pattern PLACE_FIELD_PATTERN = Pattern.compile("\\s+/([^\\s/]+)(?:\\s+|$)");
+
+    /** Recognizes the deadline date/time field. */
+    private static final Pattern DEADLINE_BY_PATTERN = Pattern.compile("\\s+/by(?=\\s|$)");
+
+    /** Recognizes the event start date/time field. */
+    private static final Pattern EVENT_FROM_PATTERN = Pattern.compile("\\s+/from(?=\\s|$)");
+
+    /** Recognizes the event end date/time field. */
+    private static final Pattern EVENT_TO_PATTERN = Pattern.compile("\\s+/to(?=\\s|$)");
 
     /** Fields accepted when adding a place. */
     private static final Set<String> PLACE_ADD_FIELDS = Set.of(
@@ -54,6 +63,7 @@ public final class Parser {
      * @throws KaykayException if the input is not a valid Kaykay command.
      */
     public Command parse(String input) throws KaykayException {
+        input = input.strip();
         if (input.isBlank()) {
             throw new KaykayException("Please enter a command.");
         } else if (input.equals("bye")) {
@@ -82,16 +92,17 @@ public final class Parser {
 
     /** Parses one command in the place-management command family. */
     private Command parsePlaceCommand(String input) throws KaykayException {
-        if (input.equals("place list")) {
+        String placeInput = argumentAfter(input, "place");
+        if (placeInput.equals("list")) {
             return new ListPlacesCommand();
-        } else if (isCommand(input, "place add")) {
-            return parseAddPlace(input);
-        } else if (isCommand(input, "place find")) {
-            return parseFindPlaces(input);
-        } else if (isCommand(input, "place edit")) {
-            return parseEditPlace(input);
-        } else if (isCommand(input, "place delete")) {
-            return new DeletePlaceCommand(parsePlaceNumber(input, "place delete", "delete"));
+        } else if (isCommand(placeInput, "add")) {
+            return parseAddPlace(placeInput);
+        } else if (isCommand(placeInput, "find")) {
+            return parseFindPlaces(placeInput);
+        } else if (isCommand(placeInput, "edit")) {
+            return parseEditPlace(placeInput);
+        } else if (isCommand(placeInput, "delete")) {
+            return new DeletePlaceCommand(parsePlaceNumber(placeInput, "delete", "delete"));
         }
         throw new KaykayException("I don't recognise that place command. "
                 + "Try place add, place list, place find, place edit, or place delete.");
@@ -99,14 +110,14 @@ public final class Parser {
 
     /** Parses a place-add command and its optional details. */
     private Command parseAddPlace(String input) throws KaykayException {
-        PlaceFields fields = parsePlaceFields(argumentAfter(input, "place add"), true,
+        PlaceFields fields = parsePlaceFields(argumentAfter(input, "add"), true,
                 PLACE_ADD_FIELDS);
         return new AddPlaceCommand(createPlace(fields));
     }
 
     /** Parses a place search and extracts its keyword. */
     private Command parseFindPlaces(String input) throws KaykayException {
-        String keyword = argumentAfter(input, "place find").trim();
+        String keyword = argumentAfter(input, "find").trim();
         if (keyword.isEmpty()) {
             throw new KaykayException("A place find command needs a keyword. "
                     + "Try: place find <keyword>.");
@@ -116,7 +127,7 @@ public final class Parser {
 
     /** Parses a partial update to an existing place. */
     private Command parseEditPlace(String input) throws KaykayException {
-        String editInput = argumentAfter(input, "place edit").trim();
+        String editInput = argumentAfter(input, "edit").trim();
         int firstSpace = editInput.indexOf(' ');
         if (firstSpace < 0 || !isInteger(editInput.substring(0, firstSpace))) {
             throw invalidPlaceEdit();
@@ -278,8 +289,8 @@ public final class Parser {
 
     /** Parses a todo command and extracts its description. */
     private Command parseTodo(String input) throws KaykayException {
-        String description = argumentAfter(input, "todo");
-        if (description.trim().isEmpty()) {
+        String description = argumentAfter(input, "todo").trim();
+        if (description.isEmpty()) {
             throw new KaykayException("A todo needs a description. Try: todo <description>.");
         }
         return new TodoCommand(description);
@@ -288,39 +299,65 @@ public final class Parser {
     /** Parses a deadline command and converts its date/time. */
     private Command parseDeadline(String input) throws KaykayException {
         String deadlineInput = argumentAfter(input, "deadline");
-        String[] deadlineParts = deadlineInput.split(" /by ", 2);
-        if (deadlineParts.length != 2 || deadlineParts[0].trim().isEmpty()
-                || deadlineParts[1].trim().isEmpty()) {
+        Matcher byMatcher = DEADLINE_BY_PATTERN.matcher(deadlineInput);
+        if (!byMatcher.find()) {
             throw new KaykayException("A deadline needs a description, date, and time. "
                     + "Use: deadline <description> /by dd MM yyyy HH:mm.");
         }
+        int byStart = byMatcher.start();
+        int byEnd = byMatcher.end();
+        if (byMatcher.find()) {
+            throw new KaykayException("The /by parameter can only be used once.");
+        }
 
-        String byText = deadlineParts[1].trim();
+        String description = deadlineInput.substring(0, byStart).trim();
+        String byText = deadlineInput.substring(byEnd).trim();
+        if (description.isEmpty() || byText.isEmpty()) {
+            throw new KaykayException("A deadline needs a description, date, and time. "
+                    + "Use: deadline <description> /by dd MM yyyy HH:mm.");
+        }
         LocalDateTime deadlineDateTime = parseDateTime("deadline", byText);
-        return new DeadlineCommand(deadlineParts[0], deadlineDateTime);
+        return new DeadlineCommand(description, deadlineDateTime);
     }
 
     /** Parses an event command and converts its start and end date/times. */
     private Command parseEvent(String input) throws KaykayException {
         String eventInput = argumentAfter(input, "event");
-        String[] fromParts = eventInput.split(" /from ", 2);
-        if (fromParts.length != 2 || fromParts[0].trim().isEmpty()) {
+        Matcher fromMatcher = EVENT_FROM_PATTERN.matcher(eventInput);
+        if (!fromMatcher.find()) {
             throw invalidEventFormat();
         }
-
-        String[] toParts = fromParts[1].split(" /to ", 2);
-        if (toParts.length != 2 || toParts[0].trim().isEmpty() || toParts[1].trim().isEmpty()) {
-            throw invalidEventFormat();
+        int fromStart = fromMatcher.start();
+        int fromEnd = fromMatcher.end();
+        if (fromMatcher.find()) {
+            throw new KaykayException("The /from parameter can only be used once.");
         }
 
-        String fromText = toParts[0].trim();
-        String toText = toParts[1].trim();
+        Matcher toMatcher = EVENT_TO_PATTERN.matcher(eventInput);
+        if (!toMatcher.find()) {
+            throw invalidEventFormat();
+        }
+        int toStart = toMatcher.start();
+        int toEnd = toMatcher.end();
+        if (toMatcher.find()) {
+            throw new KaykayException("The /to parameter can only be used once.");
+        }
+
+        if (toStart <= fromEnd) {
+            throw invalidEventFormat();
+        }
+        String description = eventInput.substring(0, fromStart).trim();
+        String fromText = eventInput.substring(fromEnd, toStart).trim();
+        String toText = eventInput.substring(toEnd).trim();
+        if (description.isEmpty() || fromText.isEmpty() || toText.isEmpty()) {
+            throw invalidEventFormat();
+        }
         LocalDateTime startDateTime = parseDateTime("event start", fromText);
         LocalDateTime endDateTime = parseDateTime("event end", toText);
-        if (endDateTime.isBefore(startDateTime)) {
-            throw new KaykayException("The event end cannot be before its start.");
+        if (!endDateTime.isAfter(startDateTime)) {
+            throw new KaykayException("The event end must be after its start.");
         }
-        return new EventCommand(fromParts[0], startDateTime, endDateTime);
+        return new EventCommand(description, startDateTime, endDateTime);
     }
 
     /** Parses a date/time and reports invalid input in the command's context. */
@@ -344,7 +381,7 @@ public final class Parser {
     /** Returns the text after a command name while preserving existing spacing behavior. */
     private static String argumentAfter(String input, String command) {
         assert isCommand(input, command) : "Input must match the command before extracting its argument";
-        return input.length() == command.length() ? "" : input.substring(command.length() + 1);
+        return input.length() == command.length() ? "" : input.substring(command.length()).stripLeading();
     }
 
     /** Checks whether a value can be interpreted as an integer task number. */

@@ -30,9 +30,11 @@ end date/time.
 event project meeting /from 26 12 2026 14:00 /to 26 12 2026 16:00
 ```
 
-If an event has the same description, start, and end as an existing event,
-Kaykay reports the existing mission instead of adding a duplicate. Events with
-the same description at different times are still allowed.
+If a task has the same type and details as an existing task, Kaykay reports the
+existing mission instead of adding a duplicate. Tasks with the same description
+but different types or date/time details are still allowed.
+Duplicates already present in an older save file remain loadable for backward
+compatibility.
 
 ## Date and time format
 
@@ -54,7 +56,7 @@ For example, `05 01 2026 06:07` means 5 January 2026 at 6:07 AM, while
 `05 01 2026 18:07` means 6:07 PM.
 
 Values such as `Friday`, `10am`, `2026-01-05`, or `31 02 2026 10:00` are not
-accepted. An event's end also cannot be earlier than its start. Kaykay will
+accepted. An event's end must be later than its start. Kaykay will
 identify invalid input and explain how to correct it.
 
 ## Managing tasks
@@ -86,3 +88,7 @@ standard format shown above.
 Save files created before the standard date/time format was introduced are not
 supported if they contain free-form deadline or event date strings. Such files
 must be cleared or recreated using the new format.
+
+If Kaykay cannot load a save file, it reports the problem and blocks further
+writes for that run. The existing file remains unchanged so it can be repaired
+before Kaykay is restarted.

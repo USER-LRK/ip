@@ -45,6 +45,7 @@ only the following `place` commands create or change place records:
 
 When adding a place, its name is required. The optional fields are `/type`, `/location`, `/visited`,
 `/rating`, and `/notes`. Visit dates use `dd MM yyyy`, and ratings are whole numbers from 1 to 5.
+An exact duplicate of an existing place is reported instead of being added again.
 
 For example:
 

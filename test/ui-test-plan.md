@@ -136,6 +136,7 @@ event reject missing time /from 12 02 2004 /to 30 04 2005
 deadline reject invalid date /by 31 02 2026 10:00
 event reject invalid time /from 30 12 2026 10:00 /to 30 12 2026 25:00
 event reject reversed time /from 30 12 2026 11:00 /to 30 12 2026 10:00
+event reject equal time /from 30 12 2026 11:00 /to 30 12 2026 11:00
 list
 bye
 ```
@@ -179,7 +180,10 @@ ____________________________________________________________
 Mission snag: The event end date/time '30 12 2026 25:00' is invalid. Include both the date and 24-hour time: dd MM yyyy HH:mm (spaces between day, month, and year), e.g. 01 01 2026 18:30.
 ____________________________________________________________
 ____________________________________________________________
-Mission snag: The event end cannot be before its start.
+Mission snag: The event end must be after its start.
+____________________________________________________________
+____________________________________________________________
+Mission snag: The event end must be after its start.
 ____________________________________________________________
 ____________________________________________________________
 Here are your current missions:
@@ -558,6 +562,7 @@ Q | 2 | broken task
 Commands / console input:
 
 ```
+todo do not overwrite
 list
 bye
 ```
@@ -579,11 +584,20 @@ ____________________________________________________________
 Mission snag: I couldn't load your data. Please check the data file.
 ____________________________________________________________
 ____________________________________________________________
+Mission snag: I couldn't save your data. Please check the data folder.
+____________________________________________________________
+____________________________________________________________
 Here are your current missions:
 ____________________________________________________________
 ____________________________________________________________
-All changes saved. Kaykay signing off!
+Kaykay signing off. Your existing data file was not changed.
 ____________________________________________________________
+```
+
+Expected file contents:
+
+```
+Q | 2 | broken task
 ```
 
 ## Case 10: Exit cleanly when input ends without bye
@@ -959,7 +973,7 @@ Event scheduled:
 Now you have 1 task in the list.
 ____________________________________________________________
 ____________________________________________________________
-That event is already scheduled as mission 1:
+Those task details already exist as mission 1:
 [E][ ] project meeting (from: 26 12 2026 14:00 to: 26 12 2026 16:00)
 ____________________________________________________________
 ____________________________________________________________
@@ -971,6 +985,147 @@ ____________________________________________________________
 Here are your current missions:
 1. [E][ ] project meeting (from: 26 12 2026 14:00 to: 26 12 2026 16:00)
 2. [E][ ] project meeting (from: 26 12 2026 16:00 to: 26 12 2026 17:00)
+____________________________________________________________
+____________________________________________________________
+All changes saved. Kaykay signing off!
+____________________________________________________________
+```
+
+## Case 16: Reject exact duplicate tasks and places
+
+**Aim:** Verify that identical task and place details are not saved more than once.
+
+Commands / console input:
+
+```
+todo duplicate task
+todo duplicate task
+deadline duplicate deadline /by 04 01 2027 09:00
+deadline duplicate deadline /by 04 01 2027 09:00
+place add Duplicate Cafe /rating 4
+place add Duplicate Cafe /rating 4
+list
+place list
+bye
+```
+
+Expected output:
+
+```
+____________________________________________________________
+#   #   ###   #   #  #   #   ###   #   #
+#  #   #   #   # #   #  #   #   #   # #
+###    #####    #    ###    #####    #
+#  #   #   #    #    #  #   #   #    #
+#   #  #   #    #    #   #  #   #    #
+____________________________________________________________
+Kaykay online!
+What's our next mission?
+____________________________________________________________
+____________________________________________________________
+Mission added:
+[T][ ] duplicate task
+Now you have 1 task in the list.
+____________________________________________________________
+____________________________________________________________
+Those task details already exist as mission 1:
+[T][ ] duplicate task
+____________________________________________________________
+____________________________________________________________
+Mission added:
+[D][ ] duplicate deadline (by: 04 01 2027 09:00)
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Those task details already exist as mission 2:
+[D][ ] duplicate deadline (by: 04 01 2027 09:00)
+____________________________________________________________
+____________________________________________________________
+Location logged:
+[P] Duplicate Cafe (rating: 4/5)
+Now you have 1 place saved.
+____________________________________________________________
+____________________________________________________________
+Those place details already exist as place 1:
+[P] Duplicate Cafe (rating: 4/5)
+____________________________________________________________
+____________________________________________________________
+Here are your current missions:
+1. [T][ ] duplicate task
+2. [D][ ] duplicate deadline (by: 04 01 2027 09:00)
+____________________________________________________________
+____________________________________________________________
+Here are your logged locations:
+1. [P] Duplicate Cafe (rating: 4/5)
+____________________________________________________________
+____________________________________________________________
+All changes saved. Kaykay signing off!
+____________________________________________________________
+```
+
+## Case 17: Handle whitespace and repeated parameters
+
+**Aim:** Verify that harmless structural whitespace is accepted while repeated or unknown parameters are rejected.
+
+Commands / console input:
+
+```
+todo   spaced task
+deadline spaced deadline   /by   03 01 2027 09:00
+place  add Cafe   /rating   5
+deadline duplicate field /by 03 01 2027 09:00 /by 04 01 2027 09:00
+event duplicate field /from 03 01 2027 09:00 /to 03 01 2027 10:00 /to 03 01 2027 11:00
+place add Other Cafe /Rating 5
+list
+place list
+bye
+```
+
+Expected output:
+
+```
+____________________________________________________________
+#   #   ###   #   #  #   #   ###   #   #
+#  #   #   #   # #   #  #   #   #   # #
+###    #####    #    ###    #####    #
+#  #   #   #    #    #  #   #   #    #
+#   #  #   #    #    #   #  #   #    #
+____________________________________________________________
+Kaykay online!
+What's our next mission?
+____________________________________________________________
+____________________________________________________________
+Mission added:
+[T][ ] spaced task
+Now you have 1 task in the list.
+____________________________________________________________
+____________________________________________________________
+Mission added:
+[D][ ] spaced deadline (by: 03 01 2027 09:00)
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Location logged:
+[P] Cafe (rating: 5/5)
+Now you have 1 place saved.
+____________________________________________________________
+____________________________________________________________
+Mission snag: The /by parameter can only be used once.
+____________________________________________________________
+____________________________________________________________
+Mission snag: The /to parameter can only be used once.
+____________________________________________________________
+____________________________________________________________
+Mission snag: Unknown place field '/Rating'.
+____________________________________________________________
+____________________________________________________________
+Here are your current missions:
+1. [T][ ] spaced task
+2. [D][ ] spaced deadline (by: 03 01 2027 09:00)
+____________________________________________________________
+____________________________________________________________
+Here are your logged locations:
+1. [P] Cafe (rating: 5/5)
 ____________________________________________________________
 ____________________________________________________________
 All changes saved. Kaykay signing off!

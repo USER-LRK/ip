@@ -69,7 +69,17 @@ class ParserTest {
                 "The event start date/time '12 02 2004' is invalid. Include both the date and 24-hour time: "
                         + "dd MM yyyy HH:mm (spaces between day, month, and year), e.g. 01 01 2026 18:30.");
         assertParseError("event meeting /from 31 12 2026 11:00 /to 31 12 2026 10:00",
-                "The event end cannot be before its start.");
+                "The event end must be after its start.");
+        assertParseError("event meeting /from 31 12 2026 11:00 /to 31 12 2026 11:00",
+                "The event end must be after its start.");
+        assertParseError("deadline report /by 31 12 2026 10:00 /by 01 01 2027 10:00",
+                "The /by parameter can only be used once.");
+        assertParseError("event meeting /from 31 12 2026 10:00 /from 31 12 2026 11:00 "
+                        + "/to 31 12 2026 12:00",
+                "The /from parameter can only be used once.");
+        assertParseError("event meeting /from 31 12 2026 10:00 /to 31 12 2026 11:00 "
+                        + "/to 31 12 2026 12:00",
+                "The /to parameter can only be used once.");
         assertParseError("deadline report /by 31 02 2026 10:00",
                 "The deadline date/time '31 02 2026 10:00' is invalid. Include both the date and 24-hour time: "
                         + "dd MM yyyy HH:mm (spaces between day, month, and year), e.g. 01 01 2026 18:30.");
@@ -92,6 +102,8 @@ class ParserTest {
                         + "for example 10 09 2026.");
         assertParseError("place add Cafe /rating 5 /rating 4",
                 "The /rating field can only be used once.");
+        assertParseError("place add Cafe /Rating 5",
+                "Unknown place field '/Rating'.");
         assertParseError("place find",
                 "A place find command needs a keyword. Try: place find <keyword>.");
         assertParseError("place edit 1",
@@ -102,6 +114,18 @@ class ParserTest {
         assertParseError("place dance",
                 "I don't recognise that place command. "
                         + "Try place add, place list, place find, place edit, or place delete.");
+    }
+
+    /** Checks that harmless extra whitespace is accepted at command boundaries. */
+    @Test
+    void parse_extraWhitespace_returnsExpectedCommandTypes() throws KaykayException {
+        assertInstanceOf(TodoCommand.class, parser.parse("  todo   revise notes  "));
+        assertInstanceOf(DeadlineCommand.class,
+                parser.parse("deadline submit report   /by   27 12 2026 09:00"));
+        assertInstanceOf(EventCommand.class,
+                parser.parse("event meeting  /from   27 12 2026 09:00  /to   27 12 2026 10:00"));
+        assertInstanceOf(AddPlaceCommand.class,
+                parser.parse("place  add Cafe   /rating   5"));
     }
 
     /** Verifies one parser failure and its user-facing message. */

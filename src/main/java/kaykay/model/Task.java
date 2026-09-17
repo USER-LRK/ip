@@ -50,6 +50,18 @@ public class Task {
         return isDone;
     }
 
+    /**
+     * Checks whether another task has the same type and user-entered details.
+     * Completion status is excluded because it is mutable task state.
+     *
+     * @param otherTask task to compare.
+     * @return true if both tasks represent the same user-entered details.
+     */
+    public boolean hasSameDetails(Task otherTask) {
+        return getClass().equals(otherTask.getClass())
+                && description.equals(otherTask.description);
+    }
+
     /** Marks this task as completed. */
     public void mark() {
         this.isDone = true;
