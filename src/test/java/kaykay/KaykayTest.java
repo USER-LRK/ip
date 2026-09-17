@@ -56,6 +56,46 @@ class KaykayTest {
         assertEquals("OOPS! Please enter a command." + System.lineSeparator(), output.toString());
     }
 
+    /** Checks that GUI errors can be styled separately without changing their wording. */
+    @Test
+    void processCommand_guiError_routesToErrorOutput() {
+        StringBuilder output = new StringBuilder();
+        StringBuilder errorOutput = new StringBuilder();
+        Ui ui = new Ui(
+                line -> output.append(line).append(System.lineSeparator()),
+                line -> errorOutput.append(line).append(System.lineSeparator()),
+                false);
+        Kaykay kaykay = new Kaykay(temporaryDirectory.resolve("gui-error.txt").toString(), ui);
+
+        assertFalse(kaykay.processCommand("unknown"));
+
+        assertEquals("", output.toString());
+        assertEquals("OOPS! I don't recognise that command. Try todo, deadline, event, list, find, delete, "
+                + "mark, unmark, place, or bye." + System.lineSeparator(), errorOutput.toString());
+    }
+
+    /** Checks that GUI action confirmations can be styled separately without changing their wording. */
+    @Test
+    void processCommand_guiSuccess_routesToSuccessOutput() {
+        StringBuilder output = new StringBuilder();
+        StringBuilder errorOutput = new StringBuilder();
+        StringBuilder successOutput = new StringBuilder();
+        Ui ui = new Ui(
+                line -> output.append(line).append(System.lineSeparator()),
+                line -> errorOutput.append(line).append(System.lineSeparator()),
+                line -> successOutput.append(line).append(System.lineSeparator()),
+                false);
+        Kaykay kaykay = new Kaykay(temporaryDirectory.resolve("gui-success.txt").toString(), ui);
+
+        assertFalse(kaykay.processCommand("todo buy milk"));
+
+        assertEquals("", output.toString());
+        assertEquals("", errorOutput.toString());
+        assertEquals("Got it. I've added this task:" + System.lineSeparator()
+                + "[T][ ] buy milk" + System.lineSeparator()
+                + "Now you have 1 tasks in the list." + System.lineSeparator(), successOutput.toString());
+    }
+
     /** Checks that place commands work together through the application coordinator. */
     @Test
     void processCommand_placeWorkflow_managesPersistedPlaces() throws IOException {

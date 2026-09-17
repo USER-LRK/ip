@@ -1,23 +1,30 @@
 package kaykay.ui;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
 /**
  * Displays one message in Kaykay's conversation area.
  *
- * <p>The avatar is represented by a text label for now. This keeps the view
- * self-contained while leaving room for image assets in a later refinement.</p>
+ * <p>Kaykay responses use a small mascot for visual identity, while user
+ * messages rely on their compact right-aligned presentation.</p>
  */
 public final class DialogBox extends HBox {
-    private static final String KAYKAY_AVATAR = "K";
-    private static final String USER_AVATAR = "U";
-    private static final double AVATAR_WIDTH = 30.0;
+    private static final String KAYKAY_AVATAR_PATH = "/images/kaykay-avatar.png";
+    private static final String SUCCESS_PREFIX = "\u2713  ";
+    private static final String WARNING_PREFIX = "\u26A0  ";
+    private static final double USER_MESSAGE_MAX_WIDTH_RATIO = 0.72;
+    private static final double KAYKAY_MESSAGE_MAX_WIDTH_RATIO = 0.82;
+    private static final Image KAYKAY_AVATAR = new Image(Objects.requireNonNull(
+            DialogBox.class.getResource(KAYKAY_AVATAR_PATH)).toExternalForm());
 
     /** Text displayed in the dialog box. */
     @FXML
@@ -25,7 +32,7 @@ public final class DialogBox extends HBox {
 
     /** Avatar displayed beside the dialog text. */
     @FXML
-    private Label avatar;
+    private ImageView avatar;
 
     /**
      * Creates a dialog box for a message from Kaykay or the user.
@@ -34,6 +41,11 @@ public final class DialogBox extends HBox {
      * @param isUserMessage whether the message came from the user.
      */
     public DialogBox(String message, boolean isUserMessage) {
+        this(message, isUserMessage, false, false);
+    }
+
+    /** Creates a dialog box with optional success or error presentation. */
+    private DialogBox(String message, boolean isUserMessage, boolean isSuccessMessage, boolean isErrorMessage) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(MainWindow.class.getResource("/view/DialogBox.fxml"));
             fxmlLoader.setController(this);
@@ -43,13 +55,37 @@ public final class DialogBox extends HBox {
             throw new IllegalStateException("Unable to load a Kaykay dialog box.", exception);
         }
 
-        avatar.setMinWidth(AVATAR_WIDTH);
-        avatar.setText(isUserMessage ? USER_AVATAR : KAYKAY_AVATAR);
-        text.setText(message);
+        String messagePrefix = "";
+        if (isSuccessMessage) {
+            messagePrefix = SUCCESS_PREFIX;
+        } else if (isErrorMessage) {
+            messagePrefix = WARNING_PREFIX;
+        }
+        text.setText(messagePrefix + message);
         text.setWrapText(true);
-        text.getStyleClass().add(isUserMessage ? "user-dialog" : "kaykay-dialog");
+        String dialogStyleClass = "kaykay-dialog";
+        if (isUserMessage) {
+            dialogStyleClass = "user-dialog";
+        } else if (isSuccessMessage) {
+            dialogStyleClass = "success-dialog";
+        } else if (isErrorMessage) {
+            dialogStyleClass = "error-dialog";
+        }
+        text.getStyleClass().add(dialogStyleClass);
+        double messageMaxWidthRatio = isUserMessage
+                ? USER_MESSAGE_MAX_WIDTH_RATIO
+                : KAYKAY_MESSAGE_MAX_WIDTH_RATIO;
+        text.maxWidthProperty().bind(widthProperty().multiply(messageMaxWidthRatio));
         setAlignment(isUserMessage ? Pos.TOP_RIGHT : Pos.TOP_LEFT);
         setSpacing(8.0);
+
+        if (isUserMessage) {
+            getChildren().setAll(text);
+        } else {
+            avatar.setImage(KAYKAY_AVATAR);
+            avatar.setAccessibleText("Kaykay");
+            getChildren().setAll(avatar, text);
+        }
     }
 
     /**
@@ -69,14 +105,26 @@ public final class DialogBox extends HBox {
      * @return a Kaykay-aligned dialog box.
      */
     public static DialogBox getKaykayDialog(String message) {
-        DialogBox dialogBox = new DialogBox(message, false);
-        dialogBox.flip();
-        return dialogBox;
+        return new DialogBox(message, false);
     }
 
-    /** Places Kaykay's avatar after the response text. */
-    private void flip() {
-        setAlignment(Pos.TOP_LEFT);
-        getChildren().setAll(avatar, text);
+    /**
+     * Creates a dialog box that confirms a successful action by Kaykay.
+     *
+     * @param message success message to display.
+     * @return a Kaykay-aligned success dialog box.
+     */
+    public static DialogBox getKaykaySuccessDialog(String message) {
+        return new DialogBox(message, false, true, false);
+    }
+
+    /**
+     * Creates a dialog box that highlights an error reported by Kaykay.
+     *
+     * @param message error message to display.
+     * @return a Kaykay-aligned error dialog box.
+     */
+    public static DialogBox getKaykayErrorDialog(String message) {
+        return new DialogBox(message, false, false, true);
     }
 }
