@@ -7,6 +7,26 @@
     -fx-padding: 14px;
 }
 
+.mission-header {
+    -fx-background-color: #10182a;
+    -fx-border-color: transparent transparent #26344d transparent;
+    -fx-border-width: 0 0 1px 0;
+    -fx-padding: 0 18px;
+    -fx-spacing: 9px;
+}
+
+.mission-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #f1f5f9;
+}
+
+.mission-subtitle {
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #fb8068;
+}
+
 .scroll-pane,
 .scroll-pane .viewport {
     -fx-background-color: transparent;

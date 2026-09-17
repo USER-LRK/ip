@@ -58,7 +58,8 @@ public final class MainWindow extends AnchorPane {
         assert userInput != null : "FXML loader must inject the user input field";
         assert sendButton != null : "FXML loader must inject the send button";
 
-        dialogContainer.getChildren().add(DialogBox.getKaykayDialog("Hello! I'm kaykay."));
+        dialogContainer.getChildren().add(DialogBox.getKaykayDialog(
+                "Kaykay online!" + System.lineSeparator() + "What's our next mission?"));
         dialogContainer.heightProperty().addListener((observable, oldHeight, newHeight) ->
                 scrollPane.setVvalue(1.0));
     }

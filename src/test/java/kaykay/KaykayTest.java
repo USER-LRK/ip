@@ -26,7 +26,7 @@ class KaykayTest {
         Kaykay kaykay = new Kaykay(temporaryDirectory.resolve("tasks.txt").toString(), ui);
 
         assertFalse(kaykay.processCommand("todo buy milk"));
-        assertTrue(output.toString().contains("I've added this task:"));
+        assertTrue(output.toString().contains("Mission added:"));
         assertTrue(output.toString().contains("[T][ ] buy milk"));
         assertTrue(kaykay.processCommand("bye"));
     }
@@ -41,7 +41,7 @@ class KaykayTest {
         kaykay.processCommand("todo buy milk");
 
         assertFalse(output.toString().contains("____________________________________________________________"));
-        assertTrue(output.toString().contains("I've added this task:"));
+        assertTrue(output.toString().contains("Mission added:"));
     }
 
     /** Checks that a blank command produces concise and predictable guidance. */
@@ -53,7 +53,7 @@ class KaykayTest {
 
         assertFalse(kaykay.processCommand("   "));
 
-        assertEquals("OOPS! Please enter a command." + System.lineSeparator(), output.toString());
+        assertEquals("Mission snag: Please enter a command." + System.lineSeparator(), output.toString());
     }
 
     /** Checks that GUI errors can be styled separately without changing their wording. */
@@ -70,7 +70,7 @@ class KaykayTest {
         assertFalse(kaykay.processCommand("unknown"));
 
         assertEquals("", output.toString());
-        assertEquals("OOPS! I don't recognise that command. Try todo, deadline, event, list, find, delete, "
+        assertEquals("Mission snag: I don't recognise that command. Try todo, deadline, event, list, find, delete, "
                 + "mark, unmark, place, or bye." + System.lineSeparator(), errorOutput.toString());
     }
 
@@ -91,9 +91,9 @@ class KaykayTest {
 
         assertEquals("", output.toString());
         assertEquals("", errorOutput.toString());
-        assertEquals("Got it. I've added this task:" + System.lineSeparator()
+        assertEquals("Mission added:" + System.lineSeparator()
                 + "[T][ ] buy milk" + System.lineSeparator()
-                + "Now you have 1 tasks in the list." + System.lineSeparator(), successOutput.toString());
+                + "Now you have 1 task in the list." + System.lineSeparator(), successOutput.toString());
     }
 
     /** Checks that place commands work together through the application coordinator. */
@@ -110,9 +110,9 @@ class KaykayTest {
         kaykay.processCommand("place find REVISITING");
         kaykay.processCommand("place list");
 
-        assertTrue(output.toString().contains("I've saved this place:"));
+        assertTrue(output.toString().contains("Location logged:"));
         assertTrue(output.toString().contains("rating: 4/5; notes: Worth revisiting"));
-        assertTrue(output.toString().contains("Here are the matching places:"));
+        assertTrue(output.toString().contains("Here are the matching locations:"));
         assertEquals(1, new Storage(dataFile.toString()).loadData().getPlaces().size());
     }
 }

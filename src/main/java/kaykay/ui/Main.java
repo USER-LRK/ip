@@ -29,7 +29,7 @@ public final class Main extends Application {
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/MainWindow.fxml"));
             AnchorPane mainLayout = fxmlLoader.load();
             Scene scene = new Scene(mainLayout);
-            stage.setTitle("Kaykay");
+            stage.setTitle("Kaykay - Mission Control");
             stage.setScene(scene);
             stage.getIcons().add(new Image(Objects.requireNonNull(
                     Main.class.getResource(APP_ICON_PATH)).toExternalForm()));

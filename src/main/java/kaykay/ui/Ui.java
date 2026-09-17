@@ -110,8 +110,8 @@ public class Ui {
         showLine(SEPARATOR);
         showLine(BANNER);
         showLine(SEPARATOR);
-        showLine("Hello! I'm kaykay.");
-        showLine("What can I do for you?");
+        showLine("Kaykay online!");
+        showLine("What's our next mission?");
         showLine(SEPARATOR);
     }
 
@@ -127,7 +127,7 @@ public class Ui {
      */
     public void showTaskList(TaskList tasks) {
         showLine(SEPARATOR);
-        showLine("Here are the tasks in your list:");
+        showLine("Here are your current missions:");
         for (int i = 0; i < tasks.size(); i += 1) {
             showLine(String.format("%d. %s", i + 1, tasks.getTask(i)));
         }
@@ -141,7 +141,7 @@ public class Ui {
      */
     public void showMatchingTasks(List<Task> matchingTasks) {
         showLine(SEPARATOR);
-        showLine("Here are the matching tasks in your list:");
+        showLine("Here's what I found:");
         for (int i = 0; i < matchingTasks.size(); i += 1) {
             showLine(String.format("%d. %s", i + 1, matchingTasks.get(i)));
         }
@@ -155,7 +155,7 @@ public class Ui {
      */
     public void showPlaceList(PlaceList places) {
         showLine(SEPARATOR);
-        showLine("Here are the places you've saved:");
+        showLine("Here are your logged locations:");
         for (int i = 0; i < places.size(); i += 1) {
             showLine(String.format("%d. %s", i + 1, places.getPlace(i)));
         }
@@ -169,7 +169,7 @@ public class Ui {
      */
     public void showMatchingPlaces(List<Place> matchingPlaces) {
         showLine(SEPARATOR);
-        showLine("Here are the matching places:");
+        showLine("Here are the matching locations:");
         for (int i = 0; i < matchingPlaces.size(); i += 1) {
             showLine(String.format("%d. %s", i + 1, matchingPlaces.get(i)));
         }
@@ -184,7 +184,7 @@ public class Ui {
      */
     public void showAddedPlace(Place place, int placeCount) {
         showLine(SEPARATOR);
-        showSuccessLine("Got it. I've saved this place:");
+        showSuccessLine("Location logged:");
         showSuccessLine(place.toString());
         showSuccessLine(formatPlaceCount(placeCount));
         showLine(SEPARATOR);
@@ -197,7 +197,7 @@ public class Ui {
      */
     public void showEditedPlace(Place place) {
         showLine(SEPARATOR);
-        showSuccessLine("Got it. I've updated this place:");
+        showSuccessLine("Location updated:");
         showSuccessLine(place.toString());
         showLine(SEPARATOR);
     }
@@ -210,7 +210,7 @@ public class Ui {
      */
     public void showDeletedPlace(Place place, int placeCount) {
         showLine(SEPARATOR);
-        showSuccessLine("Noted. I've removed this place:");
+        showSuccessLine("Location removed:");
         showSuccessLine("  " + place);
         showSuccessLine(formatPlaceCount(placeCount));
         showLine(SEPARATOR);
@@ -230,9 +230,23 @@ public class Ui {
      */
     public void showAddedTask(Task task, int taskCount) {
         showLine(SEPARATOR);
-        showSuccessLine("Got it. I've added this task:");
+        showSuccessLine("Mission added:");
         showSuccessLine(task.toString());
-        showSuccessLine(String.format("Now you have %d tasks in the list.", taskCount));
+        showSuccessLine(formatTaskCount(taskCount));
+        showLine(SEPARATOR);
+    }
+
+    /**
+     * Shows the confirmation after scheduling an event.
+     *
+     * @param event event that was scheduled.
+     * @param taskCount number of tasks after the addition.
+     */
+    public void showScheduledEvent(Task event, int taskCount) {
+        showLine(SEPARATOR);
+        showSuccessLine("Event scheduled:");
+        showSuccessLine(event.toString());
+        showSuccessLine(formatTaskCount(taskCount));
         showLine(SEPARATOR);
     }
 
@@ -244,9 +258,9 @@ public class Ui {
      */
     public void showDeletedTask(Task task, int taskCount) {
         showLine(SEPARATOR);
-        showSuccessLine("Noted. I've removed this task:");
+        showSuccessLine("Mission removed:");
         showSuccessLine("  " + task);
-        showSuccessLine(String.format("Now you have %d tasks in the list.", taskCount));
+        showSuccessLine(formatTaskCount(taskCount));
         showLine(SEPARATOR);
     }
 
@@ -259,9 +273,9 @@ public class Ui {
     public void showMarkedTask(Task task, boolean isMarked) {
         showLine(SEPARATOR);
         if (isMarked) {
-            showSuccessLine("Nice! I've marked this task as done:");
+            showSuccessLine("Mission complete! Nicely done.");
         } else {
-            showSuccessLine("OK, I've marked this task as not done yet:");
+            showSuccessLine("Mission reopened. Let's get back to it.");
         }
         showSuccessLine(task.toString());
         showLine(SEPARATOR);
@@ -274,20 +288,26 @@ public class Ui {
      */
     public void showError(String message) {
         showLine(SEPARATOR);
-        errorOutput.accept("OOPS! " + message);
+        errorOutput.accept("Mission snag: " + message);
         showLine(SEPARATOR);
     }
 
     /** Shows Kaykay's farewell. */
     public void showFarewell() {
         showLine(SEPARATOR);
-        showLine("Bye. Hope to see you again soon!");
+        showLine("All changes saved. Kaykay signing off!");
         showLine(SEPARATOR);
     }
 
     /** Sends one rendered success line to the configured success receiver. */
     private void showSuccessLine(String line) {
         successOutput.accept(line);
+    }
+
+    /** Returns a grammatically correct task count. */
+    private static String formatTaskCount(int taskCount) {
+        String taskWord = taskCount == 1 ? "task" : "tasks";
+        return String.format("Now you have %d %s in the list.", taskCount, taskWord);
     }
 
     /** Sends one rendered line to the configured output receiver. */

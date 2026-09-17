@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import kaykay.model.Event;
 import kaykay.model.Task;
+import kaykay.ui.Ui;
 
 /**
  * Adds an event task.
@@ -36,5 +37,11 @@ public final class EventCommand extends AddCommand {
     @Override
     protected Task createTask() {
         return new Event(getDescription(), startDateTime, endDateTime);
+    }
+
+    /** Shows an event-specific confirmation after the event is saved. */
+    @Override
+    protected void showConfirmation(Ui ui, Task addedTask, int taskCount) {
+        ui.showScheduledEvent(addedTask, taskCount);
     }
 }

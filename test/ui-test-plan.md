@@ -26,32 +26,32 @@ ____________________________________________________________
 #  #   #   #    #    #  #   #   #    #
 #   #  #   #    #    #   #  #   #    #
 ____________________________________________________________
-Hello! I'm kaykay.
-What can I do for you?
+Kaykay online!
+What's our next mission?
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Mission added:
 [T][ ] borrow book
-Now you have 1 tasks in the list.
+Now you have 1 task in the list.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Mission added:
 [D][ ] return book (by: 25 12 2026 18:30)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Event scheduled:
 [E][ ] project meeting (from: 26 12 2026 14:00 to: 26 12 2026 16:00)
 Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here are your current missions:
 1. [T][ ] borrow book
 2. [D][ ] return book (by: 25 12 2026 18:30)
 3. [E][ ] project meeting (from: 26 12 2026 14:00 to: 26 12 2026 16:00)
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+All changes saved. Kaykay signing off!
 ____________________________________________________________
 ```
 
@@ -80,34 +80,34 @@ ____________________________________________________________
 #  #   #   #    #    #  #   #   #    #
 #   #  #   #    #    #   #  #   #    #
 ____________________________________________________________
-Hello! I'm kaykay.
-What can I do for you?
+Kaykay online!
+What's our next mission?
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Mission added:
 [T][ ] revise notes
-Now you have 1 tasks in the list.
+Now you have 1 task in the list.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Mission added:
 [D][ ] submit report (by: 27 12 2026 09:00)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
-Nice! I've marked this task as done:
+Mission complete! Nicely done.
 [T][X] revise notes
 ____________________________________________________________
 ____________________________________________________________
-OK, I've marked this task as not done yet:
+Mission reopened. Let's get back to it.
 [D][ ] submit report (by: 27 12 2026 09:00)
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here are your current missions:
 1. [T][X] revise notes
 2. [D][ ] submit report (by: 27 12 2026 09:00)
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+All changes saved. Kaykay signing off!
 ____________________________________________________________
 ```
 
@@ -138,38 +138,38 @@ ____________________________________________________________
 #  #   #   #    #    #  #   #   #    #
 #   #  #   #    #    #   #  #   #    #
 ____________________________________________________________
-Hello! I'm kaykay.
-What can I do for you?
+Kaykay online!
+What's our next mission?
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Mission added:
 [D][ ] do homework (by: 28 12 2026 23:45)
-Now you have 1 tasks in the list.
+Now you have 1 task in the list.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Event scheduled:
 [E][ ] orientation week (from: 29 12 2026 08:00 to: 29 12 2026 10:30)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
-OOPS! The deadline date/time 'Friday' is invalid. Please use dd MM yyyy HH:mm, for example 01 01 2026 18:30.
+Mission snag: The deadline date/time 'Friday' is invalid. Please use dd MM yyyy HH:mm, for example 01 01 2026 18:30.
 ____________________________________________________________
 ____________________________________________________________
-OOPS! The event start date/time 'no idea' is invalid. Please use dd MM yyyy HH:mm, for example 01 01 2026 18:30.
+Mission snag: The event start date/time 'no idea' is invalid. Please use dd MM yyyy HH:mm, for example 01 01 2026 18:30.
 ____________________________________________________________
 ____________________________________________________________
-OOPS! The deadline date/time '31 02 2026 10:00' is invalid. Please use dd MM yyyy HH:mm, for example 01 01 2026 18:30.
+Mission snag: The deadline date/time '31 02 2026 10:00' is invalid. Please use dd MM yyyy HH:mm, for example 01 01 2026 18:30.
 ____________________________________________________________
 ____________________________________________________________
-OOPS! The event end date/time '30 12 2026 25:00' is invalid. Please use dd MM yyyy HH:mm, for example 01 01 2026 18:30.
+Mission snag: The event end date/time '30 12 2026 25:00' is invalid. Please use dd MM yyyy HH:mm, for example 01 01 2026 18:30.
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here are your current missions:
 1. [D][ ] do homework (by: 28 12 2026 23:45)
 2. [E][ ] orientation week (from: 29 12 2026 08:00 to: 29 12 2026 10:30)
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+All changes saved. Kaykay signing off!
 ____________________________________________________________
 ```
 
@@ -197,23 +197,23 @@ ____________________________________________________________
 #  #   #   #    #    #  #   #   #    #
 #   #  #   #    #    #   #  #   #    #
 ____________________________________________________________
-Hello! I'm kaykay.
-What can I do for you?
+Kaykay online!
+What's our next mission?
 ____________________________________________________________
 ____________________________________________________________
-OOPS! Please enter a command.
+Mission snag: Please enter a command.
 ____________________________________________________________
 ____________________________________________________________
-OOPS! A todo needs a description. Try: todo <description>.
+Mission snag: A todo needs a description. Try: todo <description>.
 ____________________________________________________________
 ____________________________________________________________
-OOPS! I don't recognise that command. Try todo, deadline, event, list, find, delete, mark, unmark, place, or bye.
+Mission snag: I don't recognise that command. Try todo, deadline, event, list, find, delete, mark, unmark, place, or bye.
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here are your current missions:
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+All changes saved. Kaykay signing off!
 ____________________________________________________________
 ```
 
@@ -245,44 +245,44 @@ ____________________________________________________________
 #  #   #   #    #    #  #   #   #    #
 #   #  #   #    #    #   #  #   #    #
 ____________________________________________________________
-Hello! I'm kaykay.
-What can I do for you?
+Kaykay online!
+What's our next mission?
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Mission added:
 [T][ ] keep this
-Now you have 1 tasks in the list.
+Now you have 1 task in the list.
 ____________________________________________________________
 ____________________________________________________________
-OOPS! I don't recognise that command. Try todo, deadline, event, list, find, delete, mark, unmark, place, or bye.
+Mission snag: I don't recognise that command. Try todo, deadline, event, list, find, delete, mark, unmark, place, or bye.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Mission added:
 [D][ ] finish report (by: 30 12 2026 17:00)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
-OOPS! A deadline needs a description and a date. Try: deadline <description> /by <date>.
+Mission snag: A deadline needs a description and a date. Try: deadline <description> /by <date>.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Event scheduled:
 [E][ ] meeting (from: 31 12 2026 10:00 to: 31 12 2026 11:00)
 Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
-OOPS! An event needs a description, start, and end. Try: event <description> /from <start> /to <end>.
+Mission snag: An event needs a description, start, and end. Try: event <description> /from <start> /to <end>.
 ____________________________________________________________
 ____________________________________________________________
-OOPS! Please provide an existing task number to mark or unmark.
+Mission snag: Please provide an existing task number to mark or unmark.
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here are your current missions:
 1. [T][ ] keep this
 2. [D][ ] finish report (by: 30 12 2026 17:00)
 3. [E][ ] meeting (from: 31 12 2026 10:00 to: 31 12 2026 11:00)
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+All changes saved. Kaykay signing off!
 ____________________________________________________________
 ```
 
@@ -313,42 +313,42 @@ ____________________________________________________________
 #  #   #   #    #    #  #   #   #    #
 #   #  #   #    #    #   #  #   #    #
 ____________________________________________________________
-Hello! I'm kaykay.
-What can I do for you?
+Kaykay online!
+What's our next mission?
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Mission added:
 [T][ ] first task
-Now you have 1 tasks in the list.
+Now you have 1 task in the list.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Mission added:
 [D][ ] second task (by: 01 01 2027 12:00)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Event scheduled:
 [E][ ] third task (from: 02 01 2027 10:00 to: 02 01 2027 11:00)
 Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
-Noted. I've removed this task:
+Mission removed:
   [D][ ] second task (by: 01 01 2027 12:00)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
-OOPS! Please provide an existing task number to delete.
+Mission snag: Please provide an existing task number to delete.
 ____________________________________________________________
 ____________________________________________________________
-OOPS! Please provide an existing task number to delete.
+Mission snag: Please provide an existing task number to delete.
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here are your current missions:
 1. [T][ ] first task
 2. [E][ ] third task (from: 02 01 2027 10:00 to: 02 01 2027 11:00)
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+All changes saved. Kaykay signing off!
 ____________________________________________________________
 ```
 
@@ -379,42 +379,42 @@ ____________________________________________________________
 #  #   #   #    #    #  #   #   #    #
 #   #  #   #    #    #   #  #   #    #
 ____________________________________________________________
-Hello! I'm kaykay.
-What can I do for you?
+Kaykay online!
+What's our next mission?
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Mission added:
 [T][ ] persist this
-Now you have 1 tasks in the list.
+Now you have 1 task in the list.
 ____________________________________________________________
 ____________________________________________________________
-Nice! I've marked this task as done:
+Mission complete! Nicely done.
 [T][X] persist this
 ____________________________________________________________
 ____________________________________________________________
-OK, I've marked this task as not done yet:
+Mission reopened. Let's get back to it.
 [T][ ] persist this
 ____________________________________________________________
 ____________________________________________________________
-Noted. I've removed this task:
+Mission removed:
   [T][ ] persist this
 Now you have 0 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Mission added:
 [T][ ] saved final
-Now you have 1 tasks in the list.
+Now you have 1 task in the list.
 ____________________________________________________________
 ____________________________________________________________
-Nice! I've marked this task as done:
+Mission complete! Nicely done.
 [T][X] saved final
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here are your current missions:
 1. [T][X] saved final
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+All changes saved. Kaykay signing off!
 ____________________________________________________________
 ```
 
@@ -441,15 +441,15 @@ ____________________________________________________________
 #  #   #   #    #    #  #   #   #    #
 #   #  #   #    #    #   #  #   #    #
 ____________________________________________________________
-Hello! I'm kaykay.
-What can I do for you?
+Kaykay online!
+What's our next mission?
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here are your current missions:
 1. [T][X] saved final
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+All changes saved. Kaykay signing off!
 ____________________________________________________________
 ```
 
@@ -475,20 +475,20 @@ ____________________________________________________________
 #  #   #   #    #    #  #   #   #    #
 #   #  #   #    #    #   #  #   #    #
 ____________________________________________________________
-Hello! I'm kaykay.
-What can I do for you?
+Kaykay online!
+What's our next mission?
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Mission added:
 [T][ ] pipe | slash \
-Now you have 1 tasks in the list.
+Now you have 1 task in the list.
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here are your current missions:
 1. [T][ ] pipe | slash \
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+All changes saved. Kaykay signing off!
 ____________________________________________________________
 ```
 
@@ -515,15 +515,15 @@ ____________________________________________________________
 #  #   #   #    #    #  #   #   #    #
 #   #  #   #    #    #   #  #   #    #
 ____________________________________________________________
-Hello! I'm kaykay.
-What can I do for you?
+Kaykay online!
+What's our next mission?
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here are your current missions:
 1. [T][ ] pipe | slash \
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+All changes saved. Kaykay signing off!
 ____________________________________________________________
 ```
 
@@ -554,17 +554,17 @@ ____________________________________________________________
 #  #   #   #    #    #  #   #   #    #
 #   #  #   #    #    #   #  #   #    #
 ____________________________________________________________
-Hello! I'm kaykay.
-What can I do for you?
+Kaykay online!
+What's our next mission?
 ____________________________________________________________
 ____________________________________________________________
-OOPS! I couldn't load your data. Please check the data file.
+Mission snag: I couldn't load your data. Please check the data file.
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here are your current missions:
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+All changes saved. Kaykay signing off!
 ____________________________________________________________
 ```
 
@@ -588,14 +588,14 @@ ____________________________________________________________
 #  #   #   #    #    #  #   #   #    #
 #   #  #   #    #    #   #  #   #    #
 ____________________________________________________________
-Hello! I'm kaykay.
-What can I do for you?
+Kaykay online!
+What's our next mission?
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here are your current missions:
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+All changes saved. Kaykay signing off!
 ____________________________________________________________
 ```
 
@@ -622,26 +622,26 @@ ____________________________________________________________
 #  #   #   #    #    #  #   #   #    #
 #   #  #   #    #    #   #  #   #    #
 ____________________________________________________________
-Hello! I'm kaykay.
-What can I do for you?
+Kaykay online!
+What's our next mission?
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Mission added:
 [D][ ] persist deadline (by: 25 12 2026 18:30)
-Now you have 1 tasks in the list.
+Now you have 1 task in the list.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Event scheduled:
 [E][ ] persist event (from: 26 12 2026 09:00 to: 26 12 2026 10:00)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here are your current missions:
 1. [D][ ] persist deadline (by: 25 12 2026 18:30)
 2. [E][ ] persist event (from: 26 12 2026 09:00 to: 26 12 2026 10:00)
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+All changes saved. Kaykay signing off!
 ____________________________________________________________
 ```
 
@@ -669,16 +669,16 @@ ____________________________________________________________
 #  #   #   #    #    #  #   #   #    #
 #   #  #   #    #    #   #  #   #    #
 ____________________________________________________________
-Hello! I'm kaykay.
-What can I do for you?
+Kaykay online!
+What's our next mission?
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here are your current missions:
 1. [D][ ] persist deadline (by: 25 12 2026 18:30)
 2. [E][ ] persist event (from: 26 12 2026 09:00 to: 26 12 2026 10:00)
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+All changes saved. Kaykay signing off!
 ____________________________________________________________
 ```
 
@@ -708,37 +708,37 @@ ____________________________________________________________
 #  #   #   #    #    #  #   #   #    #
 #   #  #   #    #    #   #  #   #    #
 ____________________________________________________________
-Hello! I'm kaykay.
-What can I do for you?
+Kaykay online!
+What's our next mission?
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Mission added:
 [T][ ] read book
-Now you have 1 tasks in the list.
+Now you have 1 task in the list.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Mission added:
 [D][ ] return book (by: 06 06 2027 18:30)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Mission added:
 [T][ ] buy milk
 Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
-Here are the matching tasks in your list:
+Here's what I found:
 1. [T][ ] read book
 2. [D][ ] return book (by: 06 06 2027 18:30)
 ____________________________________________________________
 ____________________________________________________________
-Here are the matching tasks in your list:
+Here's what I found:
 ____________________________________________________________
 ____________________________________________________________
-OOPS! A find command needs a keyword. Try: find <keyword>.
+Mission snag: A find command needs a keyword. Try: find <keyword>.
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+All changes saved. Kaykay signing off!
 ____________________________________________________________
 ```
 
@@ -769,43 +769,43 @@ ____________________________________________________________
 #  #   #   #    #    #  #   #   #    #
 #   #  #   #    #    #   #  #   #    #
 ____________________________________________________________
-Hello! I'm kaykay.
-What can I do for you?
+Kaykay online!
+What's our next mission?
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've saved this place:
+Location logged:
 [P] Burnt Ends (type: restaurant; location: Dempsey; visited: 10 09 2026; rating: 5/5; notes: Great brisket)
 Now you have 1 place saved.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've saved this place:
+Location logged:
 [P] NUS Computing
 Now you have 2 places saved.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've updated this place:
+Location updated:
 [P] Burnt Ends (type: restaurant; location: Dempsey; visited: 10 09 2026; rating: 4/5; notes: Worth revisiting)
 ____________________________________________________________
 ____________________________________________________________
-Here are the matching places:
+Here are the matching locations:
 1. [P] Burnt Ends (type: restaurant; location: Dempsey; visited: 10 09 2026; rating: 4/5; notes: Worth revisiting)
 ____________________________________________________________
 ____________________________________________________________
-Here are the places you've saved:
+Here are your logged locations:
 1. [P] Burnt Ends (type: restaurant; location: Dempsey; visited: 10 09 2026; rating: 4/5; notes: Worth revisiting)
 2. [P] NUS Computing
 ____________________________________________________________
 ____________________________________________________________
-Noted. I've removed this place:
+Location removed:
   [P] NUS Computing
 Now you have 1 place saved.
 ____________________________________________________________
 ____________________________________________________________
-Here are the places you've saved:
+Here are your logged locations:
 1. [P] Burnt Ends (type: restaurant; location: Dempsey; visited: 10 09 2026; rating: 4/5; notes: Worth revisiting)
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+All changes saved. Kaykay signing off!
 ____________________________________________________________
 ```
 
@@ -832,15 +832,15 @@ ____________________________________________________________
 #  #   #   #    #    #  #   #   #    #
 #   #  #   #    #    #   #  #   #    #
 ____________________________________________________________
-Hello! I'm kaykay.
-What can I do for you?
+Kaykay online!
+What's our next mission?
 ____________________________________________________________
 ____________________________________________________________
-Here are the places you've saved:
+Here are your logged locations:
 1. [P] Burnt Ends (type: restaurant; location: Dempsey; visited: 10 09 2026; rating: 4/5; notes: Worth revisiting)
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+All changes saved. Kaykay signing off!
 ____________________________________________________________
 ```
 
@@ -873,37 +873,37 @@ ____________________________________________________________
 #  #   #   #    #    #  #   #   #    #
 #   #  #   #    #    #   #  #   #    #
 ____________________________________________________________
-Hello! I'm kaykay.
-What can I do for you?
+Kaykay online!
+What's our next mission?
 ____________________________________________________________
 ____________________________________________________________
-OOPS! A place needs a name. Try: place add <name> [/type <type>] [/location <location>] [/visited <date>] [/rating <1-5>] [/notes <notes>].
+Mission snag: A place needs a name. Try: place add <name> [/type <type>] [/location <location>] [/visited <date>] [/rating <1-5>] [/notes <notes>].
 ____________________________________________________________
 ____________________________________________________________
-OOPS! A place rating must be a whole number from 1 to 5.
+Mission snag: A place rating must be a whole number from 1 to 5.
 ____________________________________________________________
 ____________________________________________________________
-OOPS! The place visit date '31 02 2026' is invalid. Please use dd MM yyyy, for example 10 09 2026.
+Mission snag: The place visit date '31 02 2026' is invalid. Please use dd MM yyyy, for example 10 09 2026.
 ____________________________________________________________
 ____________________________________________________________
-OOPS! A place find command needs a keyword. Try: place find <keyword>.
+Mission snag: A place find command needs a keyword. Try: place find <keyword>.
 ____________________________________________________________
 ____________________________________________________________
-OOPS! A place edit needs a place number and at least one field. Try: place edit <number> /rating <1-5>.
+Mission snag: A place edit needs a place number and at least one field. Try: place edit <number> /rating <1-5>.
 ____________________________________________________________
 ____________________________________________________________
-OOPS! Please provide an existing place number to edit.
+Mission snag: Please provide an existing place number to edit.
 ____________________________________________________________
 ____________________________________________________________
-OOPS! Please provide an existing place number to delete.
+Mission snag: Please provide an existing place number to delete.
 ____________________________________________________________
 ____________________________________________________________
-OOPS! I don't recognise that place command. Try place add, place list, place find, place edit, or place delete.
+Mission snag: I don't recognise that place command. Try place add, place list, place find, place edit, or place delete.
 ____________________________________________________________
 ____________________________________________________________
-Here are the places you've saved:
+Here are your logged locations:
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+All changes saved. Kaykay signing off!
 ____________________________________________________________
 ```

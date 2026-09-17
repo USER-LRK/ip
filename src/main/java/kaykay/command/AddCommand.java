@@ -65,6 +65,11 @@ public abstract class AddCommand extends Command {
             assert tasks.size() == originalTaskCount : "A failed save must restore the original task count";
             throw exception;
         }
-        ui.showAddedTask(addedTask, tasks.size());
+        showConfirmation(ui, addedTask, tasks.size());
+    }
+
+    /** Shows the confirmation appropriate for the task type. */
+    protected void showConfirmation(Ui ui, Task addedTask, int taskCount) {
+        ui.showAddedTask(addedTask, taskCount);
     }
 }

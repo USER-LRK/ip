@@ -1,6 +1,7 @@
 # Kaykay User Guide
 
-Kaykay helps you keep track of todos, deadlines, and events from the console.
+Kaykay is your mission-control companion for keeping track of todos, deadlines,
+events, and saved locations.
 
 ## Adding tasks
 

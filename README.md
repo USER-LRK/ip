@@ -21,10 +21,10 @@ Prerequisites: JDK 25, update Intellij to the most recent version.
    ###    #####    #    ###    #####    #
    #  #   #   #    #    #  #   #   #    #
    #   #  #   #    #    #   #  #   #    #
-   Hello! I'm kaykay.
-   What can I do for you?
+   Kaykay online!
+   What's our next mission?
    ____________________________________________________________
-   Bye. Hope to see you again soon!
+   All changes saved. Kaykay signing off!
    ____________________________________________________________
    ```
 
