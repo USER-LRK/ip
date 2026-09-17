@@ -5,11 +5,12 @@
 }
 
 .user-dialog {
-    -fx-background-color: #dbeafe;
+    -fx-background-color: #4f46e5;
     -fx-background-radius: 16px 16px 4px 16px;
-    -fx-border-color: #93c5fd;
+    -fx-border-color: #4338ca;
     -fx-border-radius: 16px 16px 4px 16px;
-    -fx-text-fill: #1e3a8a;
+    -fx-padding: 7px 11px;
+    -fx-text-fill: white;
 }
 
 .kaykay-dialog {
@@ -21,11 +22,5 @@
 }
 
 .avatar {
-    -fx-alignment: center;
-    -fx-background-color: #4f46e5;
-    -fx-background-radius: 50%;
-    -fx-font-size: 13px;
-    -fx-font-weight: bold;
-    -fx-min-height: 30px;
-    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(30, 41, 59, 0.18), 4, 0.15, 0, 1);
 }
