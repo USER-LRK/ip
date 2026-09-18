@@ -100,7 +100,7 @@ start. Each field can be used only once.
 
 ### Date and time format
 
-Deadline and event date/times use this exact format:
+Enter deadline and event date/times using this exact format:
 
 ```text
 dd MM yyyy HH:mm
@@ -115,6 +115,11 @@ dd MM yyyy HH:mm
 For example, `05 01 2026 06:07` means 5 January 2026 at 6:07 AM, while
 `05 01 2026 18:07` means 6:07 PM. Inputs such as `Friday`, `10am`,
 `2026-01-05`, or `31 02 2026 10:00` are not accepted.
+
+Kaykay displays these dates with English month abbreviations, using
+`dd MMM yyyy, HH:mm`. For example, entering `25 12 2026 18:30` displays
+`25 Dec 2026, 18:30`. The input and save-file formats remain numeric, so
+existing save files using `dd MM yyyy HH:mm` still work.
 
 ### Listing all tasks: `list`
 
@@ -195,7 +200,8 @@ Places are stored independently from tasks. For example,
 
 ### Adding a place: `place add`
 
-Saves a place. A name is required; all other fields are optional.
+Saves a place. A name is required before any slash-prefixed fields; all other
+fields are optional. Each supplied field must have a value.
 
 Format:
 
@@ -355,4 +361,4 @@ the application to close.
   AI-assisted output was reviewed, adapted where needed, and verified by the
   project author, who remains responsible for the submitted work.
 
-[Return to the project README](../README.md)
+[Return to the project README](https://github.com/USER-LRK/ip/blob/master/README.md)
