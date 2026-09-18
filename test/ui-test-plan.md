@@ -1131,3 +1131,89 @@ ____________________________________________________________
 All changes saved. Kaykay signing off!
 ____________________________________________________________
 ```
+
+## Case 18: Reject missing place names and adjacent empty fields
+
+**Aim:** Verify missing names and values are rejected without changing existing places or saved data, while slash-containing names and URLs remain valid.
+
+Commands / console input:
+
+```
+place add A/B Cafe /notes https://example.com/menu /rating 5 /type coffee shop
+place add /rating 5
+place add Cafe /type /rating 5
+place edit 1 /type /rating 4
+place list
+bye
+```
+
+Expected output:
+
+```
+____________________________________________________________
+#   #   ###   #   #  #   #   ###   #   #
+#  #   #   #   # #   #  #   #   #   # #
+###    #####    #    ###    #####    #
+#  #   #   #    #    #  #   #   #    #
+#   #  #   #    #    #   #  #   #    #
+____________________________________________________________
+Kaykay online!
+What's our next mission?
+____________________________________________________________
+____________________________________________________________
+Location logged:
+[P] A/B Cafe (type: coffee shop; rating: 5/5; notes: https://example.com/menu)
+Now you have 1 place saved.
+____________________________________________________________
+____________________________________________________________
+Mission snag: A place needs a name. Try: place add <name> [/type <type>] [/location <location>] [/visited <date>] [/rating <1-5>] [/notes <notes>].
+____________________________________________________________
+____________________________________________________________
+Mission snag: The /type field needs a value.
+____________________________________________________________
+____________________________________________________________
+Mission snag: The /type field needs a value.
+____________________________________________________________
+____________________________________________________________
+Here are your logged locations:
+1. [P] A/B Cafe (type: coffee shop; rating: 5/5; notes: https://example.com/menu)
+____________________________________________________________
+____________________________________________________________
+All changes saved. Kaykay signing off!
+____________________________________________________________
+```
+
+Expected file contents:
+
+```
+P | A/B Cafe | coffee shop |  |  | 5 | https://example.com/menu
+```
+
+Restart console input:
+
+```
+place list
+bye
+```
+
+Expected restart output:
+
+```
+____________________________________________________________
+#   #   ###   #   #  #   #   ###   #   #
+#  #   #   #   # #   #  #   #   #   # #
+###    #####    #    ###    #####    #
+#  #   #   #    #    #  #   #   #    #
+#   #  #   #    #    #   #  #   #    #
+____________________________________________________________
+Kaykay online!
+What's our next mission?
+____________________________________________________________
+____________________________________________________________
+Here are your logged locations:
+1. [P] A/B Cafe (type: coffee shop; rating: 5/5; notes: https://example.com/menu)
+____________________________________________________________
+____________________________________________________________
+All changes saved. Kaykay signing off!
+____________________________________________________________
+```

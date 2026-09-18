@@ -31,8 +31,10 @@ import kaykay.model.Place;
  * Interprets user input as executable Kaykay commands.
  */
 public final class Parser {
-    /** Recognizes slash-prefixed fields in place details. */
-    private static final Pattern PLACE_FIELD_PATTERN = Pattern.compile("\\s+/([^\\s/]+)(?:\\s+|$)");
+    /**
+     * Recognizes leading fields without consuming the separator before an adjacent field.
+     */
+    private static final Pattern PLACE_FIELD_PATTERN = Pattern.compile("(?:^|\\s+)/([^\\s/]+)(?=\\s|$)");
 
     /** Recognizes the deadline date/time field. */
     private static final Pattern DEADLINE_BY_PATTERN = Pattern.compile("\\s+/by(?=\\s|$)");

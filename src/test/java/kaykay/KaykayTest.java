@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import kaykay.model.Place;
 import kaykay.storage.Storage;
 import kaykay.ui.Ui;
 
@@ -115,6 +116,36 @@ class KaykayTest {
         assertTrue(output.toString().contains("rating: 4/5; notes: Worth revisiting"));
         assertTrue(output.toString().contains("Here are the matching locations:"));
         assertEquals(1, new Storage(dataFile.toString()).loadData().getPlaces().size());
+    }
+
+    /**
+     * Checks field extraction and ensures malformed place commands leave saved data intact.
+     */
+    @Test
+    void placeCommands_missingFields_preserveExistingDetails() throws IOException {
+        Path dataFile = temporaryDirectory.resolve("place-validation.txt");
+        StringBuilder output = new StringBuilder();
+        Ui ui = new Ui(line -> output.append(line).append(System.lineSeparator()), false);
+        Kaykay kaykay = new Kaykay(dataFile.toString(), ui);
+        kaykay.shouldExitAfterProcessingCommand("place add A/B Cafe /notes https://example.com/menu "
+                + "/rating 5 /type coffee shop");
+        Place savedPlace = new Storage(dataFile.toString()).loadData().getPlaces().getPlace(0);
+        assertEquals("A/B Cafe", savedPlace.getName());
+        assertEquals("https://example.com/menu", savedPlace.getNotes());
+        assertEquals(5, savedPlace.getRating());
+        assertEquals("coffee shop", savedPlace.getType());
+        String originalContents = Files.readString(dataFile);
+
+        kaykay.shouldExitAfterProcessingCommand("place add /rating 5");
+        kaykay.shouldExitAfterProcessingCommand("place add Cafe /type /rating 5");
+        kaykay.shouldExitAfterProcessingCommand("place edit 1 /type /rating 4");
+
+        assertEquals(originalContents, Files.readString(dataFile));
+        output.setLength(0);
+        kaykay.shouldExitAfterProcessingCommand("place list");
+        assertEquals("Here are your logged locations:" + System.lineSeparator()
+                + "1. [P] A/B Cafe (type: coffee shop; rating: 5/5; notes: https://example.com/menu)"
+                + System.lineSeparator(), output.toString());
     }
 
     /** Checks that malformed startup data is reported and protected from later writes. */

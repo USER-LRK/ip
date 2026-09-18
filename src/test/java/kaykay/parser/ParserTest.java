@@ -128,6 +128,39 @@ class ParserTest {
                 parser.parse("place  add Cafe   /rating   5"));
     }
 
+    /**
+     * Checks that leading fields are not mistaken for a missing place name.
+     */
+    @Test
+    void parse_placeWithoutName_rejectsLeadingFields() {
+        String[] inputs = {
+            "place add /rating 5",
+            "place add   /type restaurant /rating 5",
+            "place add /notes Nice coffee"
+        };
+        for (String input : inputs) {
+            assertParseError(input,
+                    "A place needs a name. Try: place add <name> [/type <type>] "
+                            + "[/location <location>] [/visited <date>] [/rating <1-5>] "
+                            + "[/notes <notes>].");
+        }
+    }
+
+    /**
+     * Checks missing values before another field, including edit and tab separators.
+     */
+    @Test
+    void parse_placeWithMissingValue_rejectsAdjacentFields() {
+        String[] fields = {"type", "location", "visited", "rating", "notes"};
+        for (String field : fields) {
+            String error = "The /" + field + " field needs a value.";
+            assertParseError("place add Cafe /" + field + " /rating 5", error);
+            assertParseError("place add Cafe /" + field, error);
+            assertParseError("place edit 1 /" + field + "\t/notes Updated", error);
+        }
+        assertParseError("place edit 1 /name /rating 5", "The /name field needs a value.");
+    }
+
     /** Verifies one parser failure and its user-facing message. */
     private void assertParseError(String input, String expectedMessage) {
         KaykayException exception = assertThrows(KaykayException.class, () -> parser.parse(input));
