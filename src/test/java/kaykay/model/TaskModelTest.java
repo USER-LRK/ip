@@ -47,9 +47,9 @@ class TaskModelTest {
         Deadline deadline = new Deadline("submit report", from);
         Event event = new Event("project meeting", from, to);
 
-        assertEquals("[D][ ] submit report (by: 26 12 2026 14:00)", deadline.toString());
+        assertEquals("[D][ ] submit report (by: 26 Dec 2026, 14:00)", deadline.toString());
         assertEquals("D | 0 | submit report | 26 12 2026 14:00", deadline.toFileFormat());
-        assertEquals("[E][ ] project meeting (from: 26 12 2026 14:00 to: 26 12 2026 16:00)",
+        assertEquals("[E][ ] project meeting (from: 26 Dec 2026, 14:00 to: 26 Dec 2026, 16:00)",
                 event.toString());
         assertEquals("E | 0 | project meeting | 26 12 2026 14:00 | 26 12 2026 16:00",
                 event.toFileFormat());

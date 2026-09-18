@@ -96,6 +96,26 @@ class StorageTest {
         assertEquals(2, loadedData.getPlaces().size());
     }
 
+    /**
+     * Checks that existing numeric dates load with readable output and save unchanged.
+     */
+    @Test
+    void loadDataThenSaveData_existingDates_preservesStorageFormat() throws IOException {
+        Path dataFile = temporaryDirectory.resolve("existing-dates.txt");
+        String originalContents = "D | 1 | report | 25 12 2026 18:30" + System.lineSeparator()
+                + "E | 0 | meeting | 26 12 2026 14:00 | 26 12 2026 16:00" + System.lineSeparator();
+        Files.writeString(dataFile, originalContents);
+        Storage storage = new Storage(dataFile.toString());
+
+        ApplicationData loadedData = storage.loadData();
+
+        assertEquals("[D][X] report (by: 25 Dec 2026, 18:30)", loadedData.getTasks().getTask(0).toString());
+        assertEquals("[E][ ] meeting (from: 26 Dec 2026, 14:00 to: 26 Dec 2026, 16:00)",
+                loadedData.getTasks().getTask(1).toString());
+        storage.saveData(loadedData);
+        assertEquals(originalContents, Files.readString(dataFile));
+    }
+
     /** Checks that a failed load prevents the damaged file from being overwritten. */
     @Test
     void saveData_afterFailedLoad_preservesExistingFile() throws IOException {

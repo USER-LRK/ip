@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.Locale;
 
 import org.junit.jupiter.api.Test;
 
@@ -56,5 +57,25 @@ class DateTimeParserTest {
                 DateTimeParser.format(LocalDateTime.of(2026, 1, 5, 6, 7)));
         assertEquals("31 12 2026 23:59",
                 DateTimeParser.format(LocalDateTime.of(2026, 12, 31, 23, 59)));
+    }
+
+    /**
+     * Checks readable output and numeric storage under a non-English locale.
+     */
+    @Test
+    void formatForDisplay_nonEnglishLocale_preservesEnglishDisplayAndStorage() {
+        Locale originalLocale = Locale.getDefault();
+        try {
+            Locale.setDefault(Locale.FRANCE);
+            LocalDateTime dateTime = DateTimeParser.parse("05 01 2026 06:07");
+            assertEquals("05 Jan 2026, 06:07", DateTimeParser.formatForDisplay(dateTime));
+            assertEquals("05 01 2026 06:07", DateTimeParser.format(dateTime));
+            assertEquals("29 Feb 2024, 00:00",
+                    DateTimeParser.formatForDisplay(LocalDateTime.of(2024, 2, 29, 0, 0)));
+            assertEquals("31 Dec 2026, 23:59",
+                    DateTimeParser.formatForDisplay(LocalDateTime.of(2026, 12, 31, 23, 59)));
+        } finally {
+            Locale.setDefault(originalLocale);
+        }
     }
 }
