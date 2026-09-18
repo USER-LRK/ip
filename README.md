@@ -1,56 +1,92 @@
-# Kaykay project template
+# Kaykay
 
-This is a project template for a greenfield Java project for the Kaykay chatbot. Given below are instructions on how to use it.
+Kaykay is a desktop mission-control companion for managing tasks and keeping a
+personal record of places. It combines a graphical chat interface with concise
+commands, making it quick to add, update, and find information.
 
-## Setting up in Intellij
+![Kaykay's graphical user interface](docs/Ui.png)
 
-Prerequisites: JDK 25, update Intellij to the most recent version.
+## Features
 
-1. Open Intellij (if you are not in the welcome screen, click `File` > `Close Project` to close the existing project first)
-1. Open the project into Intellij as follows:
-   1. Click `Open`.
-   1. Select the project directory, and click `OK`.
-   1. If there are any further prompts, accept the defaults.
-1. Configure the project to use **JDK 25** (not other versions) as explained in [here](https://www.jetbrains.com/help/idea/sdk.html#set-up-jdk).<br>
-   In the same dialog, set the **Project language level** field to the `SDK default` option.
-1. After that, run the application using `./gradlew run` (or the equivalent Gradle run configuration in IntelliJ). This currently opens the initial JavaFX window. The console version remains available by running `kaykay.Kaykay.main()` directly; it will continue to show the greeting and farewell output from Kaykay.
-   ```
-   ____________________________________________________________
-   #   #   ###   #   #  #   #   ###   #   #
-   #  #   #   #   # #   #  #   #   #   # #
-   ###    #####    #    ###    #####    #
-   #  #   #   #    #    #  #   #   #    #
-   #   #  #   #    #    #   #  #   #    #
-   Kaykay online!
-   What's our next mission?
-   ____________________________________________________________
-   All changes saved. Kaykay signing off!
-   ____________________________________________________________
-   ```
+- Track todos, deadlines, and events.
+- Mark tasks as completed or not completed.
+- Search task descriptions.
+- Save places together with their type, location, visit date, rating, and notes.
+- Search across all recorded place details.
+- Save changes automatically between sessions.
 
-**Warning:** Keep the `src\main\java` folder as the root folder for Java files (i.e., don't rename those folders or move Java files to another folder outside of this folder path), as this is the default location some tools (e.g., Gradle) expect to find Java files.
+For installation instructions and a complete command reference, see the
+**[Kaykay User Guide](docs/README.md)**.
 
-## Managing places
+## Using Kaykay
 
-Kaykay stores places separately from tasks. A command such as `todo visit Burnt Ends` creates a task;
-only the following `place` commands create or change place records:
+Download `kaykay.jar` from the
+[latest GitHub release](https://github.com/USER-LRK/ip/releases/latest), place it
+in a folder of your choice, and run:
 
-| Command | Purpose |
-| --- | --- |
-| `place add <name>` | Save a place. |
-| `place list` | Display all saved places. |
-| `place find <keyword>` | Search across all recorded place details. |
-| `place edit <number> /<field> <value>` | Change one or more details of a saved place. |
-| `place delete <number>` | Delete a saved place. |
-
-When adding a place, its name is required. The optional fields are `/type`, `/location`, `/visited`,
-`/rating`, and `/notes`. Visit dates use `dd MM yyyy`, and ratings are whole numbers from 1 to 5.
-An exact duplicate of an existing place is reported instead of being added again.
-
-For example:
-
+```text
+java -jar kaykay.jar
 ```
-place add Burnt Ends /type restaurant /location Dempsey /visited 10 09 2026 /rating 5 /notes Great brisket
-place edit 1 /rating 4 /notes Worth revisiting
-place find restaurant
+
+Java 25 must be installed. End users do not need Gradle or the project source
+code.
+
+## Setting up the project in IntelliJ IDEA
+
+### Prerequisites
+
+- JDK 25
+- A recent version of IntelliJ IDEA
+
+### Setup
+
+1. Open IntelliJ IDEA.
+1. Select **Open**, choose this project directory, and accept the default import
+   options.
+1. Configure the project SDK as **JDK 25** and set the project language level to
+   **SDK default**. See the
+   [IntelliJ IDEA SDK documentation](https://www.jetbrains.com/help/idea/sdk.html#set-up-jdk)
+   if you need help with this step.
+1. Run the application with the command for your terminal:
+
+   - Windows PowerShell: `.\gradlew.bat run`
+   - Git Bash, macOS, or Linux: `./gradlew run`
+
+   You can also use the corresponding Gradle run configuration in IntelliJ
+   IDEA.
+
+> [!IMPORTANT]
+> Keep `src/main/java` as the source root. Gradle and the project's other tools
+> expect Java source files at this location.
+
+## Building and testing
+
+Run the command for your terminal to build the executable JAR:
+
+```text
+# Windows PowerShell
+.\gradlew.bat clean shadowJar
+
+# Git Bash, macOS, or Linux
+./gradlew clean shadowJar
 ```
+
+The resulting file is `build/libs/kaykay.jar`.
+
+Run the automated tests and code-quality checks with:
+
+```text
+# Windows PowerShell
+.\gradlew.bat check
+
+# Git Bash, macOS, or Linux
+./gradlew check
+```
+
+## Project structure
+
+- `src/main/java`: application source code
+- `src/main/resources`: JavaFX layouts, styles, and images
+- `src/test/java`: JUnit tests
+- `docs/README.md`: user guide
+- `test/ui-test-plan.md`: console UI test cases
