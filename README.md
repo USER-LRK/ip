@@ -90,3 +90,21 @@ Run the automated tests and code-quality checks with:
 - `src/test/java`: JUnit tests
 - `docs/README.md`: user guide
 - `test/ui-test-plan.md`: console UI test cases
+
+## Acknowledgements and AI declaration
+
+- Kaykay is based on the
+  [CS2103T individual project starter repository](https://github.com/NUS-CS2103-AY2627-S1/ip)
+  and its Duke learning increments.
+- The application uses [OpenJFX](https://openjfx.io/) for its graphical user
+  interface. [JUnit 5](https://junit.org/junit5/),
+  [Checkstyle](https://checkstyle.org/), and the
+  [Gradle Shadow plugin](https://gradleup.com/shadow/) support testing, code
+  quality checks, and JAR packaging respectively.
+- The User Guide's organization was informed by the
+  [AddressBook Level 3 User Guide](https://se-education.org/addressbook-level3/UserGuide.html).
+- OpenAI Codex was used to assist with implementation, refactoring,
+  test creation, UI development, debugging, review, and documentation. The
+  Kaykay mascot was created with OpenAI's image-generation tool. All
+  AI-assisted output was reviewed, adapted where needed, and verified by the
+  project author, who remains responsible for the submitted work.

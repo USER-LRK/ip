@@ -12,6 +12,7 @@ while retaining the convenience of a graphical interface.
 - [FAQ](#faq)
 - [Known limitations](#known-limitations)
 - [Command summary](#command-summary)
+- [Acknowledgements and AI declaration](#acknowledgements-and-ai-declaration)
 
 ## Quick start
 
@@ -176,10 +177,9 @@ Example:
 delete 2
 ```
 
-> [!IMPORTANT]
-> `mark`, `unmark`, and `delete` use the numbers shown by `list`. Numbers
-> shown in `find` results do not replace the task's number in the full list. Run
-> `list` before changing a task if you are unsure of its number.
+> **Important:** `mark`, `unmark`, and `delete` use the numbers shown by `list`.
+> Numbers shown in `find` results do not replace the task's number in the full
+> list. Run `list` before changing a task if you are unsure of its number.
 
 ### Exiting Kaykay: `bye`
 
@@ -267,11 +267,10 @@ Example:
 place delete 2
 ```
 
-> [!IMPORTANT]
-> `place edit` and `place delete` use the numbers shown by `place list`.
-> Numbers shown in `place find` results do not replace the place's number in the
-> full list. Run `place list` before changing a place if you are unsure of its
-> number.
+> **Important:** `place edit` and `place delete` use the numbers shown by
+> `place list`. Numbers shown in `place find` results do not replace the place's
+> number in the full list. Run `place list` before changing a place if you are
+> unsure of its number.
 
 ## Duplicate entries
 
@@ -285,11 +284,10 @@ Kaykay saves every successful change automatically. No manual save command is
 required. Tasks and places are stored together in `data/kaykay.txt`, relative
 to the folder from which Kaykay is started.
 
-> [!CAUTION]
-> The data file is intended to be managed by Kaykay. Editing it manually can
-> make it invalid. If Kaykay cannot load an existing data file, it protects the
-> file by blocking further writes for that session so that the original data
-> can be repaired.
+> **Caution:** The data file is intended to be managed by Kaykay. Editing it
+> manually can make it invalid. If Kaykay cannot load an existing data file, it
+> protects the file by blocking further writes for that session so that the
+> original data can be repaired.
 
 Save files containing older free-form deadline or event dates are not
 compatible with the current date/time format and must be repaired or recreated.
@@ -338,5 +336,23 @@ the application to close.
 | Edit a place | `place edit PLACE_NUMBER FIELD VALUE [MORE_FIELDS]` |
 | Delete a place | `place delete PLACE_NUMBER` |
 | Exit | `bye` |
+
+## Acknowledgements and AI declaration
+
+- Kaykay is based on the
+  [CS2103T individual project starter repository](https://github.com/NUS-CS2103-AY2627-S1/ip)
+  and its Duke learning increments.
+- The application uses [OpenJFX](https://openjfx.io/) for its graphical user
+  interface. [JUnit 5](https://junit.org/junit5/),
+  [Checkstyle](https://checkstyle.org/), and the
+  [Gradle Shadow plugin](https://gradleup.com/shadow/) support testing, code
+  quality checks, and JAR packaging respectively.
+- This guide's organization was informed by the
+  [AddressBook Level 3 User Guide](https://se-education.org/addressbook-level3/UserGuide.html).
+- OpenAI Codex was used to assist with implementation, refactoring,
+  test creation, UI development, debugging, review, and documentation. The
+  Kaykay mascot was created with OpenAI's image-generation tool. All
+  AI-assisted output was reviewed, adapted where needed, and verified by the
+  project author, who remains responsible for the submitted work.
 
 [Return to the project README](../README.md)
